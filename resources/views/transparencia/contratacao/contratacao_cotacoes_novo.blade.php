@@ -1,5 +1,15 @@
 @extends('navbar.default-navbar')
 @section('content')
+<script type="text/javascript">
+    function mudar(valor) {
+		var status = document.getElementById('proccess_name').value;  
+        if(status == "COVID"){ 
+            document.getElementById('proccess_name2').disabled = false;
+        } else {
+            document.getElementById('proccess_name2').disabled = true;
+        }
+    }
+</script>
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">	
   <div class="row" style="margin-top: 25px;">		
@@ -31,7 +41,32 @@
 			    <tr>						 
 				  <td> Processo de Cotações: </td>						 
 				  <td> 		
-				    <input style="width: 500px" class="form-control" type="text" id="proccess_name" name="proccess_name">							 
+				  <select style="width: 500px" class="form-control" id="proccess_name" name="proccess_name" onchange="mudar('sim')">							 
+					<option value="PROCESSO 001/2020 - PROJETO GERADOR A DIESEL">PROCESSO 001/2020 - PROJETO GERADOR A DIESEL</option>							 
+					<option value="PROCESSO REFORMA CENTRO DE PARTO NORMAL">PROCESSO REFORMA CENTRO DE PARTO NORMAL</option>							 
+					<option value="PROCESSO DE SELEÇÃO TRS HOSPITALAR">PROCESSO DE SELEÇÃO TRS HOSPITALAR</option>							 
+					<option value="MAPA DE COTAÇÕES">MAPA DE COTAÇÕES</option>
+					<option value="COVID">COVID</option>
+				  </select>	
+				  </td>						
+				</tr>
+				<tr>						 
+				  <td> Mês/Ano: </td>						 
+				  <td> 		
+				  <select style="width: 300px" class="form-control" id="proccess_name2" name="proccess_name2" disabled="true">							 
+					<option value="Janeiro2021">Janeiro/2021</option>							 
+					<option value="Fevereiro2021">Fevereiro/2021</option>							 
+					<option value="Março2021">Março/2021</option>							 
+					<option value="Abril2021">Abril/2021</option>
+					<option value="Maio2021">Maio/2021</option>
+					<option value="Junho2021">Junho/2021</option>
+					<option value="Julho2021">Julho/2021</option>
+					<option value="Agosto2021">Agosto/2021</option>
+					<option value="Setembro2021">Setembro/2021</option>
+					<option value="Outubro2021">Outubro/2021</option>
+					<option value="Novembro2021">Novembro/2021</option>
+					<option value="Dezembro2021">Dezembro/2021</option>
+				  </select>	
 				  </td>						
 				</tr>						
 				<tr>					     

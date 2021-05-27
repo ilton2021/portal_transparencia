@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSicTable extends Migration
+class CreateAssistencialCovidTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateSicTable extends Migration
      */
     public function up()
     {
-        Schema::create('sic', function (Blueprint $table) {
+        Schema::create('assistencial_covid', function (Blueprint $table) {
             $table->bigIncrements('id');
-	    $table->string('unidade');
-	    $table->string('responsavel');
-	    $table->string('email');
-	    $table->string('telefone');
+	    $table->string('titulo');
+	    $table->string('file_name');
+	    $table->string('file_path');
+	    $table->string('ano');
+ 	    $table->string('mes');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateSicTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sic');
+        Schema::dropIfExists('assistencial_covid');
     }
 }
