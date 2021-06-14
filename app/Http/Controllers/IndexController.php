@@ -52,6 +52,7 @@ use App\Model\Aditivo;
 use App\Model\RelatorioFinanceiro;
 use App\Model\Covenio;
 use App\Model\Processos;
+use App\Model\AssistencialCovid;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use PDF;
@@ -336,7 +337,8 @@ class IndexController extends Controller
         $lastUpdated = '2020-06-15 10:00:00';;
 		$text = false;
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-        return view('transparencia.assistencial', compact('unidade','unidadesMenu','lastUpdated','anosRef','text','permissao_users'));
+        $assistencialCovid = AssistencialCovid::all();
+        return view('transparencia.assistencial', compact('unidade','unidadesMenu','lastUpdated','anosRef','text','permissao_users','assistencialCovid'));
     }
 
     public function visualizarAssistencial($id)

@@ -339,6 +339,12 @@ Route::middleware(['auth'])->group( function() {
 		Route::post('ouvidoria/{id}/ouvidoriaNovo','OuvidoriaController@storeOuvidoria')->name('storeOuvidoria');
 		////		
 		
+		//Assistencial Covid
+		Route::get('assistencial/{id}/cadastroAssistencialCovid','AssistencialCovidController@assistencialCovidCadastro')->name('assistencialCovidCadastro');
+		Route::get('assistencial/{id}/cadastroAssistencialCovid/novo','AssistencialCovidController@assistencialCovidNovo')->name('assistencialCovidNovo');
+		Route::get('assistencial/{id}/excluirAssistencialCovid/{id_covid}','AssistencialCovidController@assistencialCovidExcluir')->name('assistencialCovidExcluir');
+		Route::get('assistencial/pesquisarMesCovid/{mes}/{ano}','AssistencialCovidController@pesquisarMesCovid')->name('pesquisarMesCovid');
+		Route::post('assistencial/{id}/cadastroAssistencialCovid/novo','AssistencialCovidController@store')->name('store');
 		////
 		
 		//Stores
