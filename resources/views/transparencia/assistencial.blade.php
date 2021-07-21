@@ -1,6 +1,5 @@
 @extends('navbar.default-navbar')
 @section('content')
-
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
     <div class="row" style="margin-bottom: 25px; margin-top: 25px;">
@@ -44,13 +43,10 @@
 								 @else
 									<a href="{{route('visualizarAssistencial', ['id' => $unidade->id, 'year' => $year])}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Visualizar <i class="fas fa-bars"></i> </a> 
 								 @endif
-								 
-								 
-                            </div>
+					       </div>
                         </div>
                     </div>
                </div>
-			   
             </div>
             @endforeach
 			@if($unidade->id == 8)
@@ -62,15 +58,16 @@
 						@endforeach
 						@foreach ($assistencialCovid->pluck('ano')->unique() as $financialReport)
 						<div class="collapse border-0" id="{{$financialReport}}" >
-							<div class="card card-body border-0" style="background-color: #fafafa">
+							<table class="table" style="margin-left: -200px;">
 								@foreach ($assistencialCovid as $item)
 								@if ($item->ano == $financialReport)
-									<div class="list-group" style="font-size: 15px;padding: 2px 2px;">
-									<a href="{{asset('storage')}}/{{$item->file_path}}" target="_blank" class="list-group-item list-group-item-action" style="padding: 5px 5px;">{{$item->titulo}} - <span class="badge badge-secondary">{{$item->mes}}/{{$item->ano}}</span> <i style="color:#65b345" class="fas fa-cloud-download-alt"></i></a>
-									</div>
+								  <tr>
+								    <td><p style="margin-top: 10px; color: #000000;">{{ $item->mes }}</p></td>
+								 	<td><a href="{{asset('storage')}}/{{$item->file_path}}" style="width: 650px;" target="_blank" class="list-group-item list-group-item-action" style="padding: 5px 5px;">{{$item->titulo}} - <span class="badge badge-secondary">{{$item->mes}}/{{$item->ano}}</span> <i style="color:#65b345" class="fas fa-cloud-download-alt"></i></a></td>
+								  </tr>
 								@endif	
 								@endforeach
-							</div>
+							</table>
 						</div>
 						@endforeach
 						<div class="container" style="margin-top: 15px;">

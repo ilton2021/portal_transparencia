@@ -334,7 +334,7 @@ class IndexController extends Controller
         $unidadesMenu = $this->unidade->all();
         $unidade =$unidadesMenu->find($id);
         $anosRef = Assistencial::where('unidade_id', $id)->orderBy('ano_ref', 'ASC')->pluck('ano_ref')->unique();
-        $lastUpdated = '2020-06-15 10:00:00';;
+        $lastUpdated = '2020-06-15 10:00:00';
 		$text = false;
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
         $assistencialCovid = AssistencialCovid::all();
