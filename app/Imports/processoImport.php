@@ -29,9 +29,9 @@ class processoImport implements ToModel, WithHeadingRow
 		if($row['no_de_solicitacao'] != "") {
 			return new Processos([
 				'numeroSolicitacao'  => $row['no_de_solicitacao'],
-				'dataSolicitacao'    => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(date('d-m-Y',strtotime($row['data_da_solicitacao']))),
+				'dataSolicitacao'    => date('Y-m-d', strtotime($row['data_da_solicitacao'])),
 				'numeroOC' 			 => $row['n0_ordem_compra'],
-				'dataAutorizacao' 	 => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject(date('d-m-Y', strtotime($row['data_de_autorizacao_da_ordem_de_compra']))),
+				'dataAutorizacao' 	 => date('Y-m-d', strtotime($row['data_de_autorizacao_da_ordem_de_compra'])),
 				'fornecedor' 		 => $row['fornecedor_razao_social'],
 				'cnpj' 				 => $row['cnpj_do_fornecedor'],
 				'produto'            => $row['produto'],
@@ -48,5 +48,12 @@ class processoImport implements ToModel, WithHeadingRow
 		} else {
 			
 		}
+    }
+
+	public function rules(): array
+    {
+        return [
+            'dataSolicitacao'=>'required|date_format:Y-m-d'
+        ];
     }
 }

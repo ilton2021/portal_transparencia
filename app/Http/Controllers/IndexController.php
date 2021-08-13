@@ -483,12 +483,12 @@ class IndexController extends Controller
 		->select('contratos.id as ID', 'contratos.*', 'prestadors.prestador as nome', 'prestadors.*')
 		->where('contratos.unidade_id', $id)
 		->orderBy('nome', 'ASC')
-        ->get()->toArray();
+        ->get();
 		$aditivos = Aditivo::where('unidade_id', $id)->get();
 		$cotacoes = Cotacao::where('unidade_id', $id)->where('validar',0)->get();
 		$processos = Processos::where('unidade_id', $id)->whereMonth('dataSolicitacao',1)->get();
 		$processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
-		$lastUpdated = $processo_arquivos->max('updated_at');
+		$lastUpdated = $contratos->max('updated_at');
 		$text = false;
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
 		$a = 0;
