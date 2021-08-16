@@ -63,6 +63,12 @@ Route::get('auth/passwords/email', 'UserController@telaEmail')->name('telaEmail'
 Route::post('auth/login', 'UserController@Login')->name('Login');
 
 Route::middleware(['auth'])->group( function() {
+
+	Route::get('home_compras', 'HomeController@home_compras')->name('home_compras');
+	Route::get('home_compras/ordem_compra/{id}','HomeController@trasparenciaOrdemCompra')->name('trasparenciaOrdemCompra');
+	Route::get('home_compras/ordem_compra/novo/{id}','HomeController@trasparenciaOrdemCompraNovo')->name('trasparenciaOrdemCompraNovo');
+	Route::post('home_compras/ordem_compra/novo/{id}','HomeController@storeOrdemCompra')->name('storeOrdemCompra');
+
 	Route::prefix('home')->group( function(){
 		Route::get('', 'HomeController@index')->name('home');
 		Route::get('/{id}', 'HomeController@index')->name('index');	
