@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
 use App\Model\SelecaoPessoal;
 use App\Model\ServidoresCedidosRH;
 use App\Model\SelectiveProcess;
 use App\Model\Cargo;
+use App\Model\DespesasPessoais;
 use Illuminate\Http\Request;
 use App\Model\Unidade;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\PermissaoUsersController;
 use App\Model\PermissaoUsers;
 use Auth;
-use Illuminate\Support\Facades\DB;
+use Validator;
 
 class RHController extends Controller
 {
@@ -35,17 +39,9 @@ class RHController extends Controller
 	
 	public function selecaoPCadastro($id, Request $request)
 	{ 
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
+		
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);		
@@ -53,29 +49,21 @@ class RHController extends Controller
 		$data = array();
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);		
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+
 		}
 	}
 	
 	public function selecaoPNovo($id, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);		
@@ -84,81 +72,14 @@ class RHController extends Controller
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);
 		$cargos = Cargo::all()->sortBy("cargo_name");
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos','text'));
+		    return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos'));
+
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function selecaoPValidar($id, $id_item, Request $request)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);		
-		$selecaoPessoal = SelecaoPessoal::find($id_item);
-		DB::statement('UPDATE selecao_pessoals SET validar = 0 WHERE id = '.$id_item.';');
-		$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
-		$data = array();
-        $data[] = $selecaoPessoal->max('updated_at');
-        $lastUpdated = max($data);
-		$cargos = Cargo::all()->sortBy("cargo_name");
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Seleção de Pessoal validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-		    return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos','text','permissao_users'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function processoSValidar($id, $id_item, Request $request)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);		
-		$docSelectiveProcess = SelectiveProcess::find($id_item);
-        DB::statement('UPDATE selective_processes SET validar = 0 WHERE id = '.$id_item.';');
-		$docSelectiveProcess = SelectiveProcess::where('unidade_id', $id)->orderBy('year', 'ASC')->get();
-		$data = array();
-        $data[] = $lastUpdatedRegulamento = '2020-05-31 00:00:00';   
-        $lastUpdated = max($data);
-		$cargos = Cargo::all()->sortBy("cargo_name");
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Processo Seletivo validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-		    return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated','cargos','text','permissao_users'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
@@ -175,65 +96,53 @@ class RHController extends Controller
 		$idCargo = Cargo::where('cargo_name', $nomeCargo)->get();
 		$cargos = Cargo::all()->sortBy("cargo_name");
 		$input = $request->all();		
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'quantidade' => 'required|max:255',
 			'ano'   	 => 'required'
 		]);
 		if ($input['quantidade'] < 0) {
-			\Session::flash('mensagem', ['msg' => 'O campo quantidade não pode ser menor que 0!','class'=>'green white-text']);
-			$text = true;
-			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos','text'));
+			$validator = 'O campo quantidade não pode ser menor que 0!';
+			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else if ($input['ano'] < 1800 || $input['ano'] > 2500) {
-			\Session::flash('mensagem', ['msg' => 'O campo ano é inválido!','class'=>'green white-text']);
-			$text = true;
-			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos','text'));
+			$validator = 'O campo ano é inválido!';
+			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}  
-		if ($v->fails()) {
-			$failed = $v->failed();
-			if ( !empty($failed['quantidade']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo quantidade é obrigatório!','class'=>'green white-text']);
-			} else if ( !empty($failed['quantidade']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo quantidade possui no máximo 255 caracteres!','class'=>'green white-text']);
-			} else if ( !empty($failed['ano']['Required']) ) {	
-				\Session::flash('mensagem', ['msg' => 'O campo ano é obrigatório!','class'=>'green white-text']);
-			}
-			$text = true;
-			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos','text'));
+		if ($validator->fails()) {
+			$failed = $validator->failed();
+			$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';
+			return view('transparencia/rh/rh_selecaopessoal_novo', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','cargos'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			$input['cargo_name_id'] = $idCargo[0]['id'];		
 			$selecaoP = SelecaoPessoal::create($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Seleção de Pessoal cadastrada com sucesso!','class'=>'green white-text']);
-			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+			$validator = 'Seleção Pessoal cadastrada com sucesso!';
+			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 	
 	public function selecaoPCargos($id, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_selecaopessoal_cargos_novo', compact('unidade','unidades','unidadesMenu','text'));
+		    return view('transparencia/rh/rh_selecaopessoal_cargos_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
@@ -247,45 +156,31 @@ class RHController extends Controller
 		$data = array();
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'cargo_name' => 'required|max:255|unique:cargos'
 		]);
-		if ($v->fails()) {
-			$failed = $v->failed();
-			if ( !empty($failed['cargo_name']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome é obrigatório!','class'=>'green white-text']);
-			} else if ( !empty($failed['cargo_name']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome possui no máximo 255 caracteres!','class'=>'green white-text']);
-			} else if ( !empty($failed['cargo_name']['Unique']) ) {	
-				\Session::flash('mensagem', ['msg' => 'Este cargo já foi cadastrado!','class'=>'green white-text']);
-			}
-			$text = true;
-			return view('transparencia/rh/rh_selecaopessoal_cargos_novo', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+		if ($validator->fails()) {
+			$failed = $validator->failed();
+			$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';			
+			return view('transparencia/rh/rh_selecaopessoal_cargos_novo', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			$cargo = Cargo::create($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
 			$cargos = Cargo::all()->sortBy("cargo_name");
-			$text = true;
-			\Session::flash('cargo_name', ['msg' => 'Cargo cadastrado com sucesso!','class'=>'green white-text']);
-			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','text'));
+			$validator = 'Cargo cadastrado com sucesso!';
+			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 	
 	public function selecaoPAlterar($id, $id_item, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
@@ -294,13 +189,13 @@ class RHController extends Controller
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);
 		$cargos = Cargo::where('id', $selecaoPessoal[0]['cargo_name_id'])->get();
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_selecaopessoal_alterar', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos','text'));
+		    return view('transparencia/rh/rh_selecaopessoal_alterar', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
@@ -315,43 +210,30 @@ class RHController extends Controller
         $lastUpdated = max($data);
 		$cargos = Cargo::where('id', $selecaoPessoal[0]['cargo_name_id'])->get();		
 		$input = $request->all();
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'cargo_name' => 'required|max:255'
 		]);
-		if ($v->fails()) {
-			$failed = $v->failed();
-			if ( !empty($failed['cargo_name']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome é obrigatório!','class'=>'green white-text']);
-			} else if ( !empty($failed['cargo_name']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome possui no máximo 255 caracteres!','class'=>'green white-text']);
-			} 
-			$text = true;
-			return view('transparencia/rh/rh_selecaopessoal_alterar', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated','text'));
+		if ($validator->fails()) {
+			$failed = $validator->failed();
+			$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';
+			return view('transparencia/rh/rh_selecaopessoal_alterar', compact('unidade','unidades','unidadesMenu','cargos','selecaoPessoal','lastUpdated'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			$selecaoP = SelecaoPessoal::find($id_item);
 			$selecaoP->update($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Seleção de Pessoal alterado com sucesso!','class'=>'green white-text']);
-			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+			$validator = 'Seleção de Pessoal alterado com sucesso!';
+			return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'));
 		}
 	}
 	
 	public function selecaoPExcluir($id, $id_item, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);		
@@ -359,21 +241,20 @@ class RHController extends Controller
 		$data = array();
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);
-		$text = false;
 		$cargos = Cargo::where('id', $selecaoPessoal[0]['cargo_name_id'])->get();
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_selecaopessoal_excluir', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos','text'));
+		    return view('transparencia/rh/rh_selecaopessoal_excluir', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','cargos'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function destroySelecao($id, $id_item, Request $request)
 	{
 		SelecaoPessoal::find($id_item)->delete();
-		
 		$input = $request->all();
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
@@ -381,57 +262,39 @@ class RHController extends Controller
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
-		$text = true;
-		\Session::flash('mensagem', ['msg' => 'Seleção de Pessoal excluído com sucesso!','class'=>'green white-text']);
-		return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+		$validator = 'Seleção dePessoal excluído com sucesso!';
+		return view('transparencia/rh/rh_selecaopessoal_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'))
+		->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 	}
 	
 	public function processoSCadastro($id, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$docSelectiveProcess = SelectiveProcess::where('unidade_id', $id)->orderBy('year', 'ASC')->get();
 		$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
         $data = array();
-        $data[] = $lastUpdatedRegulamento = '2020-05-31 00:00:00';   
+        $data[] = $lastUpdatedRegulamento = '2017-08-31 00:00:00';   
         $data[] = $docSelectiveProcess->max('updated_at');
         $data[] = $selecaoPessoal->max('updated_at');
         $lastUpdated = max($data);
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','docSelectiveProcess','text'));
+		    return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidade','unidades','unidadesMenu','selecaoPessoal','docSelectiveProcess'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function processoSNovo($id, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
@@ -439,13 +302,13 @@ class RHController extends Controller
 		$data = array();
         $data[] = $docSelectiveProcess->max('updated_at');
         $lastUpdated = max($data);
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_pseletivo_novo', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated','text'));
+		    return view('transparencia/rh/rh_pseletivo_novo', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
 	
@@ -454,7 +317,9 @@ class RHController extends Controller
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
-		$input = $request->all();			$nome = $_FILES['file_path']['name']; 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
+		$input = $request->all();			
+		$nome = $_FILES['file_path']['name']; 		
+		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
 		$docSelectiveProcess = SelectiveProcess::where('unidade_id', $id)->orderBy('year', 'ASC')->get();
 		$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
 		$data = array();
@@ -463,33 +328,28 @@ class RHController extends Controller
 		$data[] = $selecaoPessoal->max('updated_at');
 		$lastUpdated = max($data);
 		if($request->file('file_path') === NULL) {	
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Informe um arquivo do Processo Seletivo!','class'=>'green white-text']);
-			return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+			$validator = 'Informe um arquivo do Processo Seletivo!';
+			return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($extensao === 'pdf') {
-				$v = \Validator::make($request->all(), [
+				$validator = Validator::make($request->all(), [
 					'title' => 'required|max:255',
 					'year' => 'required|digits:4'
 				]);
 				if ( $input['year'] < 1800 && $input['year'] > 2500 ) {
-					$text = true;
-					\Session::flash('mensagem', ['msg' => 'O campo ano é inválido!','class'=>'green white-text']);
-					return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+					$validator = 'O campo ano é inválido!';
+					return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				}
-				if ($v->fails()) {
-					$failed = $v->failed();
-					if ( !empty($failed['title']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['title']['Max']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-					} else if ( !empty($failed['year']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo ano é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['year']['Digits']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo ano é inválido!','class'=>'green white-text']);
-					}
-					$text = true;
-					return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+				if ($validator->fails()) {
+					$failed = $validator->failed();
+					$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';
+					return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				} else {
 					$ano  = $input['year'];
 					$nome = $_FILES['file_path']['name']; 
@@ -512,14 +372,16 @@ class RHController extends Controller
 					$lastUpdated = $log->max('updated_at');
 					$docSelectiveProcess = SelectiveProcess::where('unidade_id', $id)->orderBy('year', 'ASC')->get();
 					$selecaoPessoal = SelecaoPessoal::where('unidade_id', $id)->get();
-					$text = true;
-					\Session::flash('mensagem', ['msg' => 'Processo Seletivo foi cadastrado com sucesso!','class'=>'green white-text']);
-					return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidades','unidade','unidadesMenu','selecaoPessoal','docSelectiveProcess','lastUpdated','text'));
+					$validator = 'Processo Seletivo foi cadastrado com sucesso!';
+					return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidades','unidade','unidadesMenu','selecaoPessoal','docSelectiveProcess','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				}
 			} else {	
-				$text = true;
-				\Session::flash('mensagem', ['msg' => 'Só é permitido arquivos: .pdf!','class'=>'green white-text']);
-				return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated','text'));
+				$validator = 'Só são permitidos arquivos do tipo: PDF!';
+				return view('transparencia/rh/rh_pseletivo_novo', compact('unidades','unidade','unidadesMenu','selecaoPessoal','lastUpdated'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 			}
 		}
 		return view('transparencia/rh/rh_pseletivo_novo', compact('unidade','unidades','unidadesMenu','selecaoPessoal','lastUpdated'));		
@@ -527,17 +389,8 @@ class RHController extends Controller
 	
 	public function processoSExcluir($id, $id_item, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
@@ -545,13 +398,13 @@ class RHController extends Controller
 		$data = array();
         $data[] = $docSelectiveProcess->max('updated_at');
         $lastUpdated = max($data);
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/rh/rh_pseletivo_excluir', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated','text'));
+		    return view('transparencia/rh/rh_pseletivo_excluir', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
 	
@@ -569,9 +422,10 @@ class RHController extends Controller
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);		
 		$docSelectiveProcess = SelectiveProcess::where('unidade_id', $id)->orderBy('year', 'ASC')->get();
-		$text = true;
-		\Session::flash('mensagem', ['msg' => 'Processo Seletivo excluído com sucesso!','class'=>'green white-text']);
-		return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated','text'));
+		$validator = 'Processo seletivo excluído com sucesso!';
+		return view('transparencia/rh/rh_pseletivo_cadastro', compact('unidade','unidades','unidadesMenu','docSelectiveProcess','lastUpdated'))
+		->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 	}
 	
 	public function servidoresPCadastro($id, Request $request)
@@ -587,5 +441,167 @@ class RHController extends Controller
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 	}
+
+	public function despesasRH($id){
+
+		$unidadesMenu = $this->unidade->all();
+		$unidades = $unidadesMenu; 
+		$unidade = $this->unidade->find($id);
+		$ano = 0;
+		$mes = 0;
+		$tipo = 0;
+
+		return view('transparencia/rh/rh_despesas_exibe', compact('unidade','unidades','unidadesMenu','ano','mes', 'tipo')); 
+	}
+	
+
+	public function despesasRHProcurar($id, Request $request){
+		$input = $request->all();
+		$unidade = $this->unidade->find($id);		
+		$unidadesMenu = $this->unidade->all();
+		$mes  = $input['mes'];
+		$ano  = $input['ano'];
+		$tipo = $input['tipo']; 
+		if($tipo == NULL){ $tipo = ""; }
+		if ($id == 2){
+			$despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if ($id == 3){
+			$despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 4){
+			$despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 5){
+			$despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 6){
+			$despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 7){
+			$despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 8){
+			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}
+		return view('transparencia/rh/rh_despesas_exibe	', compact('unidade','despesas','unidadesMenu','ano','mes','tipo'));
+	}
+
+	public function alterarRH($id, $ano, $mes, $tipo){
+
+		$unidadesMenu = $this->unidade->all();
+		$unidades = $unidadesMenu; 
+		$unidade = $this->unidade->find($id);
+		if ($id == 2){
+			$despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if ($id == 3){
+			$despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 4){
+			$despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 5){
+			$despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 6){
+			$despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 7){
+			$despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}else if($id == 8){
+			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+		}
+		return view('transparencia/rh/rh_despesas_alterar', compact('unidade','unidades','unidadesMenu','despesas','ano','mes','tipo')); 
+	}
+
+	public function updateDespesasRH($id, Request $request){
+
+		$unidadesMenu = $this->unidade->all();
+		$unidades = $unidadesMenu; 
+		$unidade = $this->unidade->find($id);
+		$input = $request->all();
+		$mes = $input['mes'];
+		$ano = $input['ano'];
+		$tipo = $input['tipo'];
+
+		if ($id == 2){
+			$despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_hmr';
+		}else if ($id == 3){
+			$despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_belo_jardim';
+		}else if($id == 4){
+			$despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_arcoverde';
+		}else if($id == 5){
+			$despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_arruda';
+		}else if($id == 6){
+			$despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_upaecaruaru';
+		}else if($id == 7){
+			$despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_hss';
+		}else if($id == 8){
+			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+			$nome = 'desp_com_pessoal_hpr';
+		}
+
+		for($a = 1; $a <= 10; $a++){
+			$idl   = $input['id_'.$a];
+			$quant = $input['quant_'.$a];
+			$valor = $input['valor_'.$a]; 
+			$despesas = DB::statement("UPDATE `$nome` SET `Quant` = '$quant', `Valor` = '$valor', `tipo` = '$tipo' WHERE `id` = $idl");	
+		}
+		$despesas = DB::table($nome)->where('mes',$mes)->where('ano',$ano)->where('tipo',$tipo)->get();
+		$validator = 'Depesas de Pessoal alterado com sucesso!';
+		return view('transparencia/rh/rh_despesas_exibe', compact('unidade','unidades','unidadesMenu','despesas','mes','ano','tipo'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+		
+	}
+
+	public function excluirDespesasRH($id){
+
+		$unidadesMenu = $this->unidade->all();
+		$unidades = $unidadesMenu; 
+		$unidade = $this->unidade->find($id);
+
+		return view('transparencia/rh/rh_despesas_excluir', compact('unidade','unidades','unidadesMenu')); 
+	
+	}
+
+	public function destroyDespesasRH($id, Request $request){
+
+
+		$unidadesMenu = $this->unidade->all();
+		$unidades = $unidadesMenu; 
+		$unidade = $this->unidade->find($id);
+		$input = $request->all();
+		$mes = $input['mes'];
+		$ano = $input['ano'];
+		$tipo = $input['tipo'];
+
+
+		if ($id == 2){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_hmr` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+    
+		}else if ($id == 3){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_belo_jardim` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+		}else if($id == 4){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_arcoverde` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+		}else if($id == 5){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_arruda` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+		}else if($id == 6){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_upaecaruaru` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+		}else if($id == 7){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_hss` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+		}else if($id == 8){
+			$despesas = DB::statement('DELETE FROM `desp_com_pessoal_hpr` where `mes` = .$mes. where `ano` =  .$ano. where `tipo` = .$tipo.');	
+
+			}
+ 
+		$validator = 'Depesas de Pessoal Excluída com sucesso!';
+		return view('transparencia/rh/rh_despesas_exibe', compact('unidade','unidades','unidadesMenu','despesas'))
+		->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+	
+	}
+
 }
 ?>

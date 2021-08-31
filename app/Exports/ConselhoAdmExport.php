@@ -19,7 +19,6 @@ class ConselhoAdmExport implements FromCollection, WithHeadings
         return DB::table('conselho_adms')
         ->join('unidades', 'conselho_adms.unidade_id', '=','unidades.id')
         ->select('conselho_adms.name as NOME','conselho_adms.cargo','conselho_adms.tipo_membro','unidades.name as UNIDADE')
-		->where('conselho_adms.validar',0)
         ->get();
     }
 

@@ -3,6 +3,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
+        <link rel="stylesheet" type="text/css" href="resourcers\views\ordem_compra\style.css" media="screen" />
+
         <title>Portal da Transparencia - HCP</title>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -33,22 +35,15 @@
     </div>
 </div>
 
-  <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-				@if (Session::has('mensagem'))
-				 @if ($text == true)
-				   <div class="container">
-					 <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-						  {{ Session::get ('mensagem')['msg'] }}
-					 </div>
-				   </div>
-				  @endif
-				@endif
-            </div>
-		</div>
-    </div>
-
+@if ($errors->any())
+			<div class="alert alert-success">
+				<ul>
+					@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+	@endif
 
  <section id="unidades">
     <div class="container" style="margin-top:30px; margin-bottom:20px;">
@@ -71,47 +66,102 @@
             </div>
         </div>
     </div>
-    <a class="btn btn-dark  btn-sm" style="color: #FFFFFF;" href="{{route('trasparenciaOrdemCompraNovo', $unidade[0]->id)}}" > Novo <i class="fas fa-check"></i></a>    
+   <form action = "{{route('procuraOrdemCompra', $unidade[0]->id)}}"> 
+    <table class="table" style = "margin-left:1px">
+        <tr>    
+            <td>
+                <a class="btn btn-dark  btn-sm" class="form-control" style="color: #FFFFFF; margin-left: 70px; margin-bottom: 15px; height: 28px;" href="{{route('trasparenciaOrdemCompraNovo', $unidade[0]->id)}}" > Novo <i class="fas fa-check"></i></a>    
+            </td>
+           <td> <select class="custom-select mr-sm-2" style="width: 140px" id="funcao" name="funcao">
+                  <option id="funcao" name="funcao" value="0">Selecione</option>
+                  <option id="funcao" name="funcao" value="1">Data de Solicitação</option>
+                  <option id="funcao" name="funcao" value="2">Data de Autorização</option>
+            </select> </td>         
+            <td><input type="date" id="data" name="data" class="form-control" style="width: 140px" ></td>
+            <td> <select class="custom-select mr-sm-2" style="width: 140px" id="funcao2" name="funcao2">
+                  <option id="funcao2" name="funcao2" value="0">Selecione</option>
+                  <option id="funcao2" name="funcao2" value="1">Fornecedor</option>
+                  <option id="funcao2" name="funcao2" value="2">Número da Solicitação</option>
+                  <option id="funcao2" name="funcao2" value="3">Número da Nota Fiscal</option>
+
+            </select> </td>     
+            <td><input id="text" name="text" type="text" class="form-control" style="width: 140px;" placeholder="..."></td>
+            <td><button type="submit" class="btn btn-primary" style="margin-right: 35px; margin-bo 15px; height: 35px;" >Pesquisar  <i class="fas fa-search"></i></button>
+ </td>
+        </tr>   
+    </table>
+    </form> 
 	<div class="container d-flex justify-content-between">
         <div class="row">
-            <table class="table" style="margin-left: -45px">
+            <table class="table" style="margin-left: 15px; width: 100%;">
                 <thead>
                  <tr>
-                   <td colspan='2' width="200px;"><center> <b>Solicitação</b> </center></td>
-                   <td colspan='13'><center><b>Ordens de Compra</b></center></td>
+                   <td colspan='1' width="110px;"><center> <b>Solicitação</b> </center></td>
+                   <td colspan='15'><center><b>Ordens de Compra</b></center></td>
+                   <td colspan='13'><center><b></b></center></td>
+
                  </tr>
-                 <tr> 
-                    <td> Número </td>
-                    <td> Data </td>
-                    <td> Nº O.C </td>
-                    <td> Data Autorização </td>
-                    <td> Fornecedor </td>
-                    <td> CNPJ </td>
-                    <td> Valor Total </td>
-                    <td> Produto </td>
-                    <td> Quantidade Recebida </td>
-                    <td> Valor Total Recebido </td>
+                 <tr>
+                    <td style="font-size: 13px" colspan = '1'> Número </td>
+                    <td style="padding-right: 68px; font-size: 13px" colspan = '1'> Data </td>
+                    <td style="padding-right: 10px; font-size: 13px"> NºO.C </td>
+                    <td style="padding-right: 18px; font-size: 13px"> Data Autorização </td>
+                    <td style="padding-right: 43px; font-size: 13px"> Fornecedor </td>
+                    <td style="padding-right: 1px; font-size: 13px"> CNPJ </td>
+                    <td style="padding-right: 65px; font-size: 13px"> Valor Total </td>
+                    <td style="padding-right: 1px; font-size: 13px"> Produto </td>
+                    <td style="padding-right: 1px; font-size: 13px"> Qtd. Recebida </td>
+                    <td style="padding-right: 50px;font-size: 13px"> Total Recebido </td>
+                    <td style="padding-right: 1px; font-size: 13px"> <u><b>Opções</b></u></td>
+                    <td style="padding-right: 1px; font-size: 13px"> <u><b>Arquivos</b></u></td>
+
                   </tr>
                  </thead>
                  
                    @foreach($processos as $prc)
                    <tr>
-                    <td> {{ $prc->numeroSolicitacao }} </td>
-                    <td> {{ date('d-m-Y', strtotime($prc->dataSolicitacao)) }} </td>
-                    <td> {{ $prc->numeroOC }} </td>
-                    <td> {{ date('d-m-Y', strtotime($prc->dataAutorizacao)) }} </td>
-                    <td> {{ $prc->fornecedor }} </td>
-                    <td> {{ $prc->cnpj }} </td>
-                    <td> {{ "R$ ".number_format($prc->totalValorOC, 2,',','.') }} </td>
-                    <td> {{ $prc->produto }} </td>
-                    <td> {{ $prc->quantidadeRecebida }} </td>
-                    <td> {{ "R$ ".number_format($prc->valorTotalRecebido, 2,',','.') }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->numeroSolicitacao }} </td>
+                    <td style = "font-size: 13px;"> {{ date('d-m-Y', strtotime($prc->dataSolicitacao)) }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->numeroOC }} </td>
+                    <td style = "font-size: 13px;"> {{ date('d-m-Y', strtotime($prc->dataAutorizacao)) }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->fornecedor }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->cnpj }} </td>
+                    <td style = "font-size: 13px;"> {{ "R$ ".number_format($prc->totalValorOC, 2,',','.') }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->produto }} </td>
+                    <td style = "font-size: 13px;"> {{ $prc->quantidadeRecebida }} </td>
+                    <td style = "font-size: 13px;"> {{ "R$ ".number_format($prc->valorTotalRecebido, 2,',','.') }} </td>
+                   
+                    <td> <div class="dropdown">
+                    <a class="btn btn-outline-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-caret-down"></i>               
+                     </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                     <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{ route('ordemCompraAlterar', array($unidade[0]->id, $prc->id)) }}" > <i class="fas fa-edit"></i></a>
+                     <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('ordemCompraExcluir', array($unidade[0]->id, $prc->id))}}" ><i class="fas fa-times-circle"></i></a> </center>
+                     <a class="btn btn-warning btn-sm" style="color: #FFFFFF;" href="{{route('arquivosOrdemCompra', array($unidade[0]->id, $prc->id))}}" ><i class="fa fa-file-o" ></i></a> </center>
+                    
+                    </div>
+                    </div></td>
+                    <td> 
+                        <a class="badge badge-pill badge-outline-warning dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cloud-download"></i>
+                        <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
+                            @foreach($processos as $prc) 
+                                @if($prc->processo_id == $processos[0]->id)
+                                    <a id="div" class="dropdown-item" href="{{asset('../public/storage/')}}/{{$processoA->file_path}}" target="_blank">Arquivo</a>
+                                @endif
+                            @endforeach
+                        </div>	
+                        </a>
+                    </td>
+               
                    </tr> 
                    @endforeach   
             </table>
         </div>
     </div>
  
-    </section >    
+</section >    
 @endsection
 	

@@ -1,5 +1,42 @@
 @extends('navbar.default-navbar')
 @section('content')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
+  <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
+  <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
+
+
+<script>
+document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
+		var i = document.getElementById("telefone").value.length; //aqui pega o tamanho do input
+		if (i === 0)
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + "(";
+		if (i === 3)
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + ")";
+		if (i === 8) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + "-";
+	  }
+      document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
+		var i = document.getElementById("cnpj").value.length; //aqui pega o tamanho do input
+		if (i === 2)
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
+		if (i === 6)
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
+		if (i === 11) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "/";
+	  
+		if (i === 15) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "-";
+	 
+	  } 
+	});
+</script>
+
+</head>
+
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 	@if (Session::has('mensagem'))
 		@if ($text == true)
@@ -10,17 +47,26 @@
 		</div>
 		@endif
 	@endif
+
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
     <div class="row" style="margin-top: 25px;">
         <div class="col-md-12 text-center">
             <h3 style="font-size: 18px;">INSTITUCIONAL</h3>
-			    
+				@if(Auth::check())
+				 @foreach ($permissao_users as $permissao)
+					@if(($permissao->permissao_id == 1) && ($permissao->user_id == Auth::user()->id))
+					  @if ($permissao->unidade_id == $unidade->id)
+			             <p style="margin-right: -930px"><a class="btn btn-dark btn-sm" style="margin-top: 10px;" href="{{route('institucionalNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
+			          @endif
+			        @endif
+			     @endforeach   
+				@endif
 		</div>
     </div>
 	<form action="{{\Request::route('update',$unidade->id)}}" method="post">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
-	<div class="row">
+    <div class="row">
         <div class="col-md-7" style="font-size: 13px;">  
             <table class="table-sm" style="line-height: 1.5;">
                 <tbody>
@@ -76,6 +122,7 @@
                         <td style="border-top: none;" id="txtCnes">{{$unidade->cnes}}</td>
 				    </tr>
                     @endif
+
                 </tbody>
             </table>
         </div>
@@ -111,27 +158,102 @@
             </table>
         </div>
     </div>
+    <br>
+    <div class="col-md-8">
+            @if($unidade->id == 8)
+             <h3 style="font-size: 18px;">INFORMAÇÕES SOBRE A UNIDADE DE SAÚDE: </h3>
+			  <h3 style="font-size: 18px;">HOSPITAL DE CAMPANHA AURORA</h3> <br>
+			  <p style="color:#28a745;"><strong>1.	INTRODUÇÃO</strong></p>
+
+			  <p align="justify" style="color:#28a745;">O modelo de Organização Social de Saúde, a ser adotado para gestão do HOSPITAL DE CAMPANHA AURORA, 
+			     busca a modernidade e o aprimoramento da eficiência na prestação dos serviços públicos de saúde, tendo por objetivos: </p>
+			  <p align="justify" style="color:#28a745;">•	Potencializar a qualidade na execução dos serviços de saúde e atendimento à população 
+				    com suspeita ou diagnosticada com o novo Coronavírus (Covid - 19 / Síndrome 
+					Respiratória Aguda Grave - SRAG). </p>
+			  <p align="justify" style="color:#28a745;">•	Ampliar a capacidade de atendimento, com oferta de leitos clínicos e de unidade de 
+					terapia intensiva exclusivos para atendimentos aos pacientes com suspeita ou 
+					diagnosticados com o novo Coronavírus (Covid - 19 / Síndrome Respiratória Aguda 
+					Grave - SRAG);</p>
+			  <p align="justify" style="color:#28a745;">•	Melhorar o serviço ofertado ao usuário SUS com assistência humanizada. </p>
+
+			  <p style="color:#28a745;">2.	INFORMAÇÕES SOBRE A UNIDADE A SER GERIDA PELA OSS</p>
+
+			  <p style="color:#28a745;">HOSPITAL DE CAMPANHA AURORA</p>
+
+			  <p align="justify" style="color:#28a745;">O HOSPITAL DE CAMPANHA AURORA, situado na Rua da Aurora, 1675,
+				Santo Amaro, Recife/PE.</p>
+
+			  <p style="color:#28a745;">3.	SERVIÇOS </p>
+
+			  <p align="justify" style="color:#28a745;">0 HOSPITAL DE CAMPANHA AURORA será estruturado com perfil de 
+				 hospital de grande porte, 160 leitos aptos a realizar procedimentos de média e alta 
+				 complexidade para atendimento exclusivo aos pacientes suspeitos ou diagnosticados com o 
+				 novo Coronavírus (Covid - 19/ Síndrome Respiratória Aguda Grave - SRAG) através de Cuidados 
+				 Intensivos e Internação, em regime de demanda regulada pelo Município do Recife. </p>
+			  <p align="justify" style="color:#28a745;">3.1.	Serviço de Apoio Diagnóstico e Terapêutico - SADT A unidade hospitalar deverá 
+						disponibilizar exames e ações de apoio diagnóstico e terapêutico a pacientes atendidos em 
+						regime de Internação em leitos clínicos e de unidade terapia intensiva. </p>
+			  <p style="color:#28a745;">3.2.	Internação </p>
+
+			  <p align="justify" style="color:#28a745;">O hospital funcionará com capacidade operacional para 160 leitos de internação assim 
+				 distribuídos:</p>
+			  <p style="color:#28a745;">•	60 leitos clínicos de enfermaria de isolamento; </p>
+			  <p style="color:#28a745;">•	100 leitos de Unidade de Terapia Intensiva — UTI Geral. </p>
+			  <p align="justify" style="color:#28a745;">Todos os leitos do hospital deverão estar disponibilizados para a Central de Regulação Leitos do 
+				 Estado. </p>
+				 
+			  <p style="color:#28a745;">3.2.1.	ASSISTÊNCIA HOSPITALAR</p>
+
+			  <p align="justify" style="color:#28a745;">A assistência à saúde prestada em regime de hospitalização compreende o conjunto de 
+				 atendimentos oferecidos ao paciente suspeito ou diagnosticado com o novo Coronavírus (Covid
+				 - 19/ Síndrome Respiratória Aguda Grave - SRAG), desde sua admissão no hospital até sua alta 
+				 hospitalar, incluindo-se aí todos os atendimentos e procedimentos necessários para obter ou 
+				 completar o diagnóstico e as terapêuticas necessárias para o tratamento no âmbito hospitalar. 
+				 No processo de hospitalização estão incluídos: </p>
+			 <p align="justify" style="color:#28a745;">3.2.2.	Tratamento das possíveis complicações que possam ocorrer ao longo do processo 
+						assistencial, tanto na fase de tratamento, quanto na fase de recuperação. </p>
+			 <p align="justify" style="color:#28a745;">3.2.3.	Tratamentos concomitantes, diferentes daquele classificado como diagnóstico 
+						principal que motivaram a internação do paciente, que podem ser necessários, 
+						adicionalmente, devido às condições especiais do paciente e/ou outras causas. </p>
+			 <p align="justify" style="color:#28a745;">3.2.4.	Tratamento medicamentoso que seja requerido durante o processo de internação.</p>
+			 <p align="justify" style="color:#28a745;">3.2.5.	Procedimentos e cuidados de enfermagem, necessários durante o processo de 
+						internação.</p>
+			 <p align="justify" style="color:#28a745;">3.2.6.	Alimentação, incluída a assistência nutricional, alimentação enteral e parenteral. </p>
+			 <p align="justify" style="color:#28a745;">3.2.7.	Assistência por equipe médica especializada, pessoal de enfermagem e pessoal técnico. </p>
+			 <p align="justify" style="color:#28a745;">3.2.8.	O material descartável necessário para os cuidados de enfermagem e tratamentos. </p>
+
+			 <p align="justify" style="color:#28a745;">3.2.9.	Diárias de hospitalização em quarto compartilhado ou individual, quando necessário, 
+						devido às condições especiais do paciente e quarto de isolamento. </p>
+			 <p style="color:#28a745;">3.2.10.	Sangue e hemoderivados. </p>
+			 <p style="color:#28a745;">3.2.11.	Hemodiálise para os pacientes internados. </p>
+			 <p style="color:#28a745;">3.2.12.	Fornecimento de roupas hospitalares. </p>
+			 <p align="justify" style="color:#28a745;">3.2.13. Procedimentos especiais que se fizerem necessários ao adequado atendimento e 
+						tratamento do paciente, de acordo com a capacidade instalada, respeitando a 
+						complexidade e o perfil estabelecido para o HOSPITAL DE CAMPANHA AURORA </p>
+			@endif
+        </div>
+	<br>
 	<table>
-	<tr>
+		<tr>
 			<td>
 				<a href="{{route('transparenciaInstitucionalPdf', $unidade->id)}}" target="__blank" class="btn btn-success btn-sm" style="margin-top: 10px;">Download <i class="fas fa-file-pdf"></i></a>
 			</td>
 			<td> 
 				@if(Auth::check())
-				  @foreach ($permissao_users as $permissao)
+				 @foreach ($permissao_users as $permissao)
 					@if(($permissao->permissao_id == 1) && ($permissao->user_id == Auth::user()->id))
 					  @if ($permissao->unidade_id == $unidade->id)
-						<a class="btn btn-info btn-sm" style="margin-top: 10px;" href="{{route('institucionalCadastro', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
-				      @endif
-					@endif 
-				  @endforeach			
+			             <a class="btn btn-info btn-sm" style="margin-top: 10px;" href="{{route('institucionalCadastro', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
+			          @endif
+			        @endif
+			     @endforeach   
 				@endif
-			</td>	
+			</td>
 		</tr>
 	</table>
 	</form>
 </div>
 </div>
 </div>
-@endsection
 
+@endsection

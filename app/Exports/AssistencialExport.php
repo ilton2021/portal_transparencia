@@ -31,7 +31,6 @@ class AssistencialExport implements FromCollection, WithHeadings
         'assistencials.julho AS JULHO', 'assistencials.agosto AS AGOSTO', 'assistencials.setembro AS SETEMBRO', 'assistencials.outubro AS OUTUBRO', 'assistencials.novembro AS NOVEMBRO', 
         'assistencials.dezembro AS DEZEMBRO', 'assistencials.ano_ref AS ANO', 'unidades.name as NAME')
         ->where('assistencials.unidade_id', $this->id)
-		->where('assistencials.validar',0)
         ->when($ano, function ($query, $ano) {
             return $query->where('assistencials.ano_ref',$ano);
         })

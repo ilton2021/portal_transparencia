@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="pt-br">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
+    <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
+    <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
     <title>HCP - Gestão</title>
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -54,7 +57,7 @@
                     </div>
 				<li>	
 				@endif
-                @if($unidade->id == 1)
+                @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaMembros') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="membros" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">MEMBROS DIRIGENTES</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="membros">
@@ -76,12 +79,12 @@
                     </div>
                 </li>
                 @endif
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaCompetencia') ? 'active' : '' }}">
                 <a href="{{route('transparenciaCompetencia', $unidade->id)}}" style="font-size: 10px;">COMPETÊNCIAS</a>
                 </li>
                 @endif
-                @if($unidade->id == 1)
+                @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaEstatuto') ? 'active' : '' }}">
                     <a href="{{route('transparenciaEstatuto', $unidade->id)}}" style="font-size: 10px;">ESTATUTO SOCIAL E ATAS DO ESTATUTO</a>
                 </li>
@@ -91,7 +94,7 @@
                     <a href="{{route('transparenciaEstatuto', 1)}}" style="font-size: 10px;">ESTATUTO SOCIAL E ATAS DO ESTATUTO OSS</a>
                 </li>
                 @endif
-                @if($unidade->id == 1)                
+                @if($unidade->id == 1 || $unidade->id == 9)                
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaDocumento') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="regularidade" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">DOCUMENTAÇÃO DE REGULARIDADE</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="regularidade">
@@ -125,30 +128,30 @@
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaContratoGestao') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="contratos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">CONTRATOS DE GESTÃO / ADITIVOS</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="contratos">
-                        @if($unidade->id == 2 || $unidade->id == 1)
+                        @if($unidade->id == 2 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'HMR'])}}" style="font-size: 10px !important;">HMR</a>
                         @endif
-                        @if($unidade->id == 3 || $unidade->id == 1)
+                        @if($unidade->id == 3 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'UPAE BELOA JARDIM'])}}" style="font-size: 10px !important;">UPAE BELOA JARDIM</a>
                         @endif
-                        @if($unidade->id == 4 || $unidade->id == 1)
+                        @if($unidade->id == 4 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'UPAE ARCOVERDE'])}}" style="font-size: 10px !important;">UPAE ARCOVERDE</a>
                         @endif
-                        @if($unidade->id == 5 || $unidade->id == 1)
+                        @if($unidade->id == 5 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'UPAE ARRUDA'])}}" style="font-size: 10px !important;">UPAE ARRUDA</a>
                         @endif
-                        @if($unidade->id == 6 || $unidade->id == 1)
+                        @if($unidade->id == 6 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'UPAE CARUARU'])}}" style="font-size: 10px !important;">UPAE CARUARU</a>
                         @endif
-                        @if($unidade->id == 7 || $unidade->id == 1)
+                        @if($unidade->id == 7 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'HOSPITAL SÃO SEBASTIÃO'])}}" style="font-size: 10px !important;">HOSPITAL SÃO SEBASTIÃO</a>
                         @endif
-			            @if($unidade->id == 8 || $unidade->id == 1)
+			            @if($unidade->id == 8 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'HOSPITAL PROVISÓRIO DO RECIFE'])}}" style="font-size: 10px !important;">HOSPITAL PROVISÓRIO DO RECIFE</a>
                         @endif
                     </div>
                 </li>
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaFinanReports') ? 'active' : '' }}">
                 <a href="{{route('transparenciaFinanReports', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO FINANCEIRO E DE EXECUÇÃO ANUAL</a>
                 </li>
@@ -158,7 +161,7 @@
                 <a href="{{route('transparenciaCovenio', $unidade->id)}}" style="font-size: 10px;">COVÊNIO</a>
                 </li>
                 @endif
-                @if($unidade->id == 1)
+                @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDecreto') ? 'active' : '' }}">
                     <a href="{{route('transparenciaDecreto', $unidade->id)}}" style="font-size: 10px;">DECRETO DE QUALIFICAÇÃO</a>
                 </li>
@@ -188,9 +191,9 @@
                 <a href="{{route('transparenciaContasAtual', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO DE CONTAS ATUAL</a>
                 </li>
                 @endif
-                @if($unidade->id == 8)
-                <li class="{{ (\Request::route()->getName() == 'transparenciaRelatorioGerencial') ? 'active' : '' }}">
-                <a href="{{route('transparenciaRelatorioGerencial', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL DE EXECUÇÃO</a>
+                @if($unidade->id == 9)
+                <li class="{{ (\Request::route()->getName() == 'transparenciaRelMensalExecucao') ? 'active' : '' }}">
+                <a href="{{route('transparenciaRelMensalExecucao', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL DE EXECUÇÃO</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
@@ -198,12 +201,12 @@
                 <a href="{{route('transparenciaMensalFinanceiroExercico', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL FINANCEIRO DO EXERCÍCIO</a>
                 </li>
                 @endif
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDemonstrative') ? 'active' : '' }}">
                 <a href="{{route('transparenciaDemonstrative',  $unidade->id)}}" style="font-size: 10px;">DEMONSTRATIVOS FINANCEIROS</a>
                 </li>
                 @endif
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaAssistencial') ? 'active' : '' }}">
                     <a href="{{route('transparenciaAssistencial', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO ASSISTENCIAL</a>
                 </li>
@@ -213,17 +216,17 @@
                 <a href="{{route('transparenciaRepasses',  $unidade->id)}}" style="font-size: 10px;">REPASSES RECEBIDOS</a>
                 </li>
 				@endif
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaContratacao') ? 'active' : '' }}">
                 <a href="{{route('transparenciaContratacao', $unidade->id)}}" style="font-size: 10px;">CONTRATAÇÕES</a>
                 </li>
                 @endif
-                @if($unidade->id != 1)
+                @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaRecursosHumanos') ? 'active' : '' }}">
                 <a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" style="font-size: 10px;">RECURSOS HUMANOS</a>
                 </li>
                 @endif
-                @if($unidade->id == 1)
+                @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaRegulamento') ? 'active' : '' }}">
                     <a href="{{route('transparenciaRegulamento', $unidade->id)}}" style="font-size: 10px;">REGULAMENTOS PRÓPRIOS</a>
                 </li>
@@ -235,7 +238,7 @@
                 @endif
 				@if(Auth::check())
 					<?php $id = Auth::user()->id; ?>
-						@if($id == 5)
+						@if($id == 1)
 					      <li class="{{ (\Request::route()->getName == 'cadastroPermissao') ? 'active' : '' }}">
 					         <a href="{{ route('cadastroPermissao', $unidade->id) }}" style="font-size: 10px">PERMISSÃO</a>
 						  </li>
@@ -304,5 +307,36 @@
                     });
                 });
             </script>
+
+<script type="text/javascript">
+	 $("#cep").focusout(function(){
+		//Início do Comando AJAX
+		$.ajax({
+			//O campo URL diz o caminho de onde virá os dados
+			//É importante concatenar o valor digitado no CEP
+			url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
+			//Aqui você deve preencher o tipo de dados que será lido,
+			//no caso, estamos lendo JSON.
+			dataType: 'json',
+			//SUCESS é referente a função que será executada caso
+			//ele consiga ler a fonte de dados com sucesso.
+			//O parâmetro dentro da função se refere ao nome da variável
+			//que você vai dar para ler esse objeto.
+			success: function(resposta){
+				//Agora basta definir os valores que você deseja preencher
+				//automaticamente nos campos acima.
+				$("#address").val(resposta.logradouro);
+				$("#further_info").val(resposta.complemento);
+				$("#district").val(resposta.bairro);
+				$("#city").val(resposta.localidade);
+				$("#uf").val(resposta.uf);
+				//Vamos incluir para que o Número seja focado automaticamente
+				//melhorando a experiência do usuário
+				$("#numero").focus();
+			}
+		});
+	 });
+	 </script>
+
         </body>
 </html>

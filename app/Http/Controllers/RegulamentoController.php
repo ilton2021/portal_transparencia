@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Storage;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
-use Illuminate\Support\Facades\DB;
+use Validator;
 
 class RegulamentoController extends Controller
 {
@@ -28,17 +29,8 @@ class RegulamentoController extends Controller
 
     public function regulamentoCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
@@ -46,85 +38,36 @@ class RegulamentoController extends Controller
         $lastUpdated = $manuais->max('updated_at');
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/regulamentos/regulamento_cadastro', compact('unidade','unidades','unidadesMenu','manuais','lastUpdated','text'));
+			return view('transparencia/regulamentos/regulamento_cadastro', compact('unidade','unidades','unidadesMenu','manuais','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function regulamentoValidar($id, $id_item, Request $request)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);	
-		$manuais = Manual::find($id_item);
-		DB::statement('UPDATE manuals SET validar = 0 WHERE id = '.$id_item.';');		
-		$manuais = Manual::where('unidade_id', $id)->get();
-		$lastUpdated = $manuais->max('updated_at');
-		$text = false;
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Regulamento Próprio validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-			return view('transparencia/regulamentos/regulamento_cadastro', compact('unidade','unidades','unidadesMenu','manuais','lastUpdated','text','permissao_users'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
 	public function regulamentoNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/regulamentos/regulamento_novo', compact('unidade','unidades','unidadesMenu','text'));
+			return view('transparencia/regulamentos/regulamento_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function regulamentoExcluir($id_unidade, $id_item)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
@@ -132,11 +75,12 @@ class RegulamentoController extends Controller
 		$lastUpdated = $manuais->max('updated_at');	
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/regulamentos/regulamento_excluir', compact('unidade','unidades','unidadesMenu','manuais','lastUpdated','text'));
+			return view('transparencia/regulamentos/regulamento_excluir', compact('unidade','unidades','unidadesMenu','manuais','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
@@ -153,24 +97,20 @@ class RegulamentoController extends Controller
 		$nomeImg = $_FILES['path_img']['name'];
 		$extensaoI = pathinfo($nomeImg, PATHINFO_EXTENSION);
 		if($request->file('path_file') === NULL || $request->file('path_img') === NULL) {	
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Informe o arquivo e a imagem do Regulamento!','class'=>'green white-text']);		
-			return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));
+			$validator = 'Informe o arquivo e a imagem do Regulamento!';
+			return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'));
 		} else {
 			if($extensao == 'pdf') {
 				if($extensaoI == 'png' || $extensaoI == 'jpg') {
-					$v = \Validator::make($request->all(), [
+					$validator  = Validator::make($request->all(), [
 						'title' => 'required|max:255'
 					]);
-					if ($v->fails()) {
-						$failed = $v->failed();
-						if ( !empty($failed['title']['Required']) ) { 
-							\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-						} else if ( !empty($failed['title']['Max']) ) {
-							\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-						} 
-						$text = true; 
-						return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));
+					if ($validator->fails()) {
+						$failed = $validator->failed();
+						$validator = 'O campo título deve ser preenchido!';
+						return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'))
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));	
 					} else {  
 						$nomeA = $_FILES['path_file']['name'];   
 						$request->file('path_file')->move('../public/storage/manual', $nomeA);
@@ -182,23 +122,26 @@ class RegulamentoController extends Controller
 						$log = LoggerUsers::create($input);
 						$lastUpdated = $log->max('updated_at');
 						$manuais = Manual::all();
-						$text = true;
-						\Session::flash('mensagem', ['msg' => 'Regulamento cadastrado com sucesso!','class'=>'green white-text']);			
-						return view('transparencia/regulamentos/regulamento_cadastro', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));									
+						$validator = 'Regulamento cadastrado com sucesso!';
+						return view('transparencia/regulamentos/regulamento_cadastro', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'))
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));										
 					} 
 				} else {
-					\Session::flash('mensagem', ['msg' => 'Só suporta imagens: .png e .jpg!','class'=>'green white-text']);			
-					$text = true;
+					$validator = 'Só suporta Imagens do tipo: PNG e JPG!';
 					$manuais = Manual::where('unidade_id',$id_unidade)->get();
 					$lastUpdated = $manuais->max('updated_at');
-					return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));
+					return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));		
 				}
 			} else {	
-				\Session::flash('mensagem', ['msg' => 'Só suporta arquivos: .pdf!','class'=>'green white-text']);			
-				$text = true;
+				$validator = 'Só suporta arquivos do tipo: PDF!';
 				$manuais = Manual::where('unidade_id',$id_unidade)->get();
 				$lastUpdated = $manuais->max('updated_at');
-				return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));
+				return view('transparencia/regulamentos/regulamento_novo', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 			}
 		}
 	}
@@ -219,8 +162,9 @@ class RegulamentoController extends Controller
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
 		$manuais = Manual::all();
-		\Session::flash('mensagem', ['msg' => 'Regulamento excluído com sucesso!','class'=>'green white-text']);			
-		$text = true;
-		return view('transparencia/regulamentos/regulamento_cadastro', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated','text'));
+		$validator = 'Regulamento Excluído com sucesso!';
+		return view('transparencia/regulamentos/regulamento_cadastro', compact('unidades','unidade','unidadesMenu','manuais','lastUpdated'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 }

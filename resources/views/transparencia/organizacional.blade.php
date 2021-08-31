@@ -24,9 +24,9 @@
 				 @foreach ($permissao_users as $permissao)
 				  @if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
 				   @if ($permissao->unidade_id == $unidade->id)
-					  <li class="list-inline-item"><a href="{{route('regimentoCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
+				    <li class="list-inline-item"><a href="{{route('regimentoCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
 				   @endif
-				  @endif 
+				  @endif
 				 @endforeach 
 				@endif
 			</ul>
@@ -41,13 +41,13 @@
 				<li class="list-inline-item"><h5 style="font-size: 12px;">Organograma do HCP Gestão (Clique no botão para abrir)</h5></li>
 				<li class="list-inline-item"><a href="{{asset('storage/organograma.pdf')}}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-file-download" style="margin-right: 5px;"></i>Download</a></li>
 				@if(Auth::check())
-				@foreach ($permissao_users as $permissao)
-				 @if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
-				  @if ($permissao->unidade_id == $unidade->id)
-					<li class="list-inline-item"><a href="{{route('organizacionalCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
-				  @endif
-				 @endif 
-				@endforeach 
+				 @foreach ($permissao_users as $permissao)
+				  @if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
+				   @if ($permissao->unidade_id == $unidade->id)
+    				<li class="list-inline-item"><a href="{{route('organizacionalCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
+    			   @endif
+    			  @endif
+    			 @endforeach 
 				@endif
 			</ul>
 

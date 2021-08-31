@@ -17,15 +17,15 @@
 	  <h3 style="font-size: 18px;">CADASTRAR CONTRATAÇÕES:</h3>		
 	</div>	
   </div>		
-  @if (Session::has('mensagem'))		
-	  @if ($text == true)		
-		  <div class="container">	     
-	      <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">		      
-		     {{ Session::get ('mensagem')['msg'] }}		 
-		  </div>		
-		  </div>		
-	  @endif	
-  @endif		
+  @if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+	@endif
   <div class="row" style="margin-top: 25px;">		
     <div class="col-md-0 col-sm-0"></div>			
 	  <div class="col-md-12 col-sm-12 text-center">			
@@ -54,18 +54,18 @@
 				  <td> Mês/Ano: </td>						 
 				  <td> 		
 				  <select style="width: 300px" class="form-control" id="proccess_name2" name="proccess_name2" disabled="true">							 
-					<option value="Janeiro2021">Janeiro/2021</option>							 
-					<option value="Fevereiro2021">Fevereiro/2021</option>							 
-					<option value="Março2021">Março/2021</option>							 
-					<option value="Abril2021">Abril/2021</option>
-					<option value="Maio2021">Maio/2021</option>
-					<option value="Junho2021">Junho/2021</option>
-					<option value="Julho2021">Julho/2021</option>
-					<option value="Agosto2021">Agosto/2021</option>
-					<option value="Setembro2021">Setembro/2021</option>
-					<option value="Outubro2021">Outubro/2021</option>
-					<option value="Novembro2021">Novembro/2021</option>
-					<option value="Dezembro2021">Dezembro/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Janeiro2021">Janeiro/2021</option>							 
+					<option id="proccess_name2" name="proccess_name2" value="Fevereiro2021">Fevereiro/2021</option>							 
+					<option id="proccess_name2" name="proccess_name2" value="Março2021">Março/2021</option>							 
+					<option id="proccess_name2" name="proccess_name2" value="Abril2021">Abril/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Maio2021">Maio/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Junho2021">Junho/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Julho2021">Julho/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Agosto2021">Agosto/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Setembro2021">Setembro/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Outubro2021">Outubro/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Novembro2021">Novembro/2021</option>
+					<option id="proccess_name2" name="proccess_name2" value="Dezembro2021">Dezembro/2021</option>
 				  </select>	
 				  </td>						
 				</tr>						

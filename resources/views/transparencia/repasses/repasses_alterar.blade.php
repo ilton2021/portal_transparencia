@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	
-		@if (Session::has('mensagem'))
-			@if ($text == true)
-			<div class="container">
-			 <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-				  {{ Session::get ('mensagem')['msg'] }}
-			 </div>
+	@if ($errors->any())
+			<div class="alert alert-success">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
 			</div>
-			@endif
 		@endif
 	
 		<div class="row" style="margin-top: 25px;">
@@ -59,7 +59,6 @@
 					 
 					 <table>
 					   <tr>
-					     <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 						 <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
 						 <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="repasses" /> </td>
 						 <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="alterarRepasses" /> </td>

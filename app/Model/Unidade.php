@@ -31,7 +31,6 @@ class Unidade extends Model
 		'google_maps',
 		'created_at',
 		'updated_at',
-		'validar'
 	];
 	
 	public $rulesCadastro = [

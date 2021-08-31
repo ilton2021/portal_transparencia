@@ -10,14 +10,14 @@
 		</div>
 	</div>	
 	
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
+	@if ($errors->any())
+		<div class="alert alert-success">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
 		</div>
-		@endif
 	@endif
 	
 	<div class="row justify-content-around" style="margin-top: 25px;">
@@ -29,10 +29,7 @@
 						<img class="card-img-top border border-secondary" src="{{asset('img')}}/{{$manual->path_img}}" alt="Card image cap">
 					</a>
 					<p style="font-size: 11px; color: black;"><small>{{$manual->title}}</small></p>
-					<p style="font-size: 11px;"><a href="{{ route('regulamentoExcluir', array($unidade->id, $manual->id))}}" class="btn btn-danger btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Excluir <i class="fas fa-times-circle"></i> </a></p>
-					@if($manual->validar == 1)
-					 <p style="font-size: 11px;"><a href="{{ route('regulamentoValidar', array($unidade->id, $manual->id))}}" class="btn btn-info btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Validar <i class="fas fa-check"></i> </a></p>
-					@endif
+					<p style="font-size: 11px;"><a href="{{ route('regulamentoExcluir', array($unidade->id, $manual->id))}}" class="btn btn-danger btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Excluir <i class="fas fa-times-circle"></i> </a></p></p>
 				</div>
 			</div>
 		</div>

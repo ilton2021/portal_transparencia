@@ -15,8 +15,7 @@ class Associado extends Model
 		'tipo_membro',
 		'unidade_id',
 		'created_at',
-		'updated_at',
-		'validar'
+		'updated_at'
 	];
 	
 	public $rules = [

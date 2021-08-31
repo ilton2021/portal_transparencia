@@ -23,7 +23,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="background-color:#f8fafc !important;">
             <div class="container">
-				<a href="{{ route('logout') }}" class="navbar-brand" onclick="event.preventDefault(); document.getElementById('logout-form2').submit();"> 
+				<a href="{{ route('logout') }}" class="navbar-brand" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
 					<img src="{{asset('img/Imagem1.png')}}"  height="50" class="d-inline-block align-top" alt="">
 					<span class="navbar-brand mb-0 h1" style="margin-left:10px;margin-top:5px ;color: rgb(103, 101, 103) !important">
 						<h4 class="d-none d-sm-block">PORTAL DA TRANSPARÊNCIA</h4>
@@ -56,27 +56,21 @@
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
-
+                                
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('telaReset') }}"
+                                    
+                                    <a class="dropdown-item" href="{{ route('resetarSenha') }}">{{ __('  Trocar Senha') }}</a>
+                                    
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form1').submit();">
-                                        {{ __('Trocar Senha') }}
-                                    </a>
-
-                                    <form id="logout-form1" action="{{ route('telaReset') }}" method="GET" style="display: none;">
-                                        
-                                    </form>
-									
-									<a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form2').submit();">
+                                                     document.getElementById('logout-form').submit();">
                                         {{ __('Sair') }}
                                     </a>
 
-                                    <form id="logout-form2" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
+                                    
                                 </div>
                             </li>
                         @endguest

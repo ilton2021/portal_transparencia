@@ -8,8 +8,10 @@ use App\Model\Contrato;
 use App\Model\Unidade;
 use App\Model\LoggerUsers;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class GestorController extends Controller
 {
@@ -28,29 +30,23 @@ class GestorController extends Controller
 	
 	public function cadastroGestor($id, Request $request)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
+		
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
 		$gestores = $this->gestor->all();
 		$lastUpdated = $gestores->max('last_updated');
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/contratacao/contratacao_gestor_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','associados','text'));
+			return view('transparencia/contratacao/contratacao_gestor_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','associados'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		}
 	}
 }

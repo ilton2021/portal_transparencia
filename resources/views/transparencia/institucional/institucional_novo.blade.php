@@ -1,39 +1,85 @@
 @extends('navbar.default-navbar')    
-<script>
-document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-    var i = document.getElementById("telefone").value.length; //aqui pega o tamanho do input
-	if (i === 0)
-	  document.getElementById("telefone").value = document.getElementById("telefone").value + "(";
-    if (i === 3)
-	  document.getElementById("telefone").value = document.getElementById("telefone").value + ")";
-    if (i === 8) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-      document.getElementById("telefone").value = document.getElementById("telefone").value + "-";
-  }
-});
-document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-    var i = document.getElementById("cnpj").value.length; //aqui pega o tamanho do input
-	if (i === 2)
-	  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
-    if (i === 6)
-	  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
-    if (i === 10) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-      document.getElementById("cnpj").value = document.getElementById("cnpj").value + "/";
-	if (i === 15) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-      document.getElementById("cnpj").value = document.getElementById("cnpj").value + "-";
-  }
-});
-document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-    var i = document.getElementById("cep").value.length; //aqui pega o tamanho do input
-	if (i === 2)
-	  document.getElementById("cep").value = document.getElementById("cep").value + ".";
-    if (i === 6)
-	  document.getElementById("cep").value = document.getElementById("cep").value + "-";
-  }
-});
+
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
+  <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
+  <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
+
+
+<script type="text/javascript">
+
+	 $("#cep").focusout(function(){
+		//Início do Comando AJAX
+		$.ajax({
+			//O campo URL diz o caminho de onde virá os dados
+			//É importante concatenar o valor digitado no CEP
+			url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
+			//Aqui você deve preencher o tipo de dados que será lido,
+			//no caso, estamos lendo JSON.
+			dataType: 'json',
+			//SUCESS é referente a função que será executada caso
+			//ele consiga ler a fonte de dados com sucesso.
+			//O parâmetro dentro da função se refere ao nome da variável
+			//que você vai dar para ler esse objeto.
+			success: function(resposta){
+				//Agora basta definir os valores que você deseja preencher
+				//automaticamente nos campos acima.
+				$("#address").val(resposta.logradouro);
+				$("#futher_info").val(resposta.complemento);
+				$("#district").val(resposta.bairro);
+				$("#city").val(resposta.localidade);
+				$("#uf").val(resposta.uf);
+				//Vamos incluir para que o Número seja focado automaticamente
+				//melhorando a experiência do usuário
+				$("#numero").focus();
+			}
+		});
+	 });
+	 
+
+
+	document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
+		var i = document.getElementById("telefone").value.length; //aqui pega o tamanho do input
+		if (i === 0)
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + "(";
+		if (i === 3)
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + ")";
+		if (i === 8) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("telefone").value = document.getElementById("telefone").value + "-";
+	  }
+
+	document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
+		var i = document.getElementById("cnpj").value.length; //aqui pega o tamanho do input
+		if (i === 2)
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
+		if (i === 6)
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
+		if (i === 11) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "/";
+	  
+		if (i === 15) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
+		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "-";
+	 
+	  }	  
+	});
+
+
+	document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+		if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
+			var i = document.getElementById("cep").value.length; //aqui pega o tamanho do input
+			if (i === 2)
+			document.getElementById("cep").value = document.getElementById("cep").value + ".";
+			if (i === 6)
+			document.getElementById("cep").value = document.getElementById("cep").value + "-";
+		}
+		});
+
+
 </script>
+
 @section('content')
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -44,6 +90,7 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
             <h5 style="font-size: 18px;">CADASTRAR INSTITUCIONAL:</h5>
         </div> 
     </div><br/>
+
 	@if (Session::has('mensagem'))
 		@if ($text == true)
 		<div class="container">
@@ -53,6 +100,7 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 		</div>
 		@endif
 	@endif
+	
     <div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -81,6 +129,10 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 									<td style="border-top: none;"><input type="text" class="form-control" name="name" id="name" style="width:500px" value="" required />  </td>
 								</tr>
 								<tr>
+									<td style="border-top: none;"><strong>CEP: </strong></td>
+									<td style="border-top: none;"><input type="text" maxlength="10" class="form-control" name="cep" id="cep" style="width:200px" value="" required />  </td>
+								</tr>
+								<tr>
 									<td style="border-top: none;"><strong>Logradouro: </strong></td>
 									<td style="border-top: none;"><input type="text" class="form-control" name="address" id="address" style="width:500px" value="" required />  </td>
 								</tr>
@@ -102,10 +154,7 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 									<td style="border-top: none;"><strong>UF: </strong></td>
 									<td style="border-top: none;"><input type="text" class="form-control" name="uf" id="uf" style="width:200px" value="" required />  </td>
 								</tr>
-								<tr>
-									<td style="border-top: none;"><strong>CEP: </strong></td>
-									<td style="border-top: none;"><input type="text" maxlength="10" class="form-control" name="cep" id="cep" style="width:200px" value="" required />  </td>
-								</tr>
+							
 								<tr>
 									<td style="border-top: none;"><strong>Telefone: </strong></td>
 									<td style="border-top: none;"><input type="text" maxlength="13" class="form-control" name="telefone" id="telefone" style="width:200px" value="" required />  </td>
@@ -132,8 +181,8 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 									<td style="border-top: none;"><strong>Google Maps: </strong></td>
 									<td style="border-top: none;"><input type="text" placeholder="Pesquise e cole o link do mapa do google maps" class="form-control" name="google_maps" id="google_maps" style="width:500px" value="" required />  </td>
 								</tr> 
-						</tbody>
-					</table>
+							</tbody>
+						</table>
 					</div>
 				</div>
 				<div class="row">
@@ -158,7 +207,8 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 							</tbody>
 						</table>
 					</div>
-				</div>				
+				</div>
+				
 				<table>
 					<tr>
 					   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
@@ -167,6 +217,7 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 					   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
 					</tr>
 				</table>
+				
 				<table>
 					<tr>
 						<td>
@@ -176,10 +227,13 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 							<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
 						</td>
 					</tr>
-				</table>			
+				</table>
+				
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
+</div>
 @endsection
+

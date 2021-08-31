@@ -7,7 +7,9 @@ use App\Model\Unidade;
 use App\Model\Institucional;
 use App\Model\LoggerUsers;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
+use Validator;
 
 class InstitucionalController extends Controller
 {
@@ -27,55 +29,40 @@ class InstitucionalController extends Controller
 	
 	public function institucionalCadastro($id, Request $request)
 	{ 
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','text','permissao_users'));
+			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
 	public function institucionalNovo($id, Request $request)
 	{ 
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','text','permissao_users'));
+			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
+
 	public function store($id, Request $request)
 	{	
 		$unidadesMenu = $this->unidade->all();
@@ -87,41 +74,21 @@ class InstitucionalController extends Controller
 		$nomeI = $_FILES['icon_img']['name']; 		
 		$extensaoI = pathinfo($nomeI, PATHINFO_EXTENSION);
 		if(($request->file('path_img') === NULL) || ($request->file('icon_img') === NULL)) {	
-			\Session::flash('mensagem', ['msg' => 'Insira um arquivo e um ícone!','class'=>'green white-text']);
-			$text = true;
-			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','true'));
+			$validator = 'Insira um arquivo e um ícone!';
+			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','true'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		} else {
 			if(($extensao == 'png' || $extensao == 'jpg') && ($extensaoI == 'png' || $extensaoI == 'jpg')) {
-				$v = \Validator::make($request->all(), [
+				$validator = Validator::make($request->all(), [
 					'owner'       => 'required|max:255',
 					'cnpj'        => 'required|max:18',
 					'telefone'    => 'required|max:13',
 					'cep' 	   	  => 'required|max:11',
 					'google_maps' => 'required'
 				]);
-				if ($v->fails()) {
-					$failed = $v->failed();
-					if ( !empty($failed['owner']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo perfil é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['owner']['Max']) ) { 
-						\Session::flash('mensagem', ['msg' => 'O campo perfil possui no máximo 255 caracteres!','class'=>'green white-text']);
-					} else if ( !empty($failed['cnpj']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo cnpj é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['cnpj']['Max']) ) {
-						\Session::flash('mensagem', ['msg' => 'Este CNPJ é inválido!','class'=>'green white-text']);
-					} else if ( !empty($failed['telefone']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo telefone é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['telefone']['Digits']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo telefone possui no máximo 11 caracteres!','class'=>'green white-text']);
-					} else if ( !empty($failed['cep']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo cep é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['cep']['Max'] ) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo cep possui no máximo 11 caracteres!','class'=>'green white-text']);
-					} else if ( !empty($failed['google_maps']['Required'] ) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo google maps é obrigatório!','class'=>'green white-text']);
-					} 
-					$text = true;
-					return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','text'));
+				if ($validator->fails()) {
+					return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'));
 				} else {
 					$nome = $_FILES['path_img']['name']; 
 					$input['path_img'] = $nome; 
@@ -132,41 +99,35 @@ class InstitucionalController extends Controller
 					$unidade = Unidade::create($input);
 					$log = LoggerUsers::create($input);	
 					$lastUpdated = $log->max('updated_at');	
-					\Session::flash('mensagem', ['msg' => 'Instituição Cadastrado com Sucesso!','class'=>'green white-text']);
-					$text = true;
-					return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','text'));
+					$validator = 'Instituição Cadastrada com Sucesso!';
+					return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				}
 			} else  {	
-				\Session::flash('mensagem', ['msg' => 'Só é suportado arquivos: jpg ou png!','class'=>'green white-text']);
-				$text = true;
-				return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','text'));
+				$validator = 'Só são suportados arquivos do tipo: JPG ou PNG!';
+				return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 			}
 		}		
 	}
 
 	public function institucionalAlterar($id, Request $request)
 	{ 	
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu','text','permissao_users'));
+			return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Vocênão tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
@@ -174,73 +135,56 @@ class InstitucionalController extends Controller
 	{
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
-		$unidade = $unidadesMenu->find($id);
+		$unidade = $unidadesMenu->find($id); 
 		$input = $request->all();
 		if(($request->file('path_img') === NULL) || ($request->file('icon_img') === NULL)) {
-			$v = \Validator::make($request->all(), [
+			$validator = Validator::make($request->all(), [
 					'owner'    => 'required|max:255',
 					'cnpj'     => 'required|max:18',
 					'telefone' => 'required|max:13',
 					'cep' 	   => 'required|max:10'
 			]);
-			if ($v->fails()) {
-				$failed = $v->failed(); 
-				if ( !empty($failed['owner']['Max']) ) { 
-					\Session::flash('mensagem', ['msg' => 'O campo perfil possui no máximo 255 caracteres!','class'=>'green white-text']);
-				} else if ( !empty($failed['cnpj']['Max']) ) {
-					\Session::flash('mensagem', ['msg' => 'CNPJ inválido!','class'=>'green white-text']);
-				} else if ( !empty($failed['telefone']['Digits']) ) {
-					\Session::flash('mensagem', ['msg' => 'O campo telefone possui no máximo 11 caracteres!','class'=>'green white-text']);
-				} else if ( !empty($failed['cep']['Max'] ) ) {
-					\Session::flash('mensagem', ['msg' => 'O campo cep possui no máximo 9 caracteres!','class'=>'green white-text']);
-				}
-				$text = true;
-				return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu','text'));
-			}
+			if ($validator->fails()) {
+				$failed = $validator->failed(); 
+				return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu'));
+			} 
 			if(!empty($input['path_img']) && !empty($input['icon_img'])){
 				$unidade = Unidade::find($id);
 				$unidade->update($input);
 				$log = LoggerUsers::create($input);
-				$lastUpdated = $log->max('updated_at');	
-				\Session::flash('mensagem', ['msg' => 'Instituição Alterado com Sucesso!','class'=>'green white-text']);
-				$permissao_users = PermissaoUsers::where('id', $id)->get();
-				$text = true;
-				return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu','text','permissao_users'));
+				$lastUpdated = $log->max('updated_at');
+				$validator = 'Instituição Alterada com Sucesso!';	
+				return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 			} 
-		} else {
+		} else { 
 			$unidade = Unidade::find($id);
 			$unidade->update($input);
 			$lastUpdated = $unidade->max('updated_at');	
 			LoggerUsers::create($input);
-			\Session::flash('mensagem', ['msg' => 'Instituição Alterado com Sucesso!','class'=>'green white-text']);
-			$text = true;
-			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu','text'));
+			$validator = 'Instituição Alterada com Sucesso!';
+			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		}
 	}
 
 	public function institucionalExcluir($id, Request $request)
 	{ 
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/institucional/institucional_excluir', compact('unidade','unidades','unidadesMenu','text'));
+			return view('transparencia/institucional/institucional_excluir', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input())); 		
 		}
 	}
 
@@ -258,9 +202,10 @@ class InstitucionalController extends Controller
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$lastUpdated = $unidades->max('updated_at');	
-		$unidade = $unidadesMenu->find(1);		
-		\Session::flash('mensagem', ['msg' => 'Instituição Excluído com Sucesso!','class'=>'green white-text']);
-		$text = true;
-		return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','text'));
+		$unidade = $unidadesMenu->find(1);
+		$validator = 'Instituição Excluída com sucesso!';
+		return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));
 	}
 }

@@ -19,7 +19,6 @@ class SuperintendenteExport implements FromCollection, WithHeadings
         return DB::table('superintendentes')
         ->join('unidades', 'superintendentes.unidade_id', '=','unidades.id')
         ->select('superintendentes.name as NOME','superintendentes.cargo','superintendentes.tipo_membro','unidades.name as UNIDADE')
-		->where('superintendentes.validar',0)
         ->get();
     }
 

@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	
-		@if (Session::has('mensagem'))
-			@if ($text == true)
-			<div class="container">
-			 <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-				  {{ Session::get ('mensagem')['msg'] }}
-			 </div>
+		@if ($errors->any())
+			<div class="alert alert-success">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
 			</div>
-			@endif
 		@endif
 	
 		<div class="row" style="margin-top: 25px;">
@@ -54,28 +54,39 @@
 					  <tr>
 					   <td> Ano: </td>
 					   <td> &nbsp; </td>
-					   <td> <input style="width: 100px" class="form-control" type="text" id="ano" name="ano" value="" required />  </td>
-					  </tr>
+					  <td> <select id="mes" name="mes" class="form-control">
+						 <option value="janeiro" id="ano" name="ano">2015</option>
+						 <option value="feveiro" id="ano" name="ano">2016</option>
+						 <option value="marco" id="ano" name="ano">2017</option>
+						 <option value="abril" id="ano" name="ano">2018</option>
+						 <option value="maio" id="ano" name="ano">2019</option>
+						 <option value="junho" id="ano" name="ano">2020</option>
+						 <option value="julho" id="ano" name="ano">2021</option>
+						 <option value="agosto" id="ano" name="ano">2022</option>
+						 <option value="setembro" id="ano" name="ano">2023</option>
+						 <option value="outubro" id="ano" name="ano">2024</option>
+						 <option value="novembro" id="ano" name="ano">2025</option>					  
+						</td>
+						</tr>
 					  <tr>
 					   <td> Contratado: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="text" id="contratado" name="contratado" value="" required />  </td>
+					   <td> <input class="form-control" type="text" step= "any" id="contratado" name="contratado" value="" required />  </td>
 					  </tr>
 					  <tr>
 					   <td> Recebido: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="text" id="recebido" name="recebido" value="" required />  </td>
+					   <td> <input class="form-control" type="text" step= "any" id="recebido" name="recebido" value="" required />  </td>
 					  </tr>
 					  <tr>
 					   <td> Desconto: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="number" id="desconto" name="desconto" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step= "any" id="desconto" name="desconto" value="" required />  </td>
 					  </tr>
 					 </table>
 					 
 					 <table>
 					   <tr>
-					     <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 						 <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
 						 <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="repasses" /> </td>
 						 <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarRepasses" /> </td>

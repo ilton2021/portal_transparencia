@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Model\Unidade;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Storage;
-use App\Model\PermissaoUsers;
-use Auth;
 use Illuminate\Support\Facades\DB;
+use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
+use Auth;
+use Validator;
 
 class AssistencialCovidController extends Controller
 {
@@ -28,81 +30,64 @@ class AssistencialCovidController extends Controller
 
     public function assistencialCovidCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 8)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
 		$assistencialCovid = $this->assistencialCovid->all();
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','assistencialCovid','text','permissao_users'));
+			return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','assistencialCovid','permissao_users'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
     public function assistencialCovidNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 8)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
 		$text         = false;
 		if($validacao == 'ok') {
-			return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','text'));
+			return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
     public function assistencialCovidExcluir($id, $id_covid)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 8)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
 		$assistencialCovid = $this->assistencialCovid->find($id_covid);
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/assistencialCovid/covid_excluir', compact('unidade','unidades','unidadesMenu','assistencialCovid','text'));
+			return view('transparencia/assistencialCovid/covid_excluir', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validacao = "Você não tem permissão!";
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 
@@ -115,29 +100,25 @@ class AssistencialCovidController extends Controller
 		$input = $request->all();
 		$nome  = $_FILES['file_path']['name']; 
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
-		$v = \Validator::make($request->all(), [
-			'name' => 'required|max:255'		
-		]);
-		if ($v->fails()) {
-			$failed = $v->failed();
-			if ( !empty($failed['name']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-			} else if ( !empty($failed['name']['Max']) ) { 
-				\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-			}
-			$text = true;
-			return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid','text'));
-		} else {
+		$validator = Validator::make($request->all(), [
+			'name' => 'required|max:255',
+		]);	
+		if ($validator->fails()) {
+				return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+			} else {
 			if($request->file('file_path') === NULL) {
-				\Session::flash('mensagem', ['msg' => 'Informe o arquivo do Assistencial Covid!','class'=>'green white-text']);		
-				$text = true;
-				return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid','text'));
+				$validator = 'Informe o arquivo do Assistencial Covid';
+				return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 			} else {
 				if($extensao === 'pdf') {
 					$nome = $_FILES['file_path']['name']; 
                     $mes  = $input['mes'];
 					$request->file('file_path')->move('../public/storage/assistencialCovid/'.$mes.'/', $nome);
-					$input['file_path'] = 'assistencialCovid/'.$nome; 
+					$input['file_path'] = 'assistencialCovid/'.$mes.'/'.$nome; 
 				    $input['file_name'] = $nome;
                     $input['titulo']    = $input['name'];
 					$assistencialCovid  = AssistencialCovid::create($input);
@@ -145,18 +126,20 @@ class AssistencialCovidController extends Controller
 					$lastUpdated = $log->max('updated_at');
 					$assistencialCovid = $this->assistencialCovid->all();
                     $permissao_users   = PermissaoUsers::where('unidade_id', $id)->get();
-					\Session::flash('mensagem', ['msg' => 'Assistencial Covid cadastrado com sucesso!','class'=>'green white-text']);		
-					$text = true;
-					return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid','text','permissao_users'));
+					$validator = 'Assistencial Covid cadastrado com sucesso!';
+					return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid','permissao_users'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				} else {
-					\Session::flash('mensagem', ['msg' => 'Só é permitido arquivos: .pdf!','class'=>'green white-text']);		
-					$text = true;
-					return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid','text'));
+					$validator = 'Só são permitidos arquivos do tipo: PDF';
+					return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				}
 			}
 		}
     }
-
+	
     public function destroy($id, $id_covid, AssistencialCovid $assistencialCovid, Request $request)
     {
         AssistencialCovid::find($id_covid)->delete();
@@ -170,8 +153,9 @@ class AssistencialCovidController extends Controller
         $unidades     = $unidadesMenu; 
         $unidade      = $this->unidade->find($id);
         $assistencialCovid = $this->assistencialCovid->all();
-        \Session::flash('mensagem', ['msg' => 'Assistencial Covid excluído com sucesso!','class'=>'green white-text']);		
-        $text = true;
-        return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid','text'));
+		$validator = 'Assistencial covid excluído com sucesso!';
+        return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid'))
+	    ->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 }

@@ -27,8 +27,7 @@ class Assistencial extends Model
 		'unidade_id',
 		'ano_ref',
 		'created_at',
-		'updated_at',
-		'validar'
+		'updated_at'
 	];
 	
 	public $rules = [

@@ -37,27 +37,27 @@
                       <p style="font-size:15px; color: black">Lei Estadual nº 14.804/2012 - Lei de Acesso à Informação (Estadual) <a class="badge badge-success" href="https://www.sefaz.pe.gov.br/Legislacao/Tributaria/Documents/legislacao/Leis_Tributarias/2012/Lei14804_2012.htm" target="_blank">Acessar</a></p>
                       <p style="font-size:15px; color: black">Decreto nº 38.787/2012 (Norma regulamentadora LAI estadual) <a class="badge badge-success" href="http://www2.sad.pe.gov.br/c/document_library/get_file?uuid=eabe5662-3852-4ea7-96b0-5e8fecbd5133&groupId=11927" target="_blank">Acessar</a></p>
                       <p style="font-size:15px; color: black">Lei Estadual nº 15.210/2013 - Lei das Organizações Sociais de Saúde (Estadual) <a class="badge badge-success" href="https://legis.alepe.pe.gov.br/texto.aspx?id=1932&tipo=TEXTOATUALIZADO" target="_blank">Acessar</a></p-->
+                      <p style="font-size:15px; color: black">Legislação <a class="badge badge-success" href="http://hcpgestao.org.br/transparencia/unidades/ambas/LEGISLAÇÃO PORTAL.docx" target="_blank">Acessar</a></p>
                     </div>
                   </div>
                 </div>
-				<div class="card">
+                
+                <div class="card">
                     <div class="card-header" id="headingOne">
                       <h2 class="mb-0">
                         <a class="btn btn-link text-decoration-none" type="button" data-toggle="collapse" data-target="#matriz" aria-expanded="true" aria-controls="matriz">
                           Matriz de competência <i class="fas fa-dice-d6"></i>
                         </a>
 						@if(Auth::check())
-							@foreach ($permissao_users as $permissao)
-								@if(($permissao->permissao_id == 3) && ($permissao->user_id == Auth::user()->id))
-									@if ($permissao->unidade_id == $unidade->id)
-									  <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('competenciaListar', array($unidade->id))}}" > Alterar <i class="fas fa-edit"></i></a>
-								    @endif
-								@endif
-							@endforeach
+						 @foreach ($permissao_users as $permissao)
+						  @if(($permissao->permissao_id == 3) && ($permissao->user_id == Auth::user()->id))
+						   @if ($permissao->unidade_id == $unidade->id)
+						     <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('competenciaNovo', array($unidade->id))}}" > Novo <i class="fas fa-check"></i></a>
+						   @endif
+						  @endif
+						 @endforeach
 						@endif
-						
                       </h2>
-                      
                     </div>
                     
 				    <div id="matriz" class=" collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -81,9 +81,12 @@
                                             <div class="col-10 text-left">
                                               <p style="margin-bottom: 2px;">
 												@if(Auth::check())
-											         <h4 style="font-size: 15px; margin-bottom: 5px;" class="text-success"><strong>{{$item->cargo}}</strong></h4>
-												@endif	
-								              </p>
+                                                <h4 style="font-size: 15px; margin-bottom: 5px;" class="text-success"><strong><a href="{{route('competenciaCadastro', array($unidade->id, $item->id))}}">{{$item->cargo}}</a></strong></h4>
+												@else
+												<h4 style="font-size: 15px; margin-bottom: 5px;" class="text-success"><strong>{{$item->cargo}}</strong></h4>
+												@endif
+												
+                                              </p>
                                             </div>
                                             <div class="col-2">
                                         <p style="margin-bottom: 2px;">
@@ -91,6 +94,7 @@
                                         </p>
                                         </div>
                                       </div>
+                                      
                                       <div class="row">
                                         <div class="collapse border-0" id="{{$item->id}}">
                                           <div class="card border-0 card-body text-justify">
@@ -101,6 +105,7 @@
                                     </div>
                                         @endif
                                     @endforeach
+                                    
                                   </div>
                                 </div>
                             </div>

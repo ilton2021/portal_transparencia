@@ -19,7 +19,6 @@ class ConselhoFiscExport implements FromCollection, WithHeadings
         return DB::table('conselho_fiscs')
         ->join('unidades', 'conselho_fiscs.unidade_id', '=','unidades.id')
         ->select('conselho_fiscs.name as NOME','conselho_fiscs.level','conselho_fiscs.tipo_membro','unidades.name as UNIDADE')
-		->where('conselho_fiscs.validar',0)
         ->get();
     }
 

@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Storage;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
-use Illuminate\Support\Facades\DB;
+use Validator;
 
 class EstatutoController extends Controller
 {
@@ -28,112 +29,58 @@ class EstatutoController extends Controller
 
 	public function estatutoCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$estatutos = $this->estatuto->all();
-		$text = false;
+		
 		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','estatutos','text'));
+			return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','estatutos'));
+		
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	 		
 		}
 	}
 
 	public function estatutoNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','text'));
+			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu'));
+				
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function estatutoValidar($id, $id_item, Request $request)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		$estatuto = Estatuto::find($id_item);
-		DB::statement('UPDATE estatutos SET validar = 0 WHERE id = '.$id_item.';');
-		$estatutos = Estatuto::all();
-		$lastUpdated = $estatutos->max('updated_at');
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Estatuto validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-			return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','text','estatutos'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
 	public function estatutoExcluir($id, $id_estatuto)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$estatutos = $this->estatuto->find($id_estatuto);
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_excluir', compact('unidade','unidades','unidadesMenu','estatutos','text'));
+			return view('transparencia/estatuto/estatuto_excluir', compact('unidade','unidades','unidadesMenu','estatutos'));
+		
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
@@ -146,23 +93,19 @@ class EstatutoController extends Controller
 		$input = $request->all();
 		$nome = $_FILES['path_file']['name']; 
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'name' => 'required|max:255'		
 		]);
-		if ($v->fails()) {
-			$failed = $v->failed();
-			if ( !empty($failed['name']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-			} else if ( !empty($failed['name']['Max']) ) { 
-				\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-			}
-			$text = true;
-			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos','text'));
+		if ($validator->fails()) {
+			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
 			if($request->file('path_file') === NULL) {
-				\Session::flash('mensagem', ['msg' => 'Informe o arquivo do Estatuto/Ata!','class'=>'green white-text']);		
-				$text = true;
-				return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos','text'));
+				$validator = 'Informe o arquivo do Estatuto / Ata!';
+				return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 			} else {
 				if($extensao === 'pdf') {
 					$nome = $_FILES['path_file']['name']; 
@@ -173,13 +116,15 @@ class EstatutoController extends Controller
 					$log = LoggerUsers::create($input);
 					$lastUpdated = $log->max('updated_at');
 					$estatutos = $this->estatuto->all();
-					\Session::flash('mensagem', ['msg' => 'Estatuto/Ata cadastrado com sucesso!','class'=>'green white-text']);		
-					$text = true;
-					return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos','text'));
+					$validator = 'Estatuto / Ata cadastrado com sucesso!';
+					return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 				} else {
-					\Session::flash('mensagem', ['msg' => 'Só é permitido arquivos: .pdf!','class'=>'green white-text']);		
-					$text = true;
-					return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos','text'));
+					$validator = 'Só são permitidos arquivos do tipo: PDF!';
+					return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 				}
 			}
 		}
@@ -198,8 +143,9 @@ class EstatutoController extends Controller
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$estatutos = $this->estatuto->all();
-		\Session::flash('mensagem', ['msg' => 'Estatuto/Ata excluído com sucesso!','class'=>'green white-text']);		
-		$text = true;
-		return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos','text'));
+		$validator = 'Estatuto / Ata Excluído com sucesso!';
+		return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 }

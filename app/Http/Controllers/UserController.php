@@ -127,9 +127,7 @@ class UserController extends Controller
 			$user->update($input);
 			$text = true;
 			\Session::flash('mensagem', ['msg' => 'Senha alterado com sucesso!','class'=>'green white-text']);
-			$unidades = $this->unidade->all();
-			$text = false;
-			return view('home', compact('unidades','user','text')); 						
+			return view('auth.login', compact('text'));
 		}
 	}
 	
@@ -166,9 +164,8 @@ class UserController extends Controller
 		} else {
 			$input['password'] = Hash::make($input['password']);
 			$user = User::create($input);
-			\Session::flash('mensagem', ['msg' => 'Usuário cadastrado com sucesso!','class'=>'green white-text']);
-			$unidades = $this->unidade->all();
-			return view('welcome', compact('unidades')); 						
+			$user->assignRole($request->input('roles'));				
+			return view('auth.login', compact('text'));
 		}
     }
 

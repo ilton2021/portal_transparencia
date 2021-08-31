@@ -15,8 +15,7 @@ class Organizational extends Model
 		'telefone',
 		'unidade_id',
 		'created_at',
-		'updated_at',
-		'validar'
+		'updated_at'
 	];
 	
 	public $rules = [

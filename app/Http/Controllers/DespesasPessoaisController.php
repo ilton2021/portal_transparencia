@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\DespesasPessoais;
 use App\Model\Unidade;
 use DB;
+use Validator;
 
 class DespesasPessoaisController extends Controller
 {
@@ -19,8 +20,7 @@ class DespesasPessoaisController extends Controller
 		$unidades = $this->unidade->all();
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
-		$text = false;
-		return view('transparencia/rh/rh_despesasp_cadastro', compact('text','unidades','unidade','unidadesMenu'));
+		return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'));
 	}
 	
 	public function storeDespesas($id_unidade, Request $request)
@@ -31,30 +31,35 @@ class DespesasPessoaisController extends Controller
 		$input = $request->all();
 		$mes = $input['mes'];
 		$ano = $input['ano'];
-		
+		$tipo = $input['tipo'];
 		if($id_unidade == 2){
+			$despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano',$ano)->get();
 			$nome = 'hmr';
 		} else if ($id_unidade == 3) {
+		   $despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'belo_jardim';
 	    } else if ($id_unidade == 4) {
+		   $despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'arcoverde';
 	    } else if ($id_unidade == 5) {
+		   $despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'arruda';
 	    } else if ($id_unidade == 6) {
+		   $despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'upaecaruaru';
 	    } else if ($id_unidade == 7) {
+		   $despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'hss';
 	    } else if ($id_unidade == 8) {
+		   $despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'hpr';
 	    }	
-			
-		$validacao = DB::select('SELECT * FROM desp_com_pessoal_' .$nome. ' WHERE Mes = ' .$mes. ' AND Ano = ' .$ano);
-		$qtd = sizeof($validacao); var_dump($qtd); exit();
+		$qtd = sizeof($despesas); 
 		if($qtd > 30) {
-			$text = true;
-			session()->flashInput($request->input());
-			\Session::flash('mensagem', ['msg' => 'Esta Dispesa Pessoal já foi cadastrada!!','class'=>'green white-text']);		
-			return view('transparencia/rh/rh_despesasp_cadastro', compact('text','unidades','unidade','unidadesMenu'));
+			$validator = 'Esta Despesa Pessoal já foi cadastrada!!';
+			return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
 		   for($i = 1; $i < 11; $i++){
 			   $nivel = "";
@@ -80,15 +85,15 @@ class DespesasPessoaisController extends Controller
 			   } else if ($i == 10){
 				 $nivel = $input['nivel4'];
 			   }
-			   
 			   $qtd   = $input['Quant'.$i];
 			   $valor = $input['valor'.$i];	
-			   $despesas = DB::select("INSERT INTO desp_com_pessoal_" .$nome. " (Nivel,Cargo,Quant,Valor
-				,Mes,Ano) VALUES('$nivel','$cargo','$qtd','$valor','$mes','$ano')");
+			   $despesas = DB::statement("INSERT INTO desp_com_pessoal_" .$nome. " (Nivel,Cargo,Quant,Valor
+				,Mes,Ano,tipo) VALUES('$nivel','$cargo','$qtd','$valor','$mes','$ano','$tipo')");
 		  }	
 	   }
-		  $text = true;
-		  \Session::flash('mensagem', ['msg' => 'Dispesas com Pessoal cadastrada com sucesso!!','class'=>'green white-text']);		
-		  return view('transparencia/rh/rh_despesasp_cadastro', compact('text','unidades','unidade','unidadesMenu'));
+	   	$validator = 'Despesas com pessoal cadastrada com sucesso!';
+		return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
 	   }
 }

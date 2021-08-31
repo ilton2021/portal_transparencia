@@ -7,9 +7,10 @@ use App\Model\Unidade;
 use Illuminate\Http\Request;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\PermissaoUsersController;
 use App\Model\PermissaoUsers;
 use Auth;
-use Illuminate\Support\Facades\DB;
+use Validator;
 
 class DemonstracaoContabelController extends Controller
 {
@@ -28,17 +29,8 @@ class DemonstracaoContabelController extends Controller
 
     public function demonstrativoContCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
@@ -46,27 +38,19 @@ class DemonstracaoContabelController extends Controller
         $lastUpdated = $demonstrativoContaveis->max('updated_at');
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));
+			return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function demonstrativoContNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
@@ -74,99 +58,52 @@ class DemonstracaoContabelController extends Controller
         $lastUpdated = $contabilReports->max('updated_at');
 		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidade','unidades','unidadesMenu','contabilReports','lastUpdated','text'));
+			return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidade','unidades','unidadesMenu','contabilReports','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function demonstrativoContAlterar($id_unidade, $id_item)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
 		$contabilReports = DemonstracaoContabel::where('id', $id_item)->get(); 
         $lastUpdated = $contabilReports->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/demonstrativo-contabel/accountable_alterar', compact('unidade','unidades','unidadesMenu','contabilReports','lastUpdated','text'));
+		    return view('transparencia/demonstrativo-contabel/accountable_alterar', compact('unidade','unidades','unidadesMenu','contabilReports','lastUpdated'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function demonstrativoContValidar($id_unidade, $id_item)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id_unidade);
-		$contabilReports = DemonstracaoContabel::find($id_item);
-		DB::statement('UPDATE demonstracao_contabels SET validar = 0 WHERE id = '.$id_item.';');
-		$demonstrativoContaveis = DemonstracaoContabel::where('unidade_id', $id_unidade)->get();
-        $lastUpdated = $demonstrativoContaveis->max('updated_at');
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Demonstração Contábel validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-		    return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidade','unidades','unidadesMenu','contabilReports','lastUpdated','text','demonstrativoContaveis'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function demonstrativoContExcluir($id_unidade, $id_item)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
 		$demonstrativoContaveis = DemonstracaoContabel::where('id',$id_item)->get();
 		$lastUpdated = $demonstrativoContaveis->max('updated_at');	
-		$text = false;
 		if($validacao == 'ok') {
-		    return view('transparencia/demonstrativo-contabel/accountable_excluir', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));
+		    return view('transparencia/demonstrativo-contabel/accountable_excluir', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
@@ -181,31 +118,27 @@ class DemonstracaoContabelController extends Controller
 		$nome = $_FILES['file_path']['name']; 
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
 		if($request->file('file_path') === NULL) {	
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Informe o arquivo do Demonstrativo!','class'=>'green white-text']);		
-			return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated'));
+			$validator = 'Informe o arquivo do Demonstrativo';
+			return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
 			if($extensao === 'pdf') {
-				$v = \Validator::make($request->all(), [
+				$validator = Validator::make($request->all(), [
 					'title' => 'required|max:255',
 					'ano'   => 'required'
 				]);
 				if ($input['ano'] < 1800 || $input['ano'] > 2500) {
-					\Session::flash('mensagem', ['msg' => 'O campo ano é inválido!','class'=>'green white-text']);
-					$text = true;
-					return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated','text'));
+					$validator = 'O campo ano é inválido!';
+					return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 				}		
-				if ($v->fails()) {
-					$failed = $v->failed();
-					if ( !empty($failed['title']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['title']['Max']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-					} else if ( !empty($failed['ano']['Required']) ) {	
-						\Session::flash('mensagem', ['msg' => 'O campo ano é obrigatório!','class'=>'green white-text']);
-					}
-					$text = true;
-					return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated','text'));
+				if ($validator->fails()) {
+					$validator = 'Algo de errado aconteceu, verifique se os campos foram preenchidos!';
+					return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','contabilReports','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 				}
 				$ano  = $_POST['ano'];
 				$qtdUnidades = sizeof($unidades);
@@ -223,14 +156,15 @@ class DemonstracaoContabelController extends Controller
 				$log = LoggerUsers::create($input);
 				$lastUpdated = $log->max('updated_at');
 				$demonstrativoContaveis = DemonstracaoContabel::where('unidade_id',$id_unidade)->get();
-				\Session::flash('mensagem', ['msg' => 'Demonstrativo Contábil cadastrado com sucesso!','class'=>'green white-text']);			
-				return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));				
+				$validator = 'Demosntrativo Contábiel cadastrado com sucesso!';
+				return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));				
 			} else {	
-				\Session::flash('mensagem', ['msg' => 'Só suporta arquivos: pdf!','class'=>'green white-text']);			
-				$text = true;
+				$validator = 'Só suporta arquivos do tipo: PDF!';
 				$demonstrativoContaveis = DemonstracaoContabel::where('unidade_id',$id_unidade)->get();
 				$lastUpdated = $demonstrativoContaveis->max('updated_at');
-				return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));
+				return view('transparencia/demonstrativo-contabel/accountable_novo', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated'));
 			}
 		}
     }
@@ -243,8 +177,9 @@ class DemonstracaoContabelController extends Controller
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
 		$demonstrativoContaveis = DemonstracaoContabel::where('unidade_id',$id_unidade)->get();
-		$text = true;
-		return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));
+		return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 
     public function destroy($id_unidade, $id_item, DemonstracaoContabel $demonstracaoContabel, Request $request)
@@ -260,8 +195,8 @@ class DemonstracaoContabelController extends Controller
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
 		$demonstrativoContaveis = DemonstracaoContabel::where('unidade_id',$id_unidade)->get();
-		\Session::flash('mensagem', ['msg' => 'Demonstrativo Contábil excluído com sucesso!','class'=>'green white-text']);			
-		$text = true;
-		return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated','text'));
+		$validator = 'Demosntrativo Contábil excluído com sucesso!';
+		return view('transparencia/demonstrativo-contabel/accountable_cadastro', compact('unidades','unidade','unidadesMenu','demonstrativoContaveis','lastUpdated'));
+			
     }
 }

@@ -20,14 +20,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-      <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-      </div>
-	@endif 
+			<div class="alert alert-success">
+				<ul>
+					@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+	@endif
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>
 		<div class="col-md-12 col-sm-12 text-center">
@@ -53,7 +53,7 @@
 					@endforeach
 					</tr>
 					</table> <BR><BR>
-                    <form method="post" action="{{ \Request::route('storeOrdemCompra'), $unidade[0]->id }}">
+                    <form method="post" action="{{route('storeOrdemCompra', array($unidade[0]->id)) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<table class="table">
                 	  <thead>
@@ -123,16 +123,13 @@
 						 <tr>
 						   <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
-						   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="estatutoAta" /> </td>
-						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarEstatutoAta" /> </td>
-						   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
-						 </tr>
+						  </tr>
 					</table>			
 					<br/>
 					<table>
 					 <tr>
 					   <td align="left">
-						 <a href="{{route('estatutoCadastro', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						 <a href="{{route('trasparenciaOrdemCompraNovo', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
 					   </td>
 					 </tr>

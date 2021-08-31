@@ -9,6 +9,7 @@ use App\Model\LoggerUsers;
 use App\Model\PermissaoUsers;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 class ServidoresCedidosController extends Controller
 {
@@ -30,8 +31,7 @@ class ServidoresCedidosController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->orderBy('nome','ASC')->get();
-		$text = false;
-		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','servidores','text'));
+		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','servidores'));
 	}
 	
 	public function servidoresNovo($id_unidade){
@@ -40,7 +40,7 @@ class ServidoresCedidosController extends Controller
 		$unidade  = $this->unidade->find($id_unidade);
 		$text = false;
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->get();
-		return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade','servidores','text'));
+		return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade','servidores'));
 	}
 	
 	public function storeServidores($id_unidade, Request $request) {
@@ -48,7 +48,7 @@ class ServidoresCedidosController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$input = $request->all();
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'nome'   	   => 'required|max:255',
 			'cargo'  	   => 'required|max:255',
 			'matricula'    => 'required|max:255',
@@ -56,43 +56,91 @@ class ServidoresCedidosController extends Controller
 			'fone'  	   => 'required|max:15',
 			'data_inicio'  => 'required|date',
 		]);		
-		if ($v->fails()) {
-			$failed = $v->failed();
+		if ($validator->fails()) {
+			$failed = $validator->failed();
 			if ( !empty($failed['nome']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo nome é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+
 			} else if ( !empty($failed['nome']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome possui no máximo 255 caracteres!','class'=>'green white-text']);
+				$validator = 'O  campo nome suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['cargo']['Required']) ) {	
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo cargo é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['cargo']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula possui no máximo 255 caracteres!','class'=>'green white-text']);
+				$validator = 'O  campo cargo suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['matricula']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo matrícula é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['matricula']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula possui no máximo 255 caracteres!','class'=>'green white-text']);
+				$validator = 'O  campo matrícula suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['email']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo email é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo e-mail é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['email']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo email possui no máximo 255 caracteres!','class'=>'green white-text']);
+				$validator = 'O  campo email suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['fone']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo telefone é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo Telefone é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['fone']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo telefone possui no máximo 15 caracteres!','class'=>'green white-text']);
+				$validator = 'O  campo Telefone suporta até 15 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['data_inicio']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo data início é obrigatório!','class'=>'green white-text']);
+				$validator = 'O  campo Data Início é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
+			
 			} else if ( !empty($failed['data_inicio']['Date']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo data início tem que ser uma data válida!','class'=>'green white-text']);
-			}
-			$text = true; 
-			return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade','text'));
+				$validator = 'A data inserida no campo Data Início deve ser uma data válida!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			}
+				return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
+
+
 		}else {
 			$servidores = ServidoresCedidosRH::create($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$servidores = ServidoresCedidosRH::all();
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'O Servidor Cedido foi cadastrado com sucesso!','class'=>'green white-text']);
-			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores','text'));
+			$validator = 'O Servidor Cedido, foi cadastrado com sucesso!';
+			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		}
 	}
 	
@@ -101,8 +149,8 @@ class ServidoresCedidosController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->where('id', $id_servidor)->get();
-		$text = false;
-		return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores','text'));
+		return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
+		
 	}
 	
 	public function updateServidores($id_servidor, $id_unidade, Request $request) {
@@ -111,7 +159,7 @@ class ServidoresCedidosController extends Controller
 		$unidade  = $this->unidade->find($id_unidade);
 		$input = $request->all();
 		$servidores = ServidoresCedidosRH::where('unidade_id',$id_unidade)->where('id',$id_servidor)->get();
-		$v = \Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), [
 			'nome'   	   => 'required|max:255',
 			'cargo'  	   => 'required|max:255',
 			'matricula'    => 'required|max:255',
@@ -119,44 +167,117 @@ class ServidoresCedidosController extends Controller
 			'fone'  	   => 'required|max:15',
 			'data_inicio'  => 'required|date',
 		]);		
-		if ($v->fails()) {
-			$failed = $v->failed();
+		if ($validator->fails()) {
+			$failed = $validator->failed();
 			if ( !empty($failed['nome']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome é obrigatório!','class'=>'green white-text']);
+			
+				$validator = 'O  campo nome é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+
 			} else if ( !empty($failed['nome']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo nome possui no máximo 255 caracteres!','class'=>'green white-text']);
+			
+				$validator = 'O  campo nome suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+	
+	
 			} else if ( !empty($failed['cargo']['Required']) ) {	
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula é obrigatório!','class'=>'green white-text']);
+	
+				$validator = 'O  campo cargo é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
+	
+	
 			} else if ( !empty($failed['cargo']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula possui no máximo 255 caracteres!','class'=>'green white-text']);
+	
+				$validator = 'O  campo cargo suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+	
+	
 			} else if ( !empty($failed['matricula']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula é obrigatório!','class'=>'green white-text']);
+	
+	
+				$validator = 'O  campo matrícula é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
+	
+
 			} else if ( !empty($failed['matricula']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo matrícula possui no máximo 255 caracteres!','class'=>'green white-text']);
+	
+	
+				$validator = 'O  campo matrícula suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+	
 			} else if ( !empty($failed['email']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo email é obrigatório!','class'=>'green white-text']);
+	
+	
+				$validator = 'O  campo e-mail é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+	
+
 			} else if ( !empty($failed['email']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo email possui no máximo 255 caracteres!','class'=>'green white-text']);
+	
+	
+				$validator = 'O  campo email suporta até 255 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+	
 			} else if ( !empty($failed['fone']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo telefone é obrigatório!','class'=>'green white-text']);
+	
+				$validator = 'O  campo Telefone é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
+	
+	
 			} else if ( !empty($failed['fone']['Max']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo telefone possui no máximo 15 caracteres!','class'=>'green white-text']);
+	
+				$validator = 'O  campo Telefone suporta até 15 caracteres!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
+	
+	
 			} else if ( !empty($failed['data_inicio']['Required']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo data início é obrigatório!','class'=>'green white-text']);
+	
+				$validator = 'O  campo Data Início é obrigatório!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+	
+	
 			} else if ( !empty($failed['data_inicio']['Date']) ) {
-				\Session::flash('mensagem', ['msg' => 'O campo data início tem que ser uma data válida!','class'=>'green white-text']);
+	
+	
+				$validator = 'A data inserida no campo Data Início deve ser uma data válida!';
+				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
+	
 			}
-			$text = true; 
-			return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores','text'));
+			return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
 		}else {
 			$servidores = ServidoresCedidosRH::find($id_servidor); 
 			$servidores->update($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$servidores = ServidoresCedidosRH::all();
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'O Servidor Cedido foi alterado com sucesso!','class'=>'green white-text']);
-			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores','text'));
+			$validator = 'O servidor Cedido foi alterado com sucesso!';
+			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 	
@@ -165,8 +286,7 @@ class ServidoresCedidosController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->where('id', $id_servidor)->get();
-		$text = false;
-		return view('transparencia/servidores/servidor_excluir', compact('unidades','unidadesMenu','unidade','servidores','text'));
+		return view('transparencia/servidores/servidor_excluir', compact('unidades','unidadesMenu','unidade','servidores'));
 	}
 	
 	public function destroyServidores($id_servidor, $id_unidade, Request $request) {
@@ -179,8 +299,9 @@ class ServidoresCedidosController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::all();
-		$text = true;
-		\Session::flash('mensagem', ['msg' => 'Servidor Cedido excluído com sucesso!','class'=>'green white-text']);
-		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','servidores','text'));
+		$validator = 'Servidor Cedido Excluído com sucesso!';
+		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','servidores'))
+		->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 	}
 }

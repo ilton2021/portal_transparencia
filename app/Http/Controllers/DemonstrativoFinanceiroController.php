@@ -8,8 +8,9 @@ use App\Model\LoggerUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
-use Illuminate\Support\Facades\DB;
+use Validator;
 
 class DemonstrativoFinanceiroController extends Controller
 {
@@ -28,144 +29,82 @@ class DemonstrativoFinanceiroController extends Controller
 
     public function demonstrativoFinanCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+		
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id)->get();
         $lastUpdated = $financialReports->max('updated_at');	
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated','text'));
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
+			
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function demonstrativoFinanNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id)->get();
         $lastUpdated = $financialReports->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated','text'));
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
+
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
-	}
-	
-	public function demonstrativoFinanValidar($id, $id_item)
-	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);		
-		$financialReports = DemonstrativoFinanceiro::find($id_item);
-		DB::statement('UPDATE financial_reports SET validar = 0 WHERE id = '.$id_item.';');
-		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id)->get();
-        $lastUpdated = $financialReports->max('updated_at');
-		if($validacao == 'ok') {
-			\Session::flash('mensagem', ['msg' => 'Demonstrativo Financeiro validado com Sucesso!!','class'=>'green white-text']);		
-			$text = true;
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated','text','permissao_users'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function demonstrativoFinanAlterar($id_unidade, $id_item)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
 		$financialReports = DemonstrativoFinanceiro::where('id', $id_item)->get(); 
         $lastUpdated = $financialReports->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_alterar', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated','text'));
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_alterar', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = "Você ão tem Permissão!!";
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
 	public function demonstrativoFinanExcluir($id_unidade, $id_item)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
 		$financialReports = DemonstrativoFinanceiro::where('id', $id_item)->get();
         $lastUpdated = $financialReports->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_excluir', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated','text'));
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_excluir', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
+			
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -183,41 +122,29 @@ class DemonstrativoFinanceiroController extends Controller
 		$financialR = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->where('mes', $mes)->where('ano',$ano)->get();
 		$qtd = sizeof($financialR);
 		if ($qtd > 0) {
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'O Relatório correspondente a este mês e ano já foi cadastrado!','class'=>'green white-text']);		
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+			$validator = 'O Relatório correspondente a este mês e ao já foi cadastrado';
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		}
 		if($request->file('file_path') === NULL) {	
-			$text = true;
-			\Session::flash('mensagem', ['msg' => 'Informe o arquivo do Demonstrativo!','class'=>'green white-text']);		
-			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+			$validator = 'Informe o arquivo do demostrtivo.';
+			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 		} else {
 			if($extensao === 'pdf') {
-				$v = \Validator::make($request->all(), [
+				$validator = Validator::make($request->all(),[
+
 					'title' => 'required',
-					'mes' => 'required|numeric',
-					'ano' => 'required|numeric'
-				]);
-				if ($input['ano'] < 1800 || $input['ano'] > 2500) {
-					\Session::flash('mensagem', ['msg' => 'O campo ano é inválido!','class'=>'green white-text']);
-					$text = true;
-					return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
-				}
-				if ($v->fails()) {
-					$failed = $v->failed();
-					if ( !empty($failed['title']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['mes']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo mês é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['mes']['Numeric']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo mês é numérico!','class'=>'green white-text']);
-					} else if ( !empty($failed['ano']['Required']) ) {	
-						\Session::flash('mensagem', ['msg' => 'O campo ano é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['ano']['Numeric']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo ano é numérico!','class'=>'green white-text']);
-					}
-					$text = true;
-					return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+					'mes'	=> 'required',
+					'ano'	=> 'required'
+			]);
+				
+				if ($validator->fails()) {					
+					return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 				}
 				$ano  = $_POST['ano'];
 				$mes  = $_POST['mes'];
@@ -236,16 +163,18 @@ class DemonstrativoFinanceiroController extends Controller
 				$log = LoggerUsers::create($input);
 				$lastUpdated = $log->max('updated_at');						
 				$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->orderBy('ano', 'ASC')->get();
-				$text = true;
-			    \Session::flash('mensagem', ['msg' => 'Demonstrativo Financeiro cadastrado com sucesso!','class'=>'green white-text']);			
-				return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));	
+				$validator = 'Demonstrativo Financeiro cadastrado com sucesso!';
+				return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 			} else {	
-				\Session::flash('mensagem', ['msg' => 'Só suporta arquivos: pdf!','class'=>'green white-text']);			
-				$text = true;
-				return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+				$validator = 'Só suporta arquivos do tipo: PDF!';
+				return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 			}
 		}
-    }
+	}
 	
     public function update($id_unidade, $id_item, Request $request, DemonstrativoFinanceiro $demonstrativoFinanceiro)
     {
@@ -255,9 +184,10 @@ class DemonstrativoFinanceiroController extends Controller
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->get();
-		$text = true;
-		\Session::flash('mensagem', ['msg' => 'Demonstrativo Financeiro alterado com sucesso!','class'=>'green white-text']);			
-		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+		$validator = 'Demonstrativo financeiro alterado com sucesso!';
+		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 
     public function destroy($id_unidade, $id_item, Request $request)
@@ -273,8 +203,9 @@ class DemonstrativoFinanceiroController extends Controller
 		$unidades = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);	
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->orderBy('ano', 'ASC')->get();
-		$text = true;
-		\Session::flash('mensagem', ['msg' => 'Demonstrativo Financeiro excluído com sucesso!','class'=>'green white-text']);			
-		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated','text'));
+		$validator = 'Demonstrativo Financeiro Excluído com sucesso!';
+		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
+		->withErrors($validator)
+		->withInput(session()->flashInput($request->input()));	
     }
 }

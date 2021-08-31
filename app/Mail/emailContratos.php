@@ -19,6 +19,6 @@ class emailContratos extends Mailable
 
     public function build()
     {
-        return $this->view('email.contatoEmail');
+        return $this->view('email.emailContratos');
     }
 }

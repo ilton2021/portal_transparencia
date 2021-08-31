@@ -7,8 +7,7 @@ use App\Model\Unidade;
 use App\Model\RegimentoInterno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Model\PermissaoUsers;
-use Auth;
+use Validator;
 
 class RegimentoInternoController extends Controller
 {
@@ -27,80 +26,29 @@ class RegimentoInternoController extends Controller
 
 	public function regimentoCadastro($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-		
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-			} else {
-				$validacao = 'erro';
-			}
-		}
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
 		$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
-		$text = false;
-		if($validacao == 'ok') {
-			return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidadesMenu','unidade','text','regimentos'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
+		
+		return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidadesMenu','unidade','regimentos'));
 	}
 	
 	public function regimentoNovo($id)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-			} else {
-				$validacao = 'erro';
-			}
-		}
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
-		$text = false;
-		if($validacao == 'ok') {
-			return view('transparencia/organizacional/regimento_novo', compact('unidades','unidadesMenu','unidade','text'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
+		return view('transparencia/organizacional/regimento_novo', compact('unidades','unidadesMenu','unidade'));
 	}
 	
 	public function regimentoExcluir($id, $id_escolha)
 	{
-		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id) {
-				$validacao = 'ok';
-			} else {
-				$validacao = 'erro';
-			}
-		}
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id);
 		$regimentos = RegimentoInterno::where('unidade_id', $id)->where('id',$id_escolha)->get();
-		$text = false;
-		if($validacao == 'ok') {
-			return view('transparencia/organizacional/regimento_excluir', compact('unidades','unidadesMenu','unidade','text','regimentos'));
-		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
-			$text = true;
-			return view('home', compact('unidades','unidade','unidadesMenu','text')); 		
-		}
+		return view('transparencia/organizacional/regimento_excluir', compact('unidades','unidadesMenu','unidade','regimentos'));
 	}
 
     public function store($id, Request $request)
@@ -113,23 +61,21 @@ class RegimentoInternoController extends Controller
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
 
 		if ( $request->file('file_path') === NULL ) {
-			\Session::flash('mensagem', ['msg' => 'Informe o arquivo do Regimento Interno!','class'=>'green white-text']);		
-			$text = true;
-			return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu','text'));
+			$validator = 'Informe o arquivo do Regimento Interno!';
+			return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
+			->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($extensao === 'pdf') {
-				$v = \Validator::make($request->all(), [
+				$validator = Validator::make($request->all(), [
 					'title'    => 'required|max:255',
 				]);
-				if ($v->fails()) {
-					$failed = $v->failed();
-					if ( !empty($failed['title']['Required']) ) {
-						\Session::flash('mensagem', ['msg' => 'O campo título é obrigatório!','class'=>'green white-text']);
-					} else if ( !empty($failed['title']['Max']) ) { 
-						\Session::flash('mensagem', ['msg' => 'O campo título possui no máximo 255 caracteres!','class'=>'green white-text']);
-					}
-					$text = true;
-					return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu','text'));
+				if ($validator->fails()) {
+					$failed = $validator->failed();
+					$validator = 'O campo Título é obrigatório e suporta até 255 caracteres.';
+					return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				} else {
 					$nome = $_FILES['file_path']['name']; 
 					$request->file('file_path')->move('../public/storage/regimento_interno/', $nome);		
@@ -138,14 +84,16 @@ class RegimentoInternoController extends Controller
 					$log = LoggerUsers::create($input);
 					$lastUpdated = $log->max('updated_at');
 					$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
-					\Session::flash('mensagem', ['msg' => 'Regimento Interno cadastrado com sucesso!','class'=>'green white-text']);
-					$text = true;
-					return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated','text'));
+					$validator = 'Regismento interno cadastrado com sucesso!';
+					return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				}
 			} else {
-				\Session::flash('mensagem', ['msg' => 'Só é permitido arquivos: .pdf!','class'=>'green white-text']);		
-				$text = true;
-				return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu','text'));				
+				$validator = 'Só são permitidos arquivos do tipo: PDF!';
+				return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));				
 			}
 		}
     }
@@ -163,8 +111,9 @@ class RegimentoInternoController extends Controller
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
 		$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
-		\Session::flash('mensagem', ['msg' => 'Regimento Interno excluído com sucesso!','class'=>'green white-text']);		
-		$text = true;
-		return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated','text'));				
+		$validator = 'Regismento Interno Exclupido com sucesso!';
+		return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated'))
+		->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));				
     }
 }

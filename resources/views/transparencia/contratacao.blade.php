@@ -56,7 +56,7 @@
 					  <!--a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="" > Alterar <i class="fas fa-edit"></i></a-->
 					  @endif
 					</h2>
-				  </div>
+				  </div> 
 				  <div id="collapseOne" class="collapse multi-collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 					<div class="card-body"> <?php $a = 2; ?>
 						<div class="row">
@@ -372,8 +372,8 @@
 									<table class="table table-sm" >
 									   <thead>
 										  <tr>
-											<th scope="col" style="width: 400px">Título</th>
-											<th scope="col" style="width: 200px">Download</th>
+											<th  style="width: 400px">Título</th>
+											<th  style="width: 200px">Download</th>
 										  </tr>
 									   </thead>
 									   <tbody>
@@ -384,7 +384,7 @@
 											<th>
 												@foreach ($cotacoes as $cotacaoFiles)
 												 @if ($cotacaoFiles->proccess_name == $cotacao)
-													<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 12px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="fas fa-download"></i></a>
+													<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 10px; position: relative; padding: 5px;">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="fas fa-download"></i></a>
 												 @endif
 												@endforeach
 											</th>
@@ -523,6 +523,7 @@
 															@if($processoA->processo_id == $processo->id)
 															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
 															@endif
+															
 														  @endforeach
 														 </div>	
 														</a> </center>
@@ -532,6 +533,7 @@
 													</div>
 												  @endforeach
 												 @endif
+												 
 											@endif
 												 <nav aria-label="Page navigation example">
 												  <ul class="pagination justify-content-center">
@@ -740,7 +742,7 @@
 					</div>
 				</div>	
 				@endif	
-						 
+					 
 				<!-- CONTRATOS -->
 				<div class="card">
 				  <div class="card-header" id="headingThree">
@@ -810,6 +812,12 @@
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
 																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
+																		@endif
 																	@else 
 																		@if($aditivo->ativa == 1)
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>	
@@ -863,6 +871,12 @@
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
 																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
+																		@endif	
 																	@else 
 																		@if($aditivo->ativa == 1)
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>	
@@ -933,6 +947,12 @@
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
 																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
+																		@endif
 																	@else 
 																		@if($aditivo->ativa == 1)
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>	
@@ -991,6 +1011,12 @@
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
+																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
 																		@endif
 																	@else 
 																		@if($aditivo->ativa == 1)
@@ -1062,6 +1088,12 @@
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
 																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
+																		@endif
 																	@else 
 																		@if($aditivo->ativa == 1)
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>	
@@ -1114,6 +1146,12 @@
 																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
+																		@endif
+																	@elseif($aditivo->opcao == 2)
+																	    @if($aditivo->ativa == 1)
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																	    @else
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
 																		@endif
 																	@else 
 																		@if($aditivo->ativa == 1)

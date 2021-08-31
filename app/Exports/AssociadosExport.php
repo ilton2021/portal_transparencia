@@ -21,7 +21,6 @@ class AssociadosExport implements FromCollection, WithHeadings
         return DB::table('associados')
         ->join('unidades', 'associados.unidade_id', '=','unidades.id')
         ->select('associados.name as NOME','associados.cpf','associados.tipo_membro','unidades.name as UNIDADE')
-		->where('associados.validar', 0)
         ->get();
         
         

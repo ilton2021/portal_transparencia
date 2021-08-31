@@ -15,6 +15,7 @@ class CreateLoggerUsersTable extends Migration
 			$table->unsignedBigInteger('user_id');
 			$table->unsignedBigInteger('unidade_id');
 			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('unidade_id')->references('id')->on('unidades');
 			$table->timestamps();
 	   });
 	}

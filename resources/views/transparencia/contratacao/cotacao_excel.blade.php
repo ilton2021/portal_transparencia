@@ -9,15 +9,15 @@
 		 <h3 style="font-size: 18px;">CADASTRAR EXCEL COTAÇÃO:</h3>		
 	  </div>	
    </div>		
-   @if (Session::has('mensagem'))		
-	   @if ($text == true)		
-		   <div class="container">	     
-	         <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">		      
-			    {{ Session::get ('mensagem')['msg'] }}		 
-			 </div>		
-		   </div>		
-	   @endif	
-   @endif		
+   @if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+	@endif
    <div class="row" style="margin-top: 25px;">		
       <div class="col-md-0 col-sm-0"></div>			
 	      <div class="col-md-12 col-sm-12 text-center">			
@@ -32,7 +32,7 @@
  					  <table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">						
 					     <tr>					     
 						   <td> Arquivo: </td>						 
-						   <td> <input style="width: 450px" class="form-control" type="file" id="file_path" name="file_path" value="" required /> </td>						
+						   <td> <input style="width: 450px" class="form-control" type="file" id="file_path" name="file_path" value="" required enctype="multipart/form-data" /> </td>						
 						 </tr>					  
 					  </table>													
 					  <table>						   

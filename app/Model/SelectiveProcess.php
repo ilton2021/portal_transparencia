@@ -15,8 +15,7 @@ class SelectiveProcess extends Model
 		'ordering',
 		'unidade_id',
 		'created_at',
-		'updated_at',
-		'validar'
+		'updated_at'
 	];
 	
 	public $rules = [

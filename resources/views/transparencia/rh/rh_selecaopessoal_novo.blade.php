@@ -45,15 +45,27 @@
 							  <td> <input class="form-control" style="width: 100px;" type="number" id="quantidade" name="quantidade" value="" required /> </td>
 							</tr>
 							<tr>
-							  <td> Ano: </td>
-							  <td> <input class="form-control" style="width: 100px;" type="number" id="ano" name="ano" value="" required /> </td>
-							</tr>
+							<td> Ano: </td>
+							 	 <td> <select id="ano" name="ano" class="form-control" style="width: 100px">
+									<option value="2021" id="ano" name="ano">2021</option>
+									<option value="2022" id="ano" name="ano">2022</option>
+									<option value="2023" id="ano" name="ano">2023</option>
+									<option value="2024" id="ano" name="ano">2024</option>
+									<option value="2025" id="ano" name="ano">2025</option>
+									<option value="2026" id="ano" name="ano">2021</option>
+									<option value="2027" id="ano" name="ano">2022</option>
+									<option value="2028" id="ano" name="ano">2023</option>
+									<option value="2029" id="ano" name="ano">2024</option>
+									<option value="2030" id="ano" name="ano">2025</option>	
+	
+
+								</select>	
+							  </td>						</tr>
 							<input hidden type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" />
 						</table>
 						
 						<table>
 							 <tr>
-							   <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 							   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
 							   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="selecaoPessoal" /> </td>
 							   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarSelecaoPessoal" /> </td>

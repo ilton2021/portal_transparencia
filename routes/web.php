@@ -64,10 +64,27 @@ Route::post('auth/login', 'UserController@Login')->name('Login');
 
 Route::middleware(['auth'])->group( function() {
 
+	//Ordem de Compra
 	Route::get('home_compras', 'HomeController@home_compras')->name('home_compras');
 	Route::get('home_compras/ordem_compra/{id}','HomeController@trasparenciaOrdemCompra')->name('trasparenciaOrdemCompra');
 	Route::get('home_compras/ordem_compra/novo/{id}','HomeController@trasparenciaOrdemCompraNovo')->name('trasparenciaOrdemCompraNovo');
+	Route::get('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@ordemCompraAlterar')->name('ordemCompraAlterar');
+	Route::get('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@ordemCompraExcluir')->name('ordemCompraExcluir');
+
+	Route::get('home_compras/ordem_compra/cadastro/{id}','HomeController@procuraOrdemCompra')->name('procuraOrdemCompra');
+	Route::post('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/{id_processo}','HomeController@storeArquivoOrdemCompra')->name('storeArquivoOrdemCompra');
+	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/addOrdemCompra','HomeController@addOrdemCompra')->name('addOrdemCompra');
+	Route::post('home_compras/ordem_compra/{id}/cadastcadastroArquivosOrdemCompraroCotacoes/addOrdemCompra', 'HomeController@storeExcelOrdemCompra')->name('storeExcelOrdemCompra');
+	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/addOrdemCompra','HomeController@addOrdemCompra')->name('addOrdemCompra');
+	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/{id_processo}','HomeController@arquivosOrdemCompra')->name('arquivosOrdemCompra');
+
+
+
 	Route::post('home_compras/ordem_compra/novo/{id}','HomeController@storeOrdemCompra')->name('storeOrdemCompra');
+	Route::post('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@updateOrdemCompra')->name('updateOrdemCompra');
+	Route::post('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@destroyOrdemCompra')->name('destroyOrdemCompra');
+
+
 
 	Route::prefix('home')->group( function(){
 		Route::get('', 'HomeController@index')->name('home');
@@ -237,9 +254,17 @@ Route::middleware(['auth'])->group( function() {
 		Route::get('recursos-humanos/{id}/selecaoPCadastro/selecaoPNovo','RHController@selecaoPNovo')->name('selecaoPNovo');
 		Route::get('recursos-humanos/{id}/selecaoPCadastro/selecaoPAlterar/{id_item}','RHController@selecaoPAlterar')->name('selecaoPAlterar');
 		Route::get('recursos-humanos/{id}/selecaoPCadastro/selecaoPExcluir/{id_item}','RHController@selecaoPExcluir')->name('selecaoPExcluir');
+		Route::get('recursos-humanos/{id}/selecaoPcadastro/despesasRH','RHController@despesasRH')->name('despesasRH');
+		Route::get('recursos-humanos/{id}/selecaoPCadastro/selecaoPNovo/selecaoPCargos','RHController@selecaoPCargos')->name('selecaoPCargos');
+		Route::get('recursos-humanos/{id}/selecaoPcadastro/excluirDespesasRH','RHController@excluirDespesasRH')->name('excluirDespesasRH');
+		Route::post('recursos-humanos/{id}/selecaoPcadastro/excluirDespesasRH','RHController@destroyDespesasRH')->name('destroyDespesasRH');
 		Route::post('recursos-humanos/{id}/selecaoPCadastro/selecaoPAlterar/{id_item}','RHController@updateSelecao')->name('updateSelecao');
 		Route::post('recursos-humanos/{id}/selecaoPCadastro/selecaoPExcluir/{id_item}','RHController@destroySelecao')->name('destroySelecao');
-		Route::get('recursos-humanos/{id}/selecaoPCadastro/selecaoPNovo/selecaoPCargos','RHController@selecaoPCargos')->name('selecaoPCargos');
+		Route::post('recursos-humanos/{id}/selecaoPcadastro/despesasRH','RHController@despesasRHProcurar')->name('despesasRHProcurar');
+		Route::get('recursos-humanos/{id}/selecaoPcadastro/alterarDespesaRH/{ano}/{mes}/{tipo}','RHController@alterarRH')->name('alterarRH');
+		Route::post('recursos-humanos/{id}/selecaoPcadastro/alterarDespesaRH/{ano}/{mes}/{tipo}','RHController@updateDespesasRH')->name('updateDespesasRH');
+		
+
 
 		//RH - Processo Seletivo
 		Route::get('recursos-humanos/{id}/processoSCadastro','RHController@processoSCadastro')->name('processoSCadastro');

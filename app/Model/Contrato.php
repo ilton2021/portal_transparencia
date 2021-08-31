@@ -23,8 +23,7 @@ class Contrato extends Model
 		'ativa',
 		'created_at',
 		'updated_at',
-		'cadastro',
-		'validar'
+		'cadastro'
 	];
 		
 	public $rules = [

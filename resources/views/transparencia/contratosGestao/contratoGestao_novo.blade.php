@@ -42,7 +42,6 @@
 							
 							<table>
 							  <tr>     
-							    <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 							    <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
 								<td> <input hidden type="text" class="form-control" id="tela" name="tela" value="ContratoGestao" /> </td>
 								<td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarContratoGestao" /> </td>

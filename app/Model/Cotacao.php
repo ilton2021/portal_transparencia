@@ -13,8 +13,7 @@ class Cotacao extends Model
 		'file_name',
 		'file_path',
 		'ordering',
-		'unidade_id',
-		'validar'
+		'unidade_id'
 	];
 	
 	public $rules = [
