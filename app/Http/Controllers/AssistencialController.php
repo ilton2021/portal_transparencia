@@ -48,8 +48,6 @@ class AssistencialController extends Controller
 	public function assistencialAlterar($id_unidade, $id_item, Request $request)
 	{ 	
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
-
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();

@@ -1,59 +1,29 @@
 @extends('layouts.app')
-
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
         <title>Portal da Transparencia - HCP</title>
-        <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-        <!-- OWN STYLE -->
-        <link rel="stylesheet" href="{{asset('css/style.css')}}">
-		<!-- Font Awesome KIT -->
-        <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
-        <style>
-        .navbar .dropdown-menu .form-control {
-            width: 300px;
-        }
-        </style>
-
-    </head>
-
+    <head>
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
-        </div>
-        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">        
-        </div>
-        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
-        </div>
-        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
-            
-        </div>
-    </div>
-</div>
 
   <div class="container">
         <div class="row">
             <div class="col-sm-12">
-				@if (Session::has('mensagem'))
-				 @if ($text == true)
-				   <div class="container">
-					 <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-						  {{ Session::get ('mensagem')['msg'] }}
-					 </div>
-				   </div>
-				  @endif
-				@endif
-
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             </div>
 		</div>
     </div>
-
-
  <section id="unidades">
     <div class="container" style="margin-top:30px; margin-bottom:20px;">
         <div class="row">

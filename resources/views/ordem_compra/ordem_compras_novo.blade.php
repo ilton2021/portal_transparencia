@@ -37,73 +37,77 @@
                     Ordem de Compra <i class="fas fa-check-circle"></i>
                 </a>
                 </div>
-				    <table class="table">
+				    <table class="table table-bordered">
 					<tr>
 					  <td> NÚMERO SOLICITAÇÃO </td>
 					  <td> DATA SOLICITAÇÃO </td>
 					  <td> Nº ORDEM COMPRA </td>
 					  <td> DATA AUTORIZAÇÃO O.C. </td>
+					  <td> PRODUTO </td>
 					</tr>
-					<tr>  
+					  
 					@foreach($processos as $prc)
+					<tr>
 					  <td> {{ $prc->numeroSolicitacao }} </td>
 					  <td> {{ date('d-m-Y', strtotime($prc->dataSolicitacao)) }} </td>
 					  <td> {{ $prc->numeroOC }} </td>
 					  <td> {{ date('d-m-Y', strtotime($prc->dataAutorizacao)) }} </td>
-					@endforeach
+					  <td> {{ $prc->produto }} </td>
 					</tr>
+					@endforeach
+					<tr><td colspan="5"><b><center>Ordens de Compras cadastradas neste mês!</center></b></td></tr>
 					</table> <BR><BR>
                     <form method="post" action="{{route('storeOrdemCompra', array($unidade[0]->id)) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table class="table">
+					<table class="table table-bordered">
                 	  <thead>
 						<tr> 
 							<td> Nº SOLICITAÇÃO </td>
-							<td> <input type="text" id="numeroSolicitacao" name="numeroSolicitacao" class="form-control" /> </td>
+							<td> <input type="text" id="numeroSolicitacao" name="numeroSolicitacao" class="form-control" required="true" /> </td>
 						</tr>
 						<tr>
 							<td> DATA DA SOLICITAÇÃO </td>
-							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" /> </td>
+							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" required="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> Nº O.C </td>
-							<td> <input type="text" id="numeroOC" name="numeroOC" class="form-control" /> </td>
+							<td> <input type="text" id="numeroOC" name="numeroOC" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> DATA DE AUTORIZAÇÃO O.C. </td>
-							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" /> </td>
+							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> FORNECEDOR </td>
-							<td> <input type="text" id="fornecedor" name="fornecedor" class="form-control" /> </td>
+							<td> <input type="text" id="fornecedor" name="fornecedor" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> CNPJ </td>
-							<td> <input type="text" id="cnpj" name="cnpj" class="form-control" /> </td>
+							<td> <input type="text" id="cnpj" name="cnpj" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 						    <td> QUANTIDADE DA O.C. </td>
-							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" /> </td>
+							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 		
 							<td> VALOR TOTAL DA O.C. </td>
-							<td> <input type="text" id="totalValorOC" name="totalValorOC" class="form-control" /> </td>
+							<td> <input type="number" id="totalValorOC" name="totalValorOC" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> PRODUTO </td>
-							<td> <input type="text" id="produto" name="produto" class="form-control" /> </td>
+							<td> <input type="text" id="produto" name="produto" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 		
 							<td> CLASSIFICAÇÃO DO ITEM </td>
-							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" /> </td>
+							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> QUANTIDADE RECEBIDA </td>
-							<td> <input type="text" id="quantidadeRecebida" name="quantidadeRecebida" class="form-control" /> </td>
+							<td> <input type="text" id="quantidadeRecebida" name="quantidadeRecebida" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> VALOR TOTAL RECEBIDO </td>
-							<td> <input type="text" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" /> </td>
+							<td> <input type="number" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" require="true" /> </td>
 						</tr>
 						<tr> 	
 							<td> Nº NOTA FISCAL </td>
@@ -129,7 +133,7 @@
 					<table>
 					 <tr>
 					   <td align="left">
-						 <a href="{{route('trasparenciaOrdemCompraNovo', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						 <a href="{{route('trasparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
 					   </td>
 					 </tr>
