@@ -36,13 +36,11 @@ class DecretoController extends Controller
 		$unidade = $unidadesMenu->find($id);	
 		$decretos = Decreto::all();
         $lastUpdated = $decretos->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/decretos/decreto_cadastro', compact('unidade','unidades','unidadesMenu','decretos','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!';
-				return view('home', compact('unidades','unidade','unidadesMenu'))
+			return view('home', compact('unidades','unidade','unidadesMenu'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));		
 		}
@@ -51,40 +49,34 @@ class DecretoController extends Controller
 	public function decretoNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/decretos/decreto_novo', compact('unidade','unidades','unidadesMenu'));
-				
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function decretoExcluir($id_unidade, $id_item)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
 		$decretos = Decreto::where('id',$id_item)->get();
 		$lastUpdated = $decretos->max('updated_at');	
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/decretos/decreto_excluir', compact('unidade','unidades','unidadesMenu','decretos','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -101,8 +93,8 @@ class DecretoController extends Controller
 		if($request->file('path_file') === NULL) {	
 			$validator = 'Informe o arquivo do Decreto';
 			return view('transparencia/decretos/decreto_novo', compact('unidades','unidade','unidadesMenu','decretos','lastUpdated'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {  
 			if($extensao == 'pdf') {
 				$validator = Validator::make($request->all(), [
@@ -111,10 +103,9 @@ class DecretoController extends Controller
 					'kind'	  => 'required'
 				]); 
 				if ($validator->fails()) {
-					$validator = 'Todos os campos devem estar preenchidos!';
 					return view('transparencia/decretos/decreto_novo', compact('unidades','unidade','unidadesMenu','decretos','lastUpdate'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));	
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));	
 				} else {
 					$nome = $_FILES['path_file']['name'];  
 					$request->file('path_file')->move('../public/storage/decretos/', $nome);
@@ -126,16 +117,16 @@ class DecretoController extends Controller
 					$decretos = Decreto::all();
 					$validator = 'Decreto cadastrado com Sucesso!!';
 					return view('transparencia/decretos/decreto_cadastro', compact('unidades','unidade','unidadesMenu','decretos','lastUpdated'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));										
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));										
 				} 			
 			} else {	
 				$validator = 'São suportados somente arquivos do tipo: PDF!';
 				$decretos = Decreto::all();
 				$lastUpdated = $decretos->max('updated_at');
 				return view('transparencia/decretos/decreto_novo', compact('unidades','unidade','unidadesMenu','decretos','lastUpdated'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 			}
 		}
 	}
@@ -154,9 +145,8 @@ class DecretoController extends Controller
 		$unidade = $unidadesMenu->find($id_unidade);		
 		$decretos = Decreto::all();
 		$validator = 'Decreto excluido com sucesso!';
-
 		return view('transparencia/decretos/decreto_cadastro', compact('unidades','unidade','unidadesMenu','decretos','lastUpdated'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 }

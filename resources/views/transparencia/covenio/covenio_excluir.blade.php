@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">EXCLUIR COVÊNIO:</h3>
 		</div>
 	</div>
-	
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
-	@endif
-	
+	@if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-12 text-center">

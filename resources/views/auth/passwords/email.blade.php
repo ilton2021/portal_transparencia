@@ -8,13 +8,16 @@
                 <div class="card-header">{{ __('Alterar Senha:') }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('password.email') }}">
+                @if ($errors->any())
+                    <div class="alert alert-success">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                 <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                    <form method="POST" action="{{ route('emailReset') }}">
                         @csrf
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail cadastrado:') }}</label>
@@ -30,7 +33,7 @@
                         </div>
 
                         <div class="form-group row mb-0">
-							<a style="margin-left: 260px;" href="{{ route ('telaLogin') }}" class="btn btn-warning"> Voltar </a>
+							<a style="margin-left: 260px;" href="{{ route ('welcome') }}" class="btn btn-warning"> Voltar </a>
                             &nbsp;&nbsp;&nbsp;
 							<button type="submit" class="btn btn-primary"> {{ __('Enviar link de redefinição de senha') }} </button>
                         </div>

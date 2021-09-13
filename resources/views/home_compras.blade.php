@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6,21 +7,41 @@
         <title>Portal da Transparencia - HCP</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <head>
+        <link rel="stylesheet" href="{{asset('css/style.css')}}">
+	    <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
+        <style>
+        .navbar .dropdown-menu .form-control {
+            width: 300px;
+        }
+        </style>
+    </head>
+
 @section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
+        </div>
+        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">        
+        </div>
+        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
+        </div>
+        <div class="col-md-3" style="background-image: linear-gradient(to right, #28a745, #28a745); height: auto; border-radius: 175px 175px 175px 175px;">
+        </div>
+    </div>
+</div>
 
   <div class="container">
         <div class="row">
             <div class="col-sm-12">
             @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-success">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
-            @endif
+            @endif 
             </div>
 		</div>
     </div>

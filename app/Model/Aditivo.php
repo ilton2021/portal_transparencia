@@ -23,7 +23,6 @@ class Aditivo extends Model
         'opcao'
     ];
 
-
     public function contratos()
     {
         return $this->belongsTo('App\Model\Contrato');

@@ -9,7 +9,6 @@
 			<a href="{{route('regulamentoNovo', $unidade->id)}}" class="btn btn-dark btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
 		</div>
 	</div>	
-	
 	@if ($errors->any())
 		<div class="alert alert-success">
 			<ul>
@@ -19,7 +18,6 @@
 			</ul>
 		</div>
 	@endif
-	
 	<div class="row justify-content-around" style="margin-top: 25px;">
 		@foreach($manuais as $manual)
 		<div class="col-md-2 col-sm-12">

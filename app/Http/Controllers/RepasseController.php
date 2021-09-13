@@ -29,7 +29,6 @@ class RepasseController extends Controller
     public function repasseCadastro($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
@@ -62,8 +61,8 @@ class RepasseController extends Controller
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -71,7 +70,6 @@ class RepasseController extends Controller
 	public function repasseNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
@@ -102,15 +100,14 @@ class RepasseController extends Controller
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
 	public function repasseAlterar($id_unidade, $id_item)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
@@ -149,7 +146,6 @@ class RepasseController extends Controller
 	public function repasseExcluir($id_unidade, $id_item)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
@@ -178,10 +174,10 @@ class RepasseController extends Controller
         if($validacao == 'ok') {
 			return view('transparencia/repasses/repasses_excluir', compact('unidade','unidadesMenu','repasses','anoRepasses','mesRepasses','lastUpdated'));
 		} else {
-			\Session::flash('mensagem', ['msg' => 'Você não tem Permissão!!','class'=>'green white-text']);		
+			$validator = 'Você não tem Permissão!!';		
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
@@ -220,7 +216,6 @@ class RepasseController extends Controller
 				'recebido'   => 'required',
 				'desconto'   => 'required'
 		]);
-
 		if ($input['ano'] < 1800 || $input['ano'] > 2500) {
 			$validator = 'O campo contratado não pode ser negativo!';
 			return view('transparencia/repasses/repasses_novo', compact('unidades','unidade','unidadesMenu','repasses','lastUpdated'))

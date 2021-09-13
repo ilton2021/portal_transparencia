@@ -30,84 +30,68 @@ class ConselhoFiscController extends Controller
 	public function listarConselhoFisc($id, Request $request)
 	{	
 		$validacao = permissaoUsersController::Permissao($unidade_id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$conselhoFiscs = $this->conselhoFisc->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoFisc_cadastro', compact('unidade','unidades','unidadesMenu','conselhoFiscs'));
-			
 		} else {
 			$validator = 'Você não tem Permissão';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
 	public function conselhoFiscNovo($id, Request $request)
 	{	
-
 		$validacao = permissaoUsersController::Permissao($id);
-
-		
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$conselhoFiscs = $this->conselhoFisc->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoFisc_novo', compact('unidade','unidades','unidadesMenu','conselhoFiscs'));
-			
 		} else {
 			$validator = 'Você não tem permissão';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function conselhoFiscAlterar($id_unidade, $id_conselhoFisc, Request $request)
 	{	
 		$validacao = permissaoUserController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id_unidade);
 		$conselhoFisc = $this->conselhoFisc->find($id_conselhoFisc);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoFisc_alterar', compact('unidade','unidades','unidadesMenu','conselhoFisc'));
-			
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function conselhoFiscExcluir($id_unidade, $id_conselhoFisc, Request $request)
 	{	
-
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
-	
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id_unidade);
 		$conselhoFisc = $this->conselhoFisc->find($id_conselhoFisc); 
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoFisc_excluir', compact('unidade','unidades','unidadesMenu','conselhoFisc'));
-			
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	 		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	 		
 		}
 	}
 
@@ -122,10 +106,8 @@ class ConselhoFiscController extends Controller
 		$validator = Validator::make($request->all(), [
 			'name' => 'required|max:255',
 		]);
-
 		if ($validator->fails()) {
-			$validator = 'Algo de errado aconteceu, verifique os campos!';
-				return view('transparencia/membros/membros_conselhoFisc_novo', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
+			return view('transparencia/membros/membros_conselhoFisc_novo', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
@@ -135,13 +117,12 @@ class ConselhoFiscController extends Controller
 			$conselhoFiscs = $this->conselhoFisc->all();
 			$validator = 'Conselho Fiscal cadastrado com sucesso!';
 			return view('transparencia/membros/membros_conselhoFisc_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
     }
 	
-
-    public function update($id_unidade, $id_conselhoFisc, Request $request)
+	public function update($id_unidade, $id_conselhoFisc, Request $request)
     {
         $unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
@@ -153,25 +134,22 @@ class ConselhoFiscController extends Controller
 			'name' => 'required|max:255',
 		]);
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-			$validator = 'Algo de errado aconteceu, verifique os campos!';
-				return view('transparencia/membros/membros_conselhoFisc_alterar', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
+			return view('transparencia/membros/membros_conselhoFisc_alterar', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-			} else {
+		} else {
 			$conselhoFisc = conselhoFisc::find($id_conselhoFisc); 
 			$conselhoFisc->update($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$conselhoFiscs = $this->conselhoFisc->all();
-
 			$validator = 'Conselho Fiscal alterado com sucesso';
 			return view('transparencia/membros/membros_conselhoFisc_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
-    
 	}
+
     public function destroy($id_unidade, $id_conselhoFisc, ConselhoFisc $conselhoFisc, Request $request)
     {
         ConselhoFisc::find($id_conselhoFisc)->delete();  
@@ -185,7 +163,7 @@ class ConselhoFiscController extends Controller
 		$conselhoFiscs = $this->conselhoFisc->all();
 		$validator = 'Conselho Fiscal excluído com sucesso!!';
 		return view('transparencia/membros/membros_conselhoFisc_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoFiscs'))
-		->withErrors($validator)
+			->withErrors($validator)
 			->withInput(session()->flashInput($request->input()));	
     }
 }

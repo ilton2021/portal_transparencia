@@ -31,19 +31,17 @@ class RelatorioFinanceiroController extends Controller
 	public function cadastroRelatorio($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
 		$relatorioFinanceiro = RelatorioFinanceiro::where('unidade_id',$id)->orderBy('ano','ASC')->get();
         $lastUpdated = $relatorioFinanceiro->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/relatorioFinanceiro/relatorio_cadastro', compact('unidade','unidades','unidadesMenu','relatorioFinanceiro','lastUpdated'));
 		} else {
 			$validator = 'Você não tem permissão';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));	
 		}
 	}
@@ -51,17 +49,15 @@ class RelatorioFinanceiroController extends Controller
 	public function relatorioNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/relatorioFinanceiro/relatorio_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
 			$validator = 'Você não tem permissão';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -69,20 +65,17 @@ class RelatorioFinanceiroController extends Controller
 	public function relatorioExcluir($id, $id_rel)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);	
 		$relatorioFinanceiro = RelatorioFinanceiro::where('unidade_id', $id)->where('id',$id_rel)->get();
 		$lastUpdated = $relatorioFinanceiro->max('updated_at');
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/relatorioFinanceiro/relatorio_excluir', compact('unidade','unidades','unidadesMenu','relatorioFinanceiro','lastUpdated'));
 		} else {
-
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));	
 		}
 	}
@@ -100,7 +93,7 @@ class RelatorioFinanceiroController extends Controller
 		if($request->file('file_path') === NULL) {	
 			$validator = 'Informe o arquivo do Relatório financeiro!';
 			return view('transparencia/relatorioFinanceiro/relatorio_novo', compact('unidades','unidade','unidadesMenu','relatorioFinanceiro','lastUpdated'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($extensao === 'pdf') {
@@ -111,8 +104,8 @@ class RelatorioFinanceiroController extends Controller
 				if ($input['ano'] < 1800 || $input['ano'] > 2500) {
 					$validator = 'O campo ano é inválido';
 					return view('transparencia/relatorioFinanceiro/relatorio_novo', compact('unidades','unidade','unidadesMenu','relatorioFinanceiro','lastUpdated'))
-					->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				}		
 				if ($validator->fails()) {
 					$failed = $validator->failed();

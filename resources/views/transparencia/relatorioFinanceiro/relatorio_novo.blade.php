@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-		<div class="alert alert-danger">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-12 text-center">
@@ -34,7 +34,17 @@
 						 </tr>
 						 <tr>
 							<td> Ano: </td>
-							<td> <input style="width: 100px" class="form-control" type="number" id="ano" name="ano" value="" required /> </td>
+							<td> <?php $ano = date('Y', strtotime('now')); ?>
+							    <select class="form-control" id="ano" name="ano" style="width: 100px;">
+							        <?php for($a = 2020; $a <= 2025; $a++) { ?>
+							         @if($a == $ano)
+							          <option id="ano" name="ano" value="<?php echo $a; ?>" selected>{{ $a }}</option>
+							         @else
+							          <option id="ano" name="ano" value="<?php echo $a; ?>">{{ $a }}</option>
+							         @endif
+							        <?php } ?>
+							    </select>
+							</td>
 						 </tr>
 						 <tr>
 							<td> Arquivo: </td>

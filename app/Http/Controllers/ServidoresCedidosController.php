@@ -38,12 +38,11 @@ class ServidoresCedidosController extends Controller
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
-		$text = false;
-		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->get();
-		return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade','servidores'));
+		return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'));
 	}
 	
-	public function storeServidores($id_unidade, Request $request) {
+	public function storeServidores($id_unidade, Request $request) 
+	{
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
@@ -57,103 +56,32 @@ class ServidoresCedidosController extends Controller
 			'data_inicio'  => 'required|date',
 		]);		
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-			if ( !empty($failed['nome']['Required']) ) {
-				$validator = 'O  campo nome é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+			return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-
-			} else if ( !empty($failed['nome']['Max']) ) {
-				$validator = 'O  campo nome suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['cargo']['Required']) ) {	
-				$validator = 'O  campo cargo é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['cargo']['Max']) ) {
-				$validator = 'O  campo cargo suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['matricula']['Required']) ) {
-				$validator = 'O  campo matrícula é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['matricula']['Max']) ) {
-				$validator = 'O  campo matrícula suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['email']['Required']) ) {
-				$validator = 'O  campo e-mail é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['email']['Max']) ) {
-				$validator = 'O  campo email suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['fone']['Required']) ) {
-				$validator = 'O  campo Telefone é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['fone']['Max']) ) {
-				$validator = 'O  campo Telefone suporta até 15 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['data_inicio']['Required']) ) {
-				$validator = 'O  campo Data Início é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
-			
-			} else if ( !empty($failed['data_inicio']['Date']) ) {
-				$validator = 'A data inserida no campo Data Início deve ser uma data válida!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			}
-				return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
-
-
 		}else {
 			$servidores = ServidoresCedidosRH::create($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
-			$servidores = ServidoresCedidosRH::all();
+			$servidores = ServidoresCedidosRH::where('unidade_id',$id_unidade)->orderby('nome','ASC')->get();
 			$validator = 'O Servidor Cedido, foi cadastrado com sucesso!';
 			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 	
-	public function servidoresAlterar($id_servidor, $id_unidade){
+	public function servidoresAlterar($id_servidor, $id_unidade)
+	{
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->where('id', $id_servidor)->get();
 		return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
-		
 	}
 	
-	public function updateServidores($id_servidor, $id_unidade, Request $request) {
+	public function updateServidores($id_servidor, $id_unidade, Request $request) 
+	{
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
@@ -168,115 +96,18 @@ class ServidoresCedidosController extends Controller
 			'data_inicio'  => 'required|date',
 		]);		
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-			if ( !empty($failed['nome']['Required']) ) {
-			
-				$validator = 'O  campo nome é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
+			return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-
-			} else if ( !empty($failed['nome']['Max']) ) {
-			
-				$validator = 'O  campo nome suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));		
-	
-	
-			} else if ( !empty($failed['cargo']['Required']) ) {	
-	
-				$validator = 'O  campo cargo é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
-	
-	
-			} else if ( !empty($failed['cargo']['Max']) ) {
-	
-				$validator = 'O  campo cargo suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-	
-	
-			} else if ( !empty($failed['matricula']['Required']) ) {
-	
-	
-				$validator = 'O  campo matrícula é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
-	
-
-			} else if ( !empty($failed['matricula']['Max']) ) {
-	
-	
-				$validator = 'O  campo matrícula suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-	
-			} else if ( !empty($failed['email']['Required']) ) {
-	
-	
-				$validator = 'O  campo e-mail é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-	
-
-			} else if ( !empty($failed['email']['Max']) ) {
-	
-	
-				$validator = 'O  campo email suporta até 255 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-	
-			} else if ( !empty($failed['fone']['Required']) ) {
-	
-				$validator = 'O  campo Telefone é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
-	
-	
-			} else if ( !empty($failed['fone']['Max']) ) {
-	
-				$validator = 'O  campo Telefone suporta até 15 caracteres!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
-	
-	
-			} else if ( !empty($failed['data_inicio']['Required']) ) {
-	
-				$validator = 'O  campo Data Início é obrigatório!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-	
-	
-			} else if ( !empty($failed['data_inicio']['Date']) ) {
-	
-	
-				$validator = 'A data inserida no campo Data Início deve ser uma data válida!';
-				return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
-	
-			}
-			return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
 		}else {
 			$servidores = ServidoresCedidosRH::find($id_servidor); 
 			$servidores->update($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
-			$servidores = ServidoresCedidosRH::all();
+			$servidores = ServidoresCedidosRH::where('unidade_id',$id_unidade)->orderby('nome','ASC')->get();
 			$validator = 'O servidor Cedido foi alterado com sucesso!';
 			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','servidores'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
 	}
@@ -294,14 +125,13 @@ class ServidoresCedidosController extends Controller
 		$input = $request->all();
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
-		$unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id_unidade);
-		$servidores = ServidoresCedidosRH::all();
+		$servidores = ServidoresCedidosRH::where('unidade_id',$id_unidade)->orderby('nome','ASC')->get();
 		$validator = 'Servidor Cedido Excluído com sucesso!';
 		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','servidores'))
-		->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 	}
 }

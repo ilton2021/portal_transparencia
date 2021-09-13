@@ -14,7 +14,9 @@
             width: 300px;
         }
         </style>
+
     </head>
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -41,12 +43,11 @@
 					@endforeach
 				</ul>
 			</div>
-	@endif
+	        @endif
             </div>
 			<div class="col-sm-4">
 			</div>
             <div class="col-sm-4">
-			
 			            
             @foreach($unidades as $unidade)
             @if(isset($unidade->cnes) || $unidade->cnes !== null)
@@ -64,7 +65,6 @@
             </div>
         </div>
     </div>
-
 
  <section id="unidades">
     <div class="container" style="margin-top:30px; margin-bottom:20px;">
@@ -108,4 +108,3 @@
  
     </section >    
 @endsection
-	

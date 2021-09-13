@@ -30,7 +30,7 @@
 				  <div id="{{$ano}}Competência" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 					<div class="card-body">
 						@foreach ($relatorioFinanceiro as $relF)
-						@if ($ano === $relF->ano)
+						@if($ano === $relF->ano)
 							<table class="table table-sm">
 								<tbody>
 								<tr >

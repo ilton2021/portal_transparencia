@@ -78,8 +78,8 @@
 						<table>
 							<tr>
 								<td> <br /> 
-									<a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-									<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Excluir" id="Salvar" name="Salvar" />
+									<a href="{{route('servidoresCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+									<input type="submit" class="btn btn-danger btn-sm" style="margin-top: 10px;" value="Excluir" id="Salvar" name="Salvar" />
 								</td>
 							</tr>
 						</table>

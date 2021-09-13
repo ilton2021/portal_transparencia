@@ -8,9 +8,7 @@
 			<h5  style="font-size: 18px;">ALTERAR MEMBROS DIRIGENTES:</h5>
 		</div>
 	</div>	
-	
-	
-	@if ($errors->any())
+		@if ($errors->any())
 			<div class="alert alert-danger">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -18,7 +16,7 @@
 					@endforeach
 				</ul>
 			</div>
-			@endif	
+		@endif	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 col-sm-12 text-center">
 			<div class="accordion" id="accordionExample">

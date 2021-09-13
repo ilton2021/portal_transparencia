@@ -30,66 +30,56 @@ class ContratoController extends Controller
 	public function contratoNovo($id_unidade)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/contratosGestao/contratoGestao_novo', compact('unidades','unidade','unidadesMenu'));
-		
 		} else {
 			$validator = 'Você não tem Permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function contratoCadastro($id_unidade, ContratoGestao $contrato)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();
-		$text = false;
-			if($id_unidade === 1){
-				$contratos = ContratoGestao::all();
-				$lastUpdated = $contratos->max('updated_at');
-			}else{
-				$contratos = ContratoGestao::where('unidade_id',$id_unidade)->get();
-				$lastUpdated = $contratos->max('updated_at');
-			}
+		if($id_unidade === 1){
+			$contratos = ContratoGestao::all();
+		}else{
+			$contratos = ContratoGestao::where('unidade_id',$id_unidade)->get();
+		}
+		$lastUpdated = $contratos->max('updated_at');
     	if($validacao == 'ok') {
 			return view('transparencia/contratosGestao/contratoGestao_cadastro', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function contratoExcluir($id_unidade, $escolha)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();
 		$contratos = ContratoGestao::where('id',$escolha)->get();
         $lastUpdated = $contratos->max('updated_at');        
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/contratosGestao/contratoGestao_excluir', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -106,8 +96,8 @@ class ContratoController extends Controller
 		if($request->file('path_file') === NULL) {	
 			$validator = 'Informe o arquivo do contrato';
 			return view('transparencia/contratosGestao/contratoGestao_novo', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($extensao === 'pdf') {
 				$validator = Validator::make($request->all(), [
@@ -127,14 +117,14 @@ class ContratoController extends Controller
 					$contratos = ContratoGestao::where('unidade_id',$id_unidade)->get();
 					$validator = 'Contrato de Gestão/Aditivo cadastrado com sucesso!';
 					return view('transparencia/contratosGestao/contratoGestao_cadastro', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));				
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));				
 				}
 			} else {	
 				$validator = 'Só suporta arquivos do tipo: PDF';
 				return view('transparencia/contratosGestao/contratoGestao_novo', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 			}
 		}
 	
@@ -155,7 +145,7 @@ class ContratoController extends Controller
 		$contratos = ContratoGestao::where('unidade_id',$id_unidade)->get();
 		$validator = 'Contra de Gestão/Aditivo excluído com sucesso!';
    		return view('transparencia/contratosGestao/contratoGestao_cadastro', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 }

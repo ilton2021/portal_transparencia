@@ -4,9 +4,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
   <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
   <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-  <script>
-
+<script>
 		$("#cpf").keyup(function() {
 				$("#cpf").val(this.value.match(/[0-11]*/));
 			});
@@ -21,11 +19,8 @@
 		if (i === 11) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
 		  document.getElementById("cpf").value = document.getElementById("cpf").value + "-";
 	 	 }
-	});
-	</script>
-
-
-
+	});	
+</script>
 </head>
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
@@ -34,18 +29,15 @@
 			<h5  style="font-size: 18px;">MEMBROS DIRIGENTES</h5>
 		</div>
 	</div>	
-
-	
-		@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif	
-
+	@if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 col-sm-12">
 

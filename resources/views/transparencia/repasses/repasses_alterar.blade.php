@@ -7,8 +7,7 @@
 			<h3 style="font-size: 18px;">ALTERAR REPASSES RECEBIDOS:</h3>
 		</div>
 	</div>
-	
-	@if ($errors->any())
+		@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -17,7 +16,6 @@
 				</ul>
 			</div>
 		@endif
-	
 		<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-8 text-center">
@@ -45,15 +43,15 @@
 					  </tr>
 					  <tr>
 					   <td> Contratado: </td>
-					   <td> <input class="form-control" type="text" id="contratado" name="contratado" value="<?php echo $repasses[0]->contratado; ?>" />  </td>
+					   <td> <input class="form-control" type="number" id="contratado" name="contratado" value="<?php echo $repasses[0]->contratado; ?>" />  </td>
 					  </tr>
 					  <tr>
 					   <td> Recebido: </td>
-					   <td> <input class="form-control" type="text" id="recebido" name="recebido" value="<?php echo $repasses[0]->recebido; ?>" />  </td>
+					   <td> <input class="form-control" type="number" id="recebido" name="recebido" value="<?php echo $repasses[0]->recebido; ?>" />  </td>
 					  </tr>
 					  <tr>
 					   <td> Desconto: </td>
-					   <td> <input class="form-control" type="text" id="desconto" name="desconto" value="<?php echo $repasses[0]->desconto; ?>" />  </td>
+					   <td> <input class="form-control" type="number" id="desconto" name="desconto" value="<?php echo $repasses[0]->desconto; ?>" />  </td>
 					  </tr>
 					 </table>
 					 

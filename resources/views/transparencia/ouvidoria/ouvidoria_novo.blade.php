@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">CADASTRAR OUVIDORIA:</h3>
 		</div>
 	</div>
-	
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
 		</div>
-		@endif
 	@endif
-	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-12 text-center">
@@ -46,15 +44,15 @@
 								</tr>
 							    <tr>
 								 <td> <strong>Responsável:</strong> </td>
-								 <td> <input style="" class="form-control" type="text" id="responsavel" name="responsavel" value="" required /> </td> 
+								 <td> <input style="" class="form-control" type="text" id="responsavel" name="responsavel" value="{{ old('responsavel') }}" required /> </td> 
 								</tr> 
 								<tr>
 								 <td> <strong> E-mail: </strong> </td>
-								 <td> <input style="width: 400px;" class="form-control" type="text" id="email" name="email" required value="" /> </td>
+								 <td> <input style="width: 400px;" class="form-control" type="text" id="email" name="email" required value="{{ old('email') }}" /> </td>
 								</tr>
 								<tr>
 								 <td> <strong> Telefone: </strong> </td>
-								 <td> <input style="width: 400px" class="form-control" type="text" id="telefone" name="telefone" required value="" /> </td> 
+								 <td> <input style="width: 400px" class="form-control" type="text" id="telefone" name="telefone" required value="{{ old('telefone') }}" /> </td> 
 								</tr>
 							</table>
 							
@@ -70,7 +68,7 @@
 							<table>
 							 <tr>
 							  <td> <br/>
-								<a href="{{route('covenioCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+								<a href="{{route('sicCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 							  </td>
 							  <td> &nbsp; </td>
 							  <td> <br/>

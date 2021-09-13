@@ -8,7 +8,6 @@
 			<h5  style="font-size: 18px;">CADASTRAR DECRETO DE QUALIFICAÇÃO:</h5>
 		</div>
 	</div>	
-	
 	@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul>
@@ -18,7 +17,6 @@
 			</ul>
 		</div>
 	@endif
-	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>	
 		<div class="col-md-12 col-sm-12 text-center">

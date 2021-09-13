@@ -40,20 +40,29 @@
 						 </tr>
 						 <table class= "table-sm" style= "margin-left: 90px;">
 						 <tr>
+						
+
 						   <td> <br><br> <input style="width: 200px" class="form-control" type="text" id="title1" name="title1"  placeholder="Título"/> </td>						
 						   <td> <br><br> <input style="width: 200px" class="form-control" type="text" id="title2" name="title2"  placeholder="Título"/> </td>						
 						   <td> <br><br> <input style="width: 200px" class="form-control" type="text" id="title3" name="title3"  placeholder="Título"/> </td>						
 						   <td> <br><br> <input style="width: 200px" class="form-control" type="text" id="title4" name="title4"  placeholder="Título"/> </td>						
 						   <td> <br><br> <input style="width: 200px" class="form-control" type="text" id="title5" name="title5"  placeholder="Título"/> </td>						
+					 
+						
 						</tr>
 						 <tr>	
-				    	   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_1" name="file_path_1"   /> </td>						
+				     
+						   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_1" name="file_path_1"   /> </td>						
 						   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_2" name="file_path_2"   /> </td>						
 						   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_3" name="file_path_3"   /> </td>	
 						   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_4" name="file_path_4"   /> </td>											
 						   <td> <input style="width: 200px" class="form-control-file" type="file" id="file_path_5" name="file_path_5"   /> </td>						
+						
 						</tr>
-					  </table>					  	
+						 <tr>
+							
+						</tr>
+</table>					  	
 					  </table>	
 					  <table style="margin-left: 545px;" class="table-sm">							
 					    <tr>					     

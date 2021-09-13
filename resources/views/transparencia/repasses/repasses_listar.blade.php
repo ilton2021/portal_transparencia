@@ -7,8 +7,7 @@
 			<h3 style="font-size: 18px;">REPASSES RECEBIDOS</h3>
 		</div>
 	</div>
-	
-	@if ($errors->any())
+		@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -17,7 +16,6 @@
 				</ul>
 			</div>
 		@endif
-	
 		<p>
 			@foreach ($anoRepasses as $ano)
 			<a class="btn btn-success btn-sm" data-toggle="collapse" href="#{{$ano}}" role="button" aria-expanded="false" aria-controls="{{$ano}}">

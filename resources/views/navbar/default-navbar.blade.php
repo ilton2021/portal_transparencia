@@ -9,17 +9,13 @@
     <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
     <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
     <title>HCP - Gestão</title>
-    <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-    <!-- Our Custom CSS -->
     <link rel="stylesheet" href="{{asset('css/style-dashboard.css')}}">
     <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
-    <!-- Font Awesome KIT -->
     <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="wrapper">
-        <!-- Sidebar  -->
         <nav id="sidebar" >
             <div class="sidebar-header d-flex justify-content-center" style="background-color:  #3c3c3c">
 				@if(Auth::check())
@@ -244,16 +240,7 @@
 						  </li>
 						@endif
 				@endif
-               <!--<li class="{{ (\Request::route()->getName() == 'transparenciaManual') ? 'active' : '' }}">
-                    <a href="{{route('transparenciaManual', $unidade->id)}}" style="font-size: 10px;">MANUAIS</a>
-                </li>
-                <li class="{{ (\Request::route()->getName() == 'transparenciaPregao') ? 'active' : '' }}">
-                   <a href="{{route('transparenciaPregao', $unidade->id)}}" style="font-size: 10px;">CONVÊNIOS</a>
-                </li>
-                <li class="{{ (\Request::route()->getName() == 'transparenciaDespesas') ? 'active' : '' }}">
-                    <a href="{{route('transparenciaDespesas', $unidade->id)}}" style="font-size: 10px;">DESPESAS COM PESSOAL</a>
-                </li>-->
-				@if($unidade->id != 1)
+    			@if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaBensPublicos') ? 'active' : '' }}">
                   <a href="{{route('transparenciaBensPublicos', $unidade->id)}}" style="font-size: 10px;">BENS PÚBLICOS</a>
                 </li>			
@@ -268,7 +255,6 @@
                 </li>
             </ul>
         </nav>
-        <!-- Page Content  -->
         <div id="content">
             <nav class="navbar navbar-expand-lg bg-light" style="box-shadow: none; background: #f6f6f6; padding-top: 0px; margin-bottom: 0px;">
                 <div class="container-fluid">
@@ -294,11 +280,8 @@
                 </div>
             </nav>
             @yield('content')
-            <!-- jQuery CDN - Slim version (=without AJAX) -->
             <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-            <!-- Popper.JS -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-            <!-- Bootstrap JS -->
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
             <script type="text/javascript">
                 $(document).ready(function () {

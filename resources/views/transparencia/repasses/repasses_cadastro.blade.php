@@ -9,7 +9,7 @@
 			<p align="right"><a href="{{route('transparenciaRepasses', array($unidade->id,1))}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>&nbsp;&nbsp;&nbsp;<a href="{{route('repasseNovo', $unidade->id)}}" class="btn btn-dark btn-sm" style="color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
 		</div>
 	</div>
-	@if ($errors->any())
+		@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -18,7 +18,6 @@
 				</ul>
 			</div>
 		@endif
-
 		  <p>
 			@foreach ($anoRepasses as $ano)
 			<a class="btn btn-success btn-sm" data-toggle="collapse" href="#{{$ano}}" role="button" aria-expanded="false" aria-controls="{{$ano}}">
@@ -26,15 +25,12 @@
 			</a> 
 			@endforeach
 		  </p>
-
-
 		  <?php $anoA = $somContratado; ?> 
 		  <p>
 		    <a class="btn btn-success btn-sm" data-toggle="collapse" href="#1" role="button" aria-expanded="false" aria-controls="1">
 			  <img src="{{asset('img/bank.png')}}" alt="" width="30" style="margin-right: 10px;"><strong>SOMATÓRIO</strong> 
 		    </a>
 		  </p>
-		  
 		  @foreach ($anoRepasses as $ano)
       	  <div class="collapse border-0" id="{{$ano}}" >
 			<div class="card card-body border-0" style="background-color: #fafafa !important">

@@ -75,7 +75,6 @@ class IndexController extends Controller
     public function index()
     {
        $unidades = $this->unidade->all();
-       
        return view('welcome', compact('unidades'));
     }
 
@@ -85,9 +84,7 @@ class IndexController extends Controller
         $unidade = $this->unidade->find($id);
         $lastUpdated  = $unidade->updated_at;
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-
 	    return view('transparencia.institucional', compact('unidade','unidadesMenu','lastUpdated','permissao_users'));
-       
     }
     
     public function transparenciaOuvidoria($id)
@@ -96,7 +93,8 @@ class IndexController extends Controller
         $unidade = $this->unidade->find($id);
         $lastUpdated  = $unidade->updated_at;
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-	    return view('transparencia.ouvidoria', compact('unidade','unidadesMenu','lastUpdated','permissao_users'));
+        $ouvidorias = Ouvidoria::where('unidade_id',$id)->get();
+	    return view('transparencia.ouvidoria', compact('unidade','unidadesMenu','lastUpdated','permissao_users','ouvidorias'));
     }
 
     public function trasparenciaOrganizacional($id)
@@ -419,7 +417,7 @@ class IndexController extends Controller
             $monthArray = array(
                 "1" => "janeiro",
                 "2" => "fevereiro",
-                "3" => "mar�0�4o",
+                "3" => "março",
                 "4" => "abril",
                 "5" => "maio",
                 "6" => "junho",
@@ -528,4 +526,3 @@ class IndexController extends Controller
         return $pdf->download('assistencial.pdf');
     }
 }
-

@@ -7,7 +7,6 @@
 			<h3 style="font-size: 18px;">CADASTRAR REPASSES RECEBIDOS:</h3>
 		</div>
 	</div>
-	
 		@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>
@@ -17,7 +16,6 @@
 				</ul>
 			</div>
 		@endif
-	
 		<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-8 text-center">
@@ -36,52 +34,52 @@
 					   <td> &nbsp; </td>
 					   <td>
 						<select id="mes" name="mes" class="form-control">
-						 <option value="janeiro">Janeiro</option>
-						 <option value="feveiro">Fevereiro</option>
-						 <option value="marco">Março</option>
-						 <option value="abril">Abril</option>
-						 <option value="maio">Maio</option>
-						 <option value="junho">Junho</option>
-						 <option value="julho">Julho</option>
-						 <option value="agosto">Agosto</option>
-						 <option value="setembro">Setembro</option>
-						 <option value="outubro">Outubro</option>
-						 <option value="novembro">Novembro</option>
-						 <option value="dezembro">Dezembro</option>
+						 <option id="mes" name="mes" value="janeiro">Janeiro</option>
+						 <option id="mes" name="mes" value="feveiro">Fevereiro</option>
+						 <option id="mes" name="mes" value="marco">Março</option>
+						 <option id="mes" name="mes" value="abril">Abril</option>
+						 <option id="mes" name="mes" value="maio">Maio</option>
+						 <option id="mes" name="mes" value="junho">Junho</option>
+						 <option id="mes" name="mes" value="julho">Julho</option>
+						 <option id="mes" name="mes" value="agosto">Agosto</option>
+						 <option id="mes" name="mes" value="setembro">Setembro</option>
+						 <option id="mes" name="mes" value="outubro">Outubro</option>
+						 <option id="mes" name="mes" value="novembro">Novembro</option>
+						 <option id="mes" name="mes" value="dezembro">Dezembro</option>
 						 </select>
 					   </td>
 					  </tr>
 					  <tr>
 					   <td> Ano: </td>
 					   <td> &nbsp; </td>
-					  <td> <select id="mes" name="mes" class="form-control">
-						 <option value="janeiro" id="ano" name="ano">2015</option>
-						 <option value="feveiro" id="ano" name="ano">2016</option>
-						 <option value="marco" id="ano" name="ano">2017</option>
-						 <option value="abril" id="ano" name="ano">2018</option>
-						 <option value="maio" id="ano" name="ano">2019</option>
-						 <option value="junho" id="ano" name="ano">2020</option>
-						 <option value="julho" id="ano" name="ano">2021</option>
-						 <option value="agosto" id="ano" name="ano">2022</option>
-						 <option value="setembro" id="ano" name="ano">2023</option>
-						 <option value="outubro" id="ano" name="ano">2024</option>
-						 <option value="novembro" id="ano" name="ano">2025</option>					  
+					  <td> <select id="ano" name="ano" class="form-control">
+						 <option value="2015" id="ano" name="ano">2015</option>
+						 <option value="2016" id="ano" name="ano">2016</option>
+						 <option value="2017" id="ano" name="ano">2017</option>
+						 <option value="2018" id="ano" name="ano">2018</option>
+						 <option value="2019" id="ano" name="ano">2019</option>
+						 <option value="2020" id="ano" name="ano">2020</option>
+						 <option value="2021" id="ano" name="ano">2021</option>
+						 <option value="2022" id="ano" name="ano">2022</option>
+						 <option value="2023" id="ano" name="ano">2023</option>
+						 <option value="2024" id="ano" name="ano">2024</option>
+						 <option value="2025" id="ano" name="ano">2025</option>					  
 						</td>
 						</tr>
 					  <tr>
 					   <td> Contratado: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="text" step= "any" id="contratado" name="contratado" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="contratado" name="contratado" value="" required />  </td>
 					  </tr>
 					  <tr>
 					   <td> Recebido: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="text" step= "any" id="recebido" name="recebido" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="recebido" name="recebido" value="" required />  </td>
 					  </tr>
 					  <tr>
 					   <td> Desconto: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="number" step= "any" id="desconto" name="desconto" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="desconto" name="desconto" value="" required />  </td>
 					  </tr>
 					 </table>
 					 

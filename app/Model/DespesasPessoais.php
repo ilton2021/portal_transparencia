@@ -12,7 +12,6 @@ class DespesasPessoais extends Model
 		'Quant',
 		'Valor',
 		'Mes',
-		'Ano',
-		'tipo'
+		'Ano'
 	];
 }

@@ -35,7 +35,6 @@ class OrganizationalController extends Controller
 	public function organizacionalNovo($id)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
@@ -44,7 +43,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -67,11 +66,8 @@ class OrganizationalController extends Controller
 				'telefone' 	 => 'required|min:8'
 		]);
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-		
-			$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';		
 			return view('transparencia/organizacional/organizacional_novo', compact('unidade','unidadesMenu','estruturaOrganizacional'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}else {
 			$input = $request->all(); 
@@ -87,7 +83,7 @@ class OrganizationalController extends Controller
 			}
 			$validator = 'Estrutura organiazcional cadastrada com sucesso!';
 			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidadesMenu','lastUpdated','estruturaOrganizacional'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
     }
@@ -95,7 +91,6 @@ class OrganizationalController extends Controller
 	public function organizacionalCadastro($id, Organizational $organizational)
 	{ 
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
@@ -111,7 +106,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator ='Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -119,8 +114,6 @@ class OrganizationalController extends Controller
 	public function organizacionalAlterar($id_item, $id_unidade)
 	{  
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
-		
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);				
@@ -130,7 +123,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -147,11 +140,9 @@ class OrganizationalController extends Controller
 				'telefone' 	 => 'required|min:8'
 		]);		
 		if ($validator->fails()) {
-			$failed = $validator->failed();			
-			$validator = 'Algo de errado aconteceu, verifique os campos e preencha novamente!';
 			$organizacionals = Organizational::where('id', $id_item)->get();
 			return view('transparencia/organizacional/organizacional_novo', compact('unidade','unidadesMenu','organizacionals'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
 			$input = $request->all();
@@ -162,7 +153,7 @@ class OrganizationalController extends Controller
 			$estruturaOrganizacional = Organizational::where('unidade_id', $id_unidade)->get();
 			$validator = 'Estreutura Organizacional Alterada com Sucesso!';
 			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estruturaOrganizacional'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));	
 		}
     }
@@ -170,8 +161,6 @@ class OrganizationalController extends Controller
 	public function organograma($id)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
@@ -180,7 +169,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -188,16 +177,15 @@ class OrganizationalController extends Controller
 	public function organogramaNovo($id)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organograma_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
-			$validator = 'Você ão tem permissão!';
+			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -207,12 +195,11 @@ class OrganizationalController extends Controller
         $unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
-		$input = $request->all();
-		
+		$input = $request->all();	
 		if ( $request->file('file_path') === NULL ) {
 			$validator = 'Informe o arquivo do cronograma!';
 			return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($request->file_path->extension() == 'pdf') {
@@ -220,11 +207,9 @@ class OrganizationalController extends Controller
 					'title'    => 'required|max:255',
 				]);
 				if ($validator->fails()) {
-					$failed = $validator->failed();
-					$validator = 'O campo título é obrigatório e suporta até 255 caracteres!';
 					return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				} else {
 					$nome = $_FILES['file_path']['name']; 
 					$request->file('file_path')->move('../public/storage/', $nome);
@@ -232,14 +217,14 @@ class OrganizationalController extends Controller
 					$lastUpdated = $log->max('updated_at');
 					$valdiator = 'Organograma cadastrado com sucesso!';
 					return view('transparencia/organizacional/organograma_cadastro', compact('unidades','unidade','unidadesMenu','lastUpdated'))
-					->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				}
 			} else {
 				$validator = 'Só são permitidos arquivos do tipo: PDF!';
 				return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));				
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));				
 			}
 		}
     }
@@ -247,7 +232,6 @@ class OrganizationalController extends Controller
 	public function organogramaExcluir($id)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
@@ -256,7 +240,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -272,17 +256,15 @@ class OrganizationalController extends Controller
 		Storage::delete($pasta);
 		$log = LoggerUsers::create($input);
 		$lastUpdated = $log->max('updated_at');
-
 		$validator = 'Organograma Excluído com sucesso!';
 		return view('transparencia/organizacional/organograma_cadastro', compact('unidades','unidade','unidadesMenu','lastUpdated'))
-		->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));				
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));				
     }
 
 	public function organizacionalExcluir($id_item, $id_unidade)
 	{  
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
@@ -293,7 +275,7 @@ class OrganizationalController extends Controller
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
@@ -308,10 +290,9 @@ class OrganizationalController extends Controller
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
 		$estruturaOrganizacional = Organizational::where('unidade_id', $id_unidade)->get();
-
 		$validator  = 'Estrutura Organizacional Exclupido com Sucesso!';
 		return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estruturaOrganizacional'))
-		->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));		
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));		
     }
 }

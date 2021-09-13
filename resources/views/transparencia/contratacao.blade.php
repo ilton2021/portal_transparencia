@@ -329,7 +329,7 @@
 														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
 														  @foreach($processo_arquivos as $processoA) 
 															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
+															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
 															@endif
 														  @endforeach
 														 </div>	
@@ -458,7 +458,7 @@
 														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
 														  @foreach($processo_arquivos as $processoA) 
 															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
+															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
 															@endif
 														  @endforeach
 														 </div>	
@@ -521,8 +521,9 @@
 														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
 														  @foreach($processo_arquivos as $processoA) 
 															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
+															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
 															@endif
+															
 														  @endforeach
 														 </div>	
 														</a> </center>
@@ -609,7 +610,7 @@
 														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
 														  @foreach($processo_arquivos as $processoA) 
 															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
+															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
 															@endif
 														  @endforeach
 														 </div>	
@@ -637,6 +638,7 @@
 												  </ul>
 												</nav>
 											   </table>   
+												
 										</div>
 							     </div>
 							   </div>

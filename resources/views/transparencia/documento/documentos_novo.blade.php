@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">CADASTRAR DOCUMENTAÇÃO DE REGULARIDADE:</h3>
 		</div>
 	</div>
-	
 	@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
-	
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>
 		<div class="col-md-12 col-sm-12 text-center">

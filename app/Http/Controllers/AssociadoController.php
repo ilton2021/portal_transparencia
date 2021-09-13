@@ -31,7 +31,6 @@ class AssociadoController extends Controller
 	public function listarAssociado($id, Request $request)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$associados = new Associado();
 		$unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
@@ -39,22 +38,19 @@ class AssociadoController extends Controller
 		$unidade = $this->unidade->find($id);
 		$associados = $this->associado->all();
 		$lastUpdated = $associados->max('last_updated');
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','associados'));
-			
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function associadoAlterar($id_unidade, $id_associado, Request $request)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$associados = new Associado();
 		$unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
@@ -66,37 +62,33 @@ class AssociadoController extends Controller
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function associadoNovo($id, Request $request)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$associados = new Associado();
 		$unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
 		$associados = $this->associado->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_novo', compact('unidades','unidadesMenu','unidade','associados'));
-				
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
 	public function associadoExcluir($id_unidade, $id_associado , Request $request)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$associados = new Associado();
 		$unidades = new Unidade();
 		$unidadesMenu = $this->unidade->all();
@@ -105,12 +97,11 @@ class AssociadoController extends Controller
 		$associados = $this->associado->find($id_associado);
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_excluir', compact('unidades','unidadesMenu','unidade','associados'));
-			
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
@@ -122,22 +113,20 @@ class AssociadoController extends Controller
 		$associados = $this->associado->all();
 		$input = $request->all(); 	
 		$validator = Validator::make($request->all(), [
-				'name' => 'required|max:255',
-				'cpf'  => 'required|max:14|min:14',
-			]);
+			'name' => 'required|max:255',
+			'cpf'  => 'required|max:14|min:14',
+		]);
 		if ($validator->fails()) {
-				$validator = 'Membro não cadastrado, preencha todos os campos!';
-				return view('trasparencia/membros/membros_novo', compact('unidades','unidadesMenu','unidade','associados'))
+			return view('trasparencia/membros/membros_novo', compact('unidades','unidadesMenu','unidade','associados'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-			} else {
+		} else {
 			$associado = Associado::create($input);
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$associados = $this->associado->all();
 			$validator = 'Membro Associado, cadastrado com sucesso';
 			return view('transparencia/membros/membros_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','associados'));
-			
 		}
     }
 	
@@ -153,12 +142,10 @@ class AssociadoController extends Controller
 			'cpf'  => 'required|max:14|min:14',
 		]);
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-			$validator = 'Algo de errado aconteceu, verifique os campos!';
-				return view('transparencia/membros/membros_alterar', compact('unidades','unidadesMenu','unidade','associados'))
+			return view('transparencia/membros/membros_alterar', compact('unidades','unidadesMenu','unidade','associados'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-			} else {
+		} else {
 			$associado = Associado::find($id_associado); 
 			$associado->update($input);
 			$log = LoggerUsers::create($input);
@@ -166,11 +153,11 @@ class AssociadoController extends Controller
 			$associados = $this->associado->all();
 			$validator = 'Membro associado alterado com sucesso!';
 			return view('transparencia/membros/membros_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','associados'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
-    
 	}
+
     public function destroy($id_unidade, $id_associado, Associado $associado, Request $request)
     { 
         Associado::find($id_associado)->delete();  
@@ -184,7 +171,7 @@ class AssociadoController extends Controller
 		$associados = $this->associado->all();
 		$validator = 'Membro Associado excluído com sucesso!';
 		return view('transparencia/membros/membros_cadastro', compact('unidades','unidadesMenu','lastUpdated','unidade','associados'))
-		->withErrors($validator)
+			->withErrors($validator)
 			->withInput(session()->flashInput($request->input()));	
     }
 }

@@ -8,8 +8,6 @@
 			<h5  style="font-size: 18px;">ALTERAR MEMBROS DIRIGENTES:</h5>
 		</div>
 	</div>	
-	
-	
 	@if ($errors->any())
 			<div class="alert alert-danger">
 				<ul>

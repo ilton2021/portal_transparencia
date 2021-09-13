@@ -31,7 +31,6 @@ class DocumentacaoRegularidadeController extends Controller
 	public function documentosCadastro($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidades = $this->unidade->all();
 		$unidadesMenu = $unidades;
 		$unidade = $this->unidade->find($id);
@@ -40,39 +39,34 @@ class DocumentacaoRegularidadeController extends Controller
 		$types = Type::all();
 		if($validacao == 'ok') {
 			return view('transparencia/documento/documentos_cadastro', compact('unidade','unidadesMenu','unidades','lastUpdated','documents','types'));
-			
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))	
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
 	public function documentosNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidades = $this->unidade->all();
 		$unidadesMenu = $unidades;
 		$unidade = $this->unidade->find($id);
 		$types = Type::all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/documento/documentos_novo', compact('unidade','unidadesMenu','unidades','types'));
-			
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 
 	public function documentosExcluir($id, $id_escolha)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidades = $this->unidade->all();
 		$unidadesMenu = $unidades;
 		$unidade = $this->unidade->find($id);
@@ -81,12 +75,11 @@ class DocumentacaoRegularidadeController extends Controller
 		$lastUpdated = $documents->max('updated_at');
 		if($validacao == 'ok') {
 			return view('transparencia/documento/documentos_excluir', compact('unidade','unidadesMenu','unidades','documents','types'));
-		
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
@@ -103,16 +96,15 @@ class DocumentacaoRegularidadeController extends Controller
 			'name' => 'required|max:255'
 		]);
 		if ($validator->fails()) {			
-			$validator = 'Algo de errado aconteceu, verifique os campos!';
 			return view('transparencia/documento/documentos_novo', compact('unidade','unidadesMenu','unidades','types'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			if($request->file('path_file') === NULL) {	
 				$validator = 'Informe um arquivo para o Documento de Regularidade!';
 				return view('transparencia/documento/documentos_novo', compact('unidade','unidadesMenu','unidades','types'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 			} else {
 				if($extensao === 'pdf') {
 					$nome = $_FILES['path_file']['name'];
@@ -124,13 +116,13 @@ class DocumentacaoRegularidadeController extends Controller
 					$documents = DocumentacaoRegularidade::all();	
 					$validator = 'Documento de Regularidade cadastrado com sucesso!';
 					return view('transparencia/documento/documentos_cadastro', compact('unidade','unidadesMenu','unidades','documents','lastUpdated','types'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));				
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));				
 				} else {
 					$validator = 'Só são permitidos os arquivos do tipo: PDF';
 					return view('transparencia/documento/documentos_novo', compact('unidade','unidadesMenu','unidades','types'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));				
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));				
 				}
 			}
 		}
@@ -152,7 +144,7 @@ class DocumentacaoRegularidadeController extends Controller
 		$documents = DocumentacaoRegularidade::all();
 		$validator = 'Documento de Regularidade excluído com sucesso!';
 		return view('transparencia/documento/documentos_cadastro', compact('unidade','unidadesMenu','unidades','documents','lastUpdated','types'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));			
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
     }
 }

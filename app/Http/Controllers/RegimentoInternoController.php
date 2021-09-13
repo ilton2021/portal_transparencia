@@ -30,7 +30,6 @@ class RegimentoInternoController extends Controller
 		$unidades = $unidadesMenu;
 		$unidade = $this->unidade->find($id);
 		$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
-		
 		return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidadesMenu','unidade','regimentos'));
 	}
 	
@@ -59,11 +58,10 @@ class RegimentoInternoController extends Controller
 		$input = $request->all();
 		$nome = $_FILES['file_path']['name']; 
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
-
 		if ( $request->file('file_path') === NULL ) {
 			$validator = 'Informe o arquivo do Regimento Interno!';
 			return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
+				->withErrors($validator)	
 				->withInput(session()->flashInput($request->input()));
 		} else {
 			if($extensao === 'pdf') {
@@ -71,11 +69,9 @@ class RegimentoInternoController extends Controller
 					'title'    => 'required|max:255',
 				]);
 				if ($validator->fails()) {
-					$failed = $validator->failed();
-					$validator = 'O campo Título é obrigatório e suporta até 255 caracteres.';
 					return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				} else {
 					$nome = $_FILES['file_path']['name']; 
 					$request->file('file_path')->move('../public/storage/regimento_interno/', $nome);		
@@ -86,14 +82,14 @@ class RegimentoInternoController extends Controller
 					$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
 					$validator = 'Regismento interno cadastrado com sucesso!';
 					return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				}
 			} else {
 				$validator = 'Só são permitidos arquivos do tipo: PDF!';
 				return view('transparencia/organizacional/regimento_novo', compact('unidades','unidade','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));				
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));				
 			}
 		}
     }
@@ -113,7 +109,7 @@ class RegimentoInternoController extends Controller
 		$regimentos = RegimentoInterno::where('unidade_id', $id)->get();
 		$validator = 'Regismento Interno Exclupido com sucesso!';
 		return view('transparencia/organizacional/regimento_cadastro', compact('unidades','unidade','unidadesMenu','regimentos','lastUpdated'))
-		->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));				
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));				
     }
 }

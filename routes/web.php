@@ -1,15 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 Route::get('/', 'IndexController@index')->name('welcome');
 
 Route::prefix('transparencia')->group( function(){
@@ -57,10 +47,15 @@ Route::prefix('transparencia')->group( function(){
 Auth::routes();
 
 Route::get('auth/login','UserController@telaLogin')->name('telaLogin');
+Route::get('auth/login/reset','UserController@telaEmail')->name('telaEmail');
 Route::get('auth/register', 'UserController@telaRegistro')->name('telaRegistro');
 Route::post('auth/register', 'UserController@store')->name('store');
 Route::get('auth/passwords/email', 'UserController@telaEmail')->name('telaEmail');
 Route::post('auth/login', 'UserController@Login')->name('Login');
+Route::get('auth/login/emailreset', 'UserController@emailReset')->name('emailReset');
+Route::post('auth/login/emailreset','UserController@emailReset')->name('emailReset');
+Route::get('auth/passwords/reset', 'UserController@telaReset')->name('telaReset');
+Route::post('auth/passwords/reset','UserController@resetarSenha')->name('resetarSenha');
 
 Route::middleware(['auth'])->group( function() {
 
@@ -78,19 +73,13 @@ Route::middleware(['auth'])->group( function() {
 	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/addOrdemCompra','HomeController@addOrdemCompra')->name('addOrdemCompra');
 	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/{id_processo}','HomeController@arquivosOrdemCompra')->name('arquivosOrdemCompra');
 
-
-
 	Route::post('home_compras/ordem_compra/novo/{id}','HomeController@storeOrdemCompra')->name('storeOrdemCompra');
 	Route::post('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@updateOrdemCompra')->name('updateOrdemCompra');
 	Route::post('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@destroyOrdemCompra')->name('destroyOrdemCompra');
 
-
-
 	Route::prefix('home')->group( function(){
 		Route::get('', 'HomeController@index')->name('home');
 		Route::get('/{id}', 'HomeController@index')->name('index');	
-		Route::get('auth/passwords/reset', 'UserController@telaReset')->name('telaReset');
-		Route::post('auth/passwords/reset','UserController@resetarSenha')->name('resetarSenha');
 		
 		//Permissao
 		Route::get('permissao/{id}', 'PermissaoController@cadastroPermissao')->name('cadastroPermissao');
@@ -263,7 +252,8 @@ Route::middleware(['auth'])->group( function() {
 		Route::post('recursos-humanos/{id}/selecaoPcadastro/despesasRH','RHController@despesasRHProcurar')->name('despesasRHProcurar');
 		Route::get('recursos-humanos/{id}/selecaoPcadastro/alterarDespesaRH/{ano}/{mes}/{tipo}','RHController@alterarRH')->name('alterarRH');
 		Route::post('recursos-humanos/{id}/selecaoPcadastro/alterarDespesaRH/{ano}/{mes}/{tipo}','RHController@updateDespesasRH')->name('updateDespesasRH');
-		
+		Route::get('recursos-humanos/{id}/selecaoPcadastro/deletarDespesaRH/{ano}/{mes}/{tipo}','RHController@deletarRH')->name('deletarRH');
+		Route::post('recursos-humanos/{id}/selecaoPcadastro/deletarDespesaRH/{ano}/{mes}/{tipo}','RHController@destroyDespesasRH')->name('destroyDespesasRH');
 
 
 		//RH - Processo Seletivo

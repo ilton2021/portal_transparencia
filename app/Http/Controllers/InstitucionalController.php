@@ -34,32 +34,29 @@ class InstitucionalController extends Controller
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu'));
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
 	public function institucionalNovo($id, Request $request)
 	{ 
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
@@ -76,8 +73,8 @@ class InstitucionalController extends Controller
 		if(($request->file('path_img') === NULL) || ($request->file('icon_img') === NULL)) {	
 			$validator = 'Insira um arquivo e um ícone!';
 			return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu','true'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		} else {
 			if(($extensao == 'png' || $extensao == 'jpg') && ($extensaoI == 'png' || $extensaoI == 'jpg')) {
 				$validator = Validator::make($request->all(), [
@@ -88,7 +85,9 @@ class InstitucionalController extends Controller
 					'google_maps' => 'required'
 				]);
 				if ($validator->fails()) {
-					return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'));
+					return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'))
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				} else {
 					$nome = $_FILES['path_img']['name']; 
 					$input['path_img'] = $nome; 
@@ -101,14 +100,14 @@ class InstitucionalController extends Controller
 					$lastUpdated = $log->max('updated_at');	
 					$validator = 'Instituição Cadastrada com Sucesso!';
 					return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				}
 			} else  {	
 				$validator = 'Só são suportados arquivos do tipo: JPG ou PNG!';
 				return view('transparencia/institucional/institucional_novo', compact('unidade','unidades','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 			}
 		}		
 	}
@@ -116,18 +115,16 @@ class InstitucionalController extends Controller
 	public function institucionalAlterar($id, Request $request)
 	{ 	
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu'));
 		} else {
 			$validator = 'Vocênão tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 
@@ -145,8 +142,9 @@ class InstitucionalController extends Controller
 					'cep' 	   => 'required|max:10'
 			]);
 			if ($validator->fails()) {
-				$failed = $validator->failed(); 
-				return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu'));
+				return view('transparencia/institucional/institucional_alterar', compact('unidade','unidades','unidadesMenu'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 			} 
 			if(!empty($input['path_img']) && !empty($input['icon_img'])){
 				$unidade = Unidade::find($id);
@@ -155,9 +153,9 @@ class InstitucionalController extends Controller
 				$lastUpdated = $log->max('updated_at');
 				$validator = 'Instituição Alterada com Sucesso!';	
 				return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
-			} 
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
+			}  
 		} else { 
 			$unidade = Unidade::find($id);
 			$unidade->update($input);
@@ -165,26 +163,24 @@ class InstitucionalController extends Controller
 			LoggerUsers::create($input);
 			$validator = 'Instituição Alterada com Sucesso!';
 			return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','lastUpdated','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 
 	public function institucionalExcluir($id, Request $request)
 	{ 
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/institucional/institucional_excluir', compact('unidade','unidades','unidadesMenu'));
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input())); 		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
 
@@ -205,7 +201,7 @@ class InstitucionalController extends Controller
 		$unidade = $unidadesMenu->find(1);
 		$validator = 'Instituição Excluída com sucesso!';
 		return view('transparencia/institucional/institucional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 	}
 }

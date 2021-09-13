@@ -7,7 +7,7 @@
 			<h3 style="font-size: 18px;">EXCLUIR REPASSES RECEBIDOS:</h3>
 		</div>
 	</div>
-	@if ($errors->any())
+		@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>
 					@foreach ($errors->all() as $error)
@@ -16,7 +16,6 @@
 				</ul>
 			</div>
 		@endif
-
 		<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-8 text-center">

@@ -7,9 +7,7 @@
 		<div class="col-md-12 text-center">
 			<h5  style="font-size: 18px;">MEMBROS DIRIGENTES</h5>
 		</div>
-	</div>	
-
-	
+	</div>		
 	@if ($errors->any())
 			<div class="alert alert-success">
 				<ul>

@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">ALTERAR RECURSOS HUMANOS:</h3>
 		</div>
 	</div>
-	
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
+	@if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
 	@endif
-	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -44,7 +42,7 @@
 						    </tr>
 							<tr>
 							  <td> Quantidade: </td>
-							  <td> <input class="form-control" style="width: 100px;" type="text" required id="quantidade" name="quantidade" value="<?php echo $selecaoPessoal[0]->quantidade; ?>" /> </td>
+							  <td> <input class="form-control" style="width: 100px;" type="number" required id="quantidade" name="quantidade" value="<?php echo $selecaoPessoal[0]->quantidade; ?>" /> </td>
 							</tr>
 							<tr>
 							  <td> Ano: </td>

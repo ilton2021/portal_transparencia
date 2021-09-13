@@ -5,8 +5,16 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                @if ($errors->any())
+                    <div class="alert alert-success">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                 <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="card-header">{{ __('Login') }}</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
@@ -40,7 +48,6 @@
                         </div>
 
                         <div class="form-group row mb-0">
-							<a style="margin-left: 290px;" href="{{ url ('/') }}" class="btn btn-warning"> Voltar </a>
                             
 							@if (Route::has('password.request'))
 								<a class="btn btn-link" href="{{ route('password.request') }}">

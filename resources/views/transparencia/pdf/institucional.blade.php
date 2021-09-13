@@ -3,20 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
-        
-
         <title>Portal da Transparencia - HCP</title>
-
-
-
-        <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-
-        <!-- OWN STYLE -->
         <link rel="stylesheet" href="{{asset('css/style.css')}}">
-
 </head>
 <body>
 
@@ -106,10 +96,8 @@
             </table>
         </div>
     </div>
-
 </div>
 </div>
 </div>
-    
 </body>
 </html>

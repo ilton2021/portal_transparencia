@@ -5,22 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
-        
-
         <title>Portal da Transparencia - HCP</title>
-
-        <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
-        <!-- BOOTSTRAP -->
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-
-        <!-- OWN STYLE -->
         <link rel="stylesheet" href="{{asset('css/style.css')}}">
-
-        <!-- Font Awesome KIT -->
         <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
-
         <style>
 
 .navbar .dropdown-menu .form-control {
@@ -30,7 +19,6 @@
 
     </head>
     <body>
-    <!-- As a heading -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm p-3 mb-5 rounded fixed-top">
         <a class="navbar-brand" href="#">
             <img src="{{asset('img/Imagem1.png')}}"  height="50" class="d-inline-block align-top" alt="">
@@ -78,6 +66,9 @@
                                     </div>
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-success btn-block">ENTRAR</button>
+                                        <a class="btn btn-link" style="margin-left: 70px" href="{{ route('telaEmail') }}">
+                                        {{ __('Esqueceu sua senha?') }}
+                                        </a>
                                     </div>
                                 </form>
                             </li>
@@ -243,8 +234,5 @@
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
-
-
-
     </body>
 </html>

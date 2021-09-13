@@ -31,63 +31,56 @@ class AssistencialCovidController extends Controller
     public function assistencialCovidCadastro($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
 		$assistencialCovid = $this->assistencialCovid->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','assistencialCovid','permissao_users'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
     public function assistencialCovidNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
-		$text         = false;
 		if($validacao == 'ok') {
 			return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 
     public function assistencialCovidExcluir($id, $id_covid)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades     = $unidadesMenu; 
 		$unidade      = $this->unidade->find($id);
 		$assistencialCovid = $this->assistencialCovid->find($id_covid);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/assistencialCovid/covid_excluir', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			$validacao = "Você não tem permissão!";
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 
@@ -104,15 +97,15 @@ class AssistencialCovidController extends Controller
 			'name' => 'required|max:255',
 		]);	
 		if ($validator->fails()) {
-				return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
+			return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-			} else {
+		} else {
 			if($request->file('file_path') === NULL) {
 				$validator = 'Informe o arquivo do Assistencial Covid';
 				return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 			} else {
 				if($extensao === 'pdf') {
 					$nome = $_FILES['file_path']['name']; 
@@ -128,13 +121,13 @@ class AssistencialCovidController extends Controller
                     $permissao_users   = PermissaoUsers::where('unidade_id', $id)->get();
 					$validator = 'Assistencial Covid cadastrado com sucesso!';
 					return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid','permissao_users'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				} else {
 					$validator = 'Só são permitidos arquivos do tipo: PDF';
 					return view('transparencia/assistencialCovid/covid_novo', compact('unidade','unidades','unidadesMenu','assistencialCovid'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
 				}
 			}
 		}
@@ -155,7 +148,7 @@ class AssistencialCovidController extends Controller
         $assistencialCovid = $this->assistencialCovid->all();
 		$validator = 'Assistencial covid excluído com sucesso!';
         return view('transparencia/assistencialCovid/covid_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','assistencialCovid'))
-	    ->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 }

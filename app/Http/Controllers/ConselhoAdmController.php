@@ -21,7 +21,7 @@ class ConselhoAdmController extends Controller
 		$this->logger_users = $logger_users;
 	}
    
-   public function index()
+    public function index()
     {
         $unidades = $this->unidade->all();
 		return view('home', compact('unidades'));
@@ -29,96 +29,69 @@ class ConselhoAdmController extends Controller
 
 	public function listarConselhoAdm($id, Request $request)
 	{	
-	
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$conselhoAdms = $this->conselhoAdm->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoAdm_cadastro', compact('unidade','unidades','unidadesMenu','conselhoAdms'));
-				
 		} else {
 			$validator = 'VocÊ não tem permissao!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function conselhoAdmNovo($id, Request $request)
 	{	
-
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$conselhoAdms = $this->conselhoAdm->all();
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoAdm_novo', compact('unidade','unidades','unidadesMenu','conselhoAdms'));
-		
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function conselhoAdmAlterar($id_unidade, $id_conselhoAdm, Request $request)
 	{	
-
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id_unidade);
 		$conselhoAdm = $this->conselhoAdm->find($id_conselhoAdm);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoAdm_alterar', compact('unidade','unidades','unidadesMenu','conselhoAdm'));
-				
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	 		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	 		
 		}
 	}
 	
 	public function conselhoAdmExcluir($id_unidade, $id_conselhoAdm, Request $request)
 	{	
-
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
-		$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
-		$qtd = sizeof($permissao_users);
-		$validacao = '';
-	    for($i = 0; $i < $qtd; $i++) {
-			if($permissao_users[$i]->user_id == Auth::user()->id && ($permissao_users[$i]->unidade_id == 1)) {
-				$validacao = 'ok';
-				break;
-			} else {
-				$validacao = 'erro';
-			}
-		}
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id_unidade);
 		$conselhoAdm = $this->conselhoAdm->find($id_conselhoAdm);
-		$text = false;
 		if($validacao == 'ok') {
 			return view('transparencia/membros/membros_conselhoAdm_excluir', compact('unidade','unidades','unidadesMenu','conselhoAdm'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
@@ -134,8 +107,8 @@ class ConselhoAdmController extends Controller
 			'cargo' => 'required'
 		]);
 		if ($validator->fails()) {
-				$validator = 'Algo de errado aconteceu, verifique os campos!';
-				return view('transparencia/membros/membros_conselhoAdm_novo', compact('unidades','unidadesMenu','unidade','conselhoAdms'))
+			$validator = 'Algo de errado aconteceu, verifique os campos!';
+			return view('transparencia/membros/membros_conselhoAdm_novo', compact('unidades','unidadesMenu','unidade','conselhoAdms'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
@@ -143,13 +116,11 @@ class ConselhoAdmController extends Controller
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$conselhoAdms = $this->conselhoAdm->all();
-
 			$validator = 'Conselho de Administração cadastrado com sucesso!';
 			return view('transparencia/membros/membros_conselhoAdm_cadastro', compact('unidades','unidadesMenu','unidade','conselhoAdms'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-		}
-    
+		}    
 	}
     public function update($id_unidade, $id_conselhoAdm, Request $request)
     {
@@ -162,14 +133,11 @@ class ConselhoAdmController extends Controller
 			'name' => 'required|max:255',
 			'cargo'  => 'required'
 		]);
-
 		if ($validator->fails()) {
-			$failed = $validator->failed();
-			$validator = 'Algo de errado aconteceu, verifique os campos!';
-				return view('transparencia/membros/membros_conselhoAdm_alterar', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoAdms'))
+			return view('transparencia/membros/membros_conselhoAdm_alterar', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoAdms'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
-			} else {
+		} else {
 			$conselhoAdm = ConselhoAdm::find($id_conselhoAdm); 
 			$conselhoAdm->update($input);	
 			$log = LoggerUsers::create($input);
@@ -177,11 +145,11 @@ class ConselhoAdmController extends Controller
 			$conselhoAdms = $this->conselhoAdm->all();
 			$validator = 'Conselho de Adminstração alterado com sucesso!';
 			return view('transparencia/membros/membros_conselhoAdm_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoAdms'))
-			->withErrors($validator)
+				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
-    
 	}
+
     public function destroy($id_unidade, $id_conselhoAdm, ConselhoAdm $conselhoAdm, Request $request)
     {
         ConselhoAdm::find($id_conselhoAdm)->delete();  
@@ -195,8 +163,7 @@ class ConselhoAdmController extends Controller
 		$conselhoAdms = $this->conselhoAdm->all();
 		$validator = 'Conselho de Administração Excluído com sucesso!';
 		return view('transparencia/membros/membros_conselhoAdm_cadastro', compact('unidades','unidadesMenu','unidade','lastUpdated','conselhoAdms'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
-	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 }

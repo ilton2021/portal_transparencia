@@ -10,9 +10,8 @@
             width: 300px;
         }
         </style>
-    </head>
+</head>
 @section('content')
-
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade[0]->name}}</strong></div><div class="container-fluid">
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
@@ -39,7 +38,7 @@
                 </div>
 				    <form method="post" action="{{ route('updateOrdemCompra', array($unidade[0]->id,$processos[0]->id)) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table class="table table-bordered">
+					<table class="table">
                 	  <thead>
 						<tr> 
 							<td> Nº SOLICITAÇÃO </td>
@@ -47,7 +46,7 @@
 						</tr>
 						<tr>
 							<td> DATA DA SOLICITAÇÃO </td>
-							<td> <input type="text" id="dataSolicitacao" name="dataSolicitacao" class="form-control" value="<?php echo $processos[0]->dataSolicitacao; ?> "/> </td>
+							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" value="<?php echo $processos[0]->dataSolicitacao; ?> "/> </td>
 						</tr>
 						<tr> 	
 							<td> Nº O.C </td>
@@ -55,7 +54,7 @@
 						</tr>
 						<tr> 	
 							<td> DATA DE AUTORIZAÇÃO O.C. </td>
-							<td> <input type="text" id="dataAutorizacao" name="dataAutorizacao" class="form-control" value="<?php echo $processos[0]->dataAutorizacao; ?> "/> </td>
+							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" value="<?php echo $processos[0]->dataAutorizacao; ?> "/> </td>
 						</tr>
 						<tr> 	
 							<td> FORNECEDOR </td>
@@ -70,8 +69,8 @@
 							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" value="<?php echo $processos[0]->qtdOrdemCompra; ?>" /> </td>
 						</tr>
 						<tr> 		
-							<td> VALOR TOTAL DA O.C. (R$) </td>
-							<td> <input type="number" id="totalValorOC" name="totalValorOC" class="form-control" value="<?php echo $processos[0]->totalValorOC; ?>" /> </td>
+							<td> VALOR TOTAL DA O.C. </td>
+							<td> <input type="text" id="totalValorOC" name="totalValorOC" class="form-control" value="<?php echo $processos[0]->totalValorOC; ?>" /> </td>
 						</tr>
 						<tr> 	
 							<td> PRODUTO </td>
@@ -79,15 +78,15 @@
 						</tr>
 						<tr> 		
 							<td> CLASSIFICAÇÃO DO ITEM </td>
-							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" value="<?php echo $processos[0]->classificacaoItem; ?>" /></td>
+							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" value="<?php echo $processos[0]->cassificacaoItem; ?>" /></td>
 						</tr>
 						<tr> 	
 							<td> QUANTIDADE RECEBIDA </td>
 							<td> <input type="text" id="quantidadeRecebida" name="quantidadeRecebida" class="form-control" value="<?php echo $processos[0]->quantidadeRecebida; ?>" /> </td>
 						</tr>
 						<tr> 	
-							<td> VALOR TOTAL RECEBIDO (R$) </td>
-							<td> <input type="number" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" value="<?php echo $processos[0]->valorTotalRecebido; ?> "/> </td>
+							<td> VALOR TOTAL RECEBIDO </td>
+							<td> <input type="text" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" value="<?php echo $processos[0]->valorTotalRecebido; ?> "/> </td>
 						</tr>
 						<tr> 	
 							<td> Nº NOTA FISCAL </td>
@@ -99,7 +98,7 @@
 						</tr>
 						<tr> 	
 							<td> CÓDIGO IBGE </td>
-							<td> <input type="text" id="codigoIbge" name="codigoIbge" class="form-control" value="<?php echo $processos[0]->codigoIBGE; ?> "/> </td>
+							<td> <input type="text" id="codigoIbge" name="codigoIbge" class="form-control" value="<?php echo $processos[0]->codigoIbge; ?> "/> </td>
 						</tr>
 						</thead>
 					</table>					
@@ -107,7 +106,7 @@
 						 <tr>
 						   <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
 						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
-		        		 <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
+		        		   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
 						 </tr>
 					</table>			
 					<br/>
@@ -124,7 +123,6 @@
         </div>
 		<div class="col-md-0 col-sm-0"></div>
     </div>
-</div>
- 
+</div> 
 </section >    
 @endsection

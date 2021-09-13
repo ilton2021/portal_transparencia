@@ -9,9 +9,8 @@ use Auth;
 
 class PermissaoUsersController extends Controller
 {
-    
-    public static function Permissao($id){
-
+    public static function Permissao($id)
+	{
         $permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
 		$qtd = sizeof($permissao_users);
 		$validacao = '';
@@ -25,5 +24,4 @@ class PermissaoUsersController extends Controller
 		}
         return $validacao;
     }
-
 }

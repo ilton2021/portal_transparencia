@@ -33,33 +33,26 @@ class DespesasPessoaisController extends Controller
 		$ano = $input['ano'];
 		$tipo = $input['tipo'];
 		if($id_unidade == 2){
-			$despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano',$ano)->get();
 			$nome = 'hmr';
 		} else if ($id_unidade == 3) {
-		   $despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'belo_jardim';
 	    } else if ($id_unidade == 4) {
-		   $despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'arcoverde';
 	    } else if ($id_unidade == 5) {
-		   $despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'arruda';
 	    } else if ($id_unidade == 6) {
-		   $despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'upaecaruaru';
 	    } else if ($id_unidade == 7) {
-		   $despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'hss';
 	    } else if ($id_unidade == 8) {
-		   $despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano',$ano)->get();
 		   $nome = 'hpr';
 	    }	
-		$qtd = sizeof($despesas); 
+		$qtd = 0; 
 		if($qtd > 30) {
 			$validator = 'Esta Despesa Pessoal já foi cadastrada!!';
 			return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 		   for($i = 1; $i < 11; $i++){
 			   $nivel = "";
@@ -92,8 +85,8 @@ class DespesasPessoaisController extends Controller
 		  }	
 	   }
 	   	$validator = 'Despesas com pessoal cadastrada com sucesso!';
-		return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+		return view('transparencia/rh/rh_despesas_exibe', compact('unidades','unidade','unidadesMenu','mes','ano','tipo'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
 	   }
 }

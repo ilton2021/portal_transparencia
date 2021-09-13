@@ -5,8 +5,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
   <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
   <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-
 <script>
 document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
 	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
@@ -37,16 +35,15 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 
 </head>
 <meta name="csrf-token" content="{{ csrf_token() }}">
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
-	@endif
-
+    @if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
     <div class="row" style="margin-top: 25px;">

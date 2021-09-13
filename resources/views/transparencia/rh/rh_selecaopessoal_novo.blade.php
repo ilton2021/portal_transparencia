@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">CADASTRAR RECURSOS HUMANOS:</h3>
 		</div>
 	</div>
-	
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
+	@if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
 	@endif
-	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -46,21 +44,16 @@
 							</tr>
 							<tr>
 							<td> Ano: </td>
-							 	 <td> <select id="ano" name="ano" class="form-control" style="width: 100px">
+							 	 <td> 
+								  <select id="ano" name="ano" class="form-control" style="width: 100px">
 									<option value="2021" id="ano" name="ano">2021</option>
 									<option value="2022" id="ano" name="ano">2022</option>
 									<option value="2023" id="ano" name="ano">2023</option>
 									<option value="2024" id="ano" name="ano">2024</option>
 									<option value="2025" id="ano" name="ano">2025</option>
-									<option value="2026" id="ano" name="ano">2021</option>
-									<option value="2027" id="ano" name="ano">2022</option>
-									<option value="2028" id="ano" name="ano">2023</option>
-									<option value="2029" id="ano" name="ano">2024</option>
-									<option value="2030" id="ano" name="ano">2025</option>	
-	
-
-								</select>	
-							  </td>						</tr>
+								  </select>	
+							  </td>						
+						    </tr>
 							<input hidden type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" />
 						</table>
 						

@@ -38,16 +38,15 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
-	@endif
-
+	@if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
     <div class="row" style="margin-top: 25px;">

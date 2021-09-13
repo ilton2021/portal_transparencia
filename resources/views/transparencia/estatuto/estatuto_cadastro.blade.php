@@ -4,17 +4,15 @@
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid" style="margin-top: 25px;">
 	<div class="row">
-
 	@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
-
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 		<div class="col-md-2"></div>
 		<div class="col-md-8 text-center">
 			<h5  style="font-size: 18px;">ESTATUTO SOCIAL E ATAS DO ESTATUTO SOCIAL</h5> 

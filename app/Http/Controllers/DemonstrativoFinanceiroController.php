@@ -38,19 +38,17 @@ class DemonstrativoFinanceiroController extends Controller
         $lastUpdated = $financialReports->max('updated_at');	
 		if($validacao == 'ok') {
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
 	public function demonstrativoFinanNovo($id)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id);		
@@ -58,19 +56,17 @@ class DemonstrativoFinanceiroController extends Controller
         $lastUpdated = $financialReports->max('updated_at');
 		if($validacao == 'ok') {
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
-
 		} else {
 			$validator = 'Você não tem Permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
 		}
 	}
 	
 	public function demonstrativoFinanAlterar($id_unidade, $id_item)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);
@@ -78,20 +74,19 @@ class DemonstrativoFinanceiroController extends Controller
         $lastUpdated = $financialReports->max('updated_at');
 		if($validacao == 'ok') {
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_alterar', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			$validator = "Você ão tem Permissão!!";
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
 	public function demonstrativoFinanExcluir($id_unidade, $id_item)
 	{
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-
 		$unidadesMenu = $this->unidade->all(); 
 		$unidades = $this->unidade->all();
 		$unidade = $unidadesMenu->find($id_unidade);		
@@ -99,12 +94,11 @@ class DemonstrativoFinanceiroController extends Controller
         $lastUpdated = $financialReports->max('updated_at');
 		if($validacao == 'ok') {
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_excluir', compact('unidade','unidades','unidadesMenu', 'financialReports','lastUpdated'));
-			
 		} else {
 			$validator = 'Você não tem Permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));			
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -124,27 +118,25 @@ class DemonstrativoFinanceiroController extends Controller
 		if ($qtd > 0) {
 			$validator = 'O Relatório correspondente a este mês e ao já foi cadastrado';
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		}
 		if($request->file('file_path') === NULL) {	
 			$validator = 'Informe o arquivo do demostrtivo.';
 			return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));	
 		} else {
 			if($extensao === 'pdf') {
 				$validator = Validator::make($request->all(),[
-
 					'title' => 'required',
 					'mes'	=> 'required',
 					'ano'	=> 'required'
-			]);
-				
+				]);
 				if ($validator->fails()) {					
 					return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));	
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));	
 				}
 				$ano  = $_POST['ano'];
 				$mes  = $_POST['mes'];
@@ -165,13 +157,13 @@ class DemonstrativoFinanceiroController extends Controller
 				$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->orderBy('ano', 'ASC')->get();
 				$validator = 'Demonstrativo Financeiro cadastrado com sucesso!';
 				return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 			} else {	
 				$validator = 'Só suporta arquivos do tipo: PDF!';
 				return view('transparencia/demonstrativo-financeiro/demonstrativo_novo', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));	
 			}
 		}
 	}
@@ -186,8 +178,8 @@ class DemonstrativoFinanceiroController extends Controller
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->get();
 		$validator = 'Demonstrativo financeiro alterado com sucesso!';
 		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 
     public function destroy($id_unidade, $id_item, Request $request)
@@ -205,7 +197,7 @@ class DemonstrativoFinanceiroController extends Controller
 		$financialReports = DemonstrativoFinanceiro::where('unidade_id', $id_unidade)->orderBy('ano', 'ASC')->get();
 		$validator = 'Demonstrativo Financeiro Excluído com sucesso!';
 		return view('transparencia/demonstrativo-financeiro/demonstrativo_cadastro', compact('unidades','unidade','unidadesMenu','financialReports','lastUpdated'))
-		->withErrors($validator)
-		->withInput(session()->flashInput($request->input()));	
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));	
     }
 }

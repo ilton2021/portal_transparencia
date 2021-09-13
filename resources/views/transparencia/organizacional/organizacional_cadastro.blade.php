@@ -5,14 +5,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
   <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
   <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-  <script>
-
+<script>
 		$("#cpf").keyup(function() {
 				$("#cpf").val(this.value.match(/[0-11]*/));
 			});
 
-			document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
+	document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
 	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
 		var i = document.getElementById("telefone").value.length; //aqui pega o tamanho do input
 		if (i === 0)
@@ -23,7 +21,6 @@
 		  document.getElementById("telefone").value = document.getElementById("telefone").value + "-";
 	  }
 	});
-
 	</script>
 </head>
 

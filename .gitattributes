@@ -2,6 +2,4 @@
 *.css linguist-vendored
 *.scss linguist-vendored
 *.js linguist-vendored
-CHANGELOG.md export-ignore7
-composer.json
-composer.lock
+CHANGELOG.md export-ignore

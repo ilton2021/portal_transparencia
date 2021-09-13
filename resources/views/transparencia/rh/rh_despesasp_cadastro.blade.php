@@ -27,11 +27,11 @@
 					</a>				
 						<form action="{{\Request::route('storeDespesas'), $unidade->id}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<table class="table table-sm" style="margin-right: 500px;">
+							<table class="table table-sm" style="margin-right: 400px;">
 								<tr>
 								  <td rowspan="" colspan="1"> Mês: </td>
 								  <td> 
-									<select style="width: 120px" class="form-control" id="mes" name="mes">
+									<select style="width: 140px" class="form-control" id="mes" name="mes">
 									 <option value="1" id="mes" name="mes">Janeiro</option>
 									 <option value="2" id="mes" name="mes">Fevereiro</option>
 									 <option value="3" id="mes" name="mes">Março</option>
@@ -48,7 +48,7 @@
 								  </td>
 								  <td> Ano: </td>
 								  <td> 
-									<select style="width:120px;" class="form-control" id="ano" name="ano">
+									<select style="width:100px;" class="form-control" id="ano" name="ano">
 									  <option value="2010" id="ano" name="ano">2010</option>
 									  <option value="2011" id="ano" name="ano">2011</option>
 									  <option value="2012" id="ano" name="ano">2012</option>
@@ -59,8 +59,8 @@
 									  <option value="2017" id="ano" name="ano">2017</option>
 									  <option value="2018" id="ano" name="ano">2018</option>
 									  <option value="2019" id="ano" name="ano">2019</option>
-									  <option value="2020" id="ano" name="ano">2020</option>
-									  <option selected value="2021" id="ano" name="ano">2021</option>
+									  <option selected value="2020" id="ano" name="ano">2020</option>
+									  <option value="2021" id="ano" name="ano">2021</option>
 									  <option value="2022" id="ano" name="ano">2022</option>
 									  <option value="2023" id="ano" name="ano">2023</option>
 									  <option value="2024" id="ano" name="ano">2024</option>
@@ -74,13 +74,13 @@
 									  <option value="13" id="tipo" name="tipo">13° Salário</option>
 									  <option value="covid" id="tipo" name="tipo">Covid</option>
 								</td>
-							</table>
-							<table class="table table-sm" style="margin-right: 300px;">
 								</tr>
+							</table>
+							<table>
 								<tr style="margin-right: 90px;">
 								  <td> Nível: </td>
 								  <td> Cargos: </td>
-								  <td> Quantidade: </td>	
+								  <td> Qtd: </td>	
 								  <td> Valores (R$): </td>
 								</tr>
 							    <tr>
@@ -136,9 +136,9 @@
 								  <td> <input class="form-control" style="width: 150px;" type="text" id="valor9" name="valor9" value="<?php echo old('valor9') ?>" required /> </td>
 								</tr>
 								<tr>  
-								  <td rowspan="1" colspan="2"> <input class="form-control" readonly="true" style="width: 579px;" type="text" id="nivel4" name="nivel4" value="TOTAL GERAL" required /> </td>
-								  <td  rowspan="1" colspan="1"> <input class="form-control" style="width: 100px;" type="number" id="Quant10" name="Quant10" value="<?php echo old('Quant10') ?>" required /> </td>
-								  <td  rowspan="2" colspan="5">  <input class="form-control" style="width: 150px;" type="text" id="valor10" name="valor10" value="<?php echo old('valor10') ?>" required /> </td>
+								  <td rowspan="1" colspan="2"> <input class="form-control" readonly="true" style="width: 500spx;" type="text" id="nivel4" name="nivel4" value="TOTAL GERAL" required /> </td>
+								  <td rowspan="1" colspan="1"> <input class="form-control" style="width: 100px;" type="number" id="Quant10" name="Quant10" value="<?php echo old('Quant10') ?>" required /> </td>
+								  <td rowspan="2" colspan="5"> <input class="form-control" style="width: 150px;" type="text" id="valor10" name="valor10" value="<?php echo old('valor10') ?>" required /> </td>
 								</tr>
 							</table>							
 							<table>
@@ -151,9 +151,11 @@
 							</table>	
 							<table>
 							 <tr>
-								<td style="align: right"> 
+								<td>
+								  <p style="margin-left: 610px;;"> 
 								   <a href="{{route('despesasRH', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 								   <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
+								  </p>
 								</td>
 							 </tr>
 							</table>

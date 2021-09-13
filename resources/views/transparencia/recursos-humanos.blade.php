@@ -126,10 +126,32 @@
 					<div id="DESPESAS" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 					<div class="card-body" style="font-size: 15px;background-color: #fafafa;">
 						<i style="margin-right: 5px;" class="fas fa-scroll"></i>Despesas com Pessoal
-					        <!--<a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/hmr/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>!-->
-						 	<a style="margin-left:10px;" class="btn btn-success btn-sm" href="{{ route('despesasRH', array($unidade->id)) }}" role="button">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
-
-					        
+						
+						@if(Auth::check())
+						  <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('despesasRH', $unidade->id)}}" > Alterar <i class="fas fa-edit"></i></a>
+						@else
+						@if($unidade->id == 2)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/hmr/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+						@endif
+					    @if($unidade->id == 3)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/belo-jardim/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+					    @if($unidade->id == 4)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/arcoverde/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+					    @if($unidade->id == 5)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/arruda/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+					    @if($unidade->id == 6)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/upae-caruaru/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+					    @if($unidade->id == 7)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/hss/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+						@if($unidade->id == 8)
+					      <a style="margin-left:10px;" class="btn btn-success btn-sm" href="http://hcpgestao.org.br/transparencia/unidades/hpr/desp_com_pessoal/index.php" role="button" target="_blank">Consultar<i style="margin-left:5px;" class="fas fa-edit"></i></a>
+					    @endif
+						@endif
 					    </i>	
 					</div>
 					</div>

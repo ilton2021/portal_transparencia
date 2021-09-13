@@ -8,16 +8,15 @@
             <h5  style="font-size: 18px;">ALTERAR RELATÓRIO ASSISTENCIAL:</h5>
         </div>
     </div>
-	
 	@if ($errors->any())
-					<div class="alert alert-danger">
-						<ul>
-							@foreach ($errors->all() as $error)
-							<li>{{ $error }}</li>
-							@endforeach
-						</ul>
-					</div>
-	@endif
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
     <div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-20 col-sm-18 text-center">

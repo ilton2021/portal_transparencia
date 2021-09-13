@@ -7,8 +7,7 @@
 		<div class="col-md-12 text-center">
 			<h5  style="font-size: 18px;">EXCLUIR DECRETO DE QUALIFICAÇÃO:</h5>
 		</div>
-	</div>	
-	
+	</div>
 	@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul>
@@ -17,8 +16,7 @@
 				@endforeach
 			</ul>
 		</div>
-	@endif
-	
+	@endif	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>	
 		<div class="col-md-12 col-sm-12 text-center">

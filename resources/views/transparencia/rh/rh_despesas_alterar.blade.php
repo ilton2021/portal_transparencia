@@ -27,44 +27,59 @@
 					</a>				
 						<form action="{{route('updateDespesasRH', array($unidade->id, $ano, $mes, $tipo))}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<table class="table table-sm" style="margin-right: 600px;">
+							<table class="table table-sm" style="margin-right: 400px;">
 								<tr>
-								  <td  rowspan="" colspan="1"> Mês: </td>
+								  <td> Mês: </td> 
 								  <td> 
-									<select style="width: 120px" class="form-control" id="mes" name="mes">
-									 <option value="<?php echo $mes ?>" id="mes" name="mes">{{ $mes }}</option>
+									<select style="width: 70px;" class="form-control" id="mes" name="mes">
+									  <option value="<?php echo $mes ?>" id="mes" name="mes">{{ $mes }}</option>
 									</select>
-								  </td>
-								  <td> Ano: </td>
-								  <td> 
-									<select style="width:120px;" class="form-control" id="ano" name="ano">
+								  </td>	
+								  <td>  Ano: </td>
+								  <td>	
+									<select style="width:100px;" class="form-control" id="ano" name="ano">
 									  <option value="<?php echo $ano ?>" id="ano" name="ano">{{ $ano }}</option>
 									</select>
-								  </td>
+								  </td>	
 								  <td> Tipo: </td>
-								  <td> 	
-									  <select style="width:100px;" class="form-control" id="tipo" name="tipo">
+								  <td> 
+								    <select style="width:160px;" class="form-control" id="tipo" name="tipo">
 									  <option value="<?php echo $tipo ?>" id="tipo" name="tipo">{{ $tipo }}</option>
-								</td>
+									</select>
+								  </td>
 								</tr>
-							</table> <br>
-							<table class="table table-sm" style="width: 850px;">
+							  </table>
+							  <table> 
+								<tr>
+								  <td><br>Nível</td>
+								  <td><br>Cargo</td>
+								  <td></td>
+								  <td><br>Qtd</td>
+								  <td></td>
+								  <td><br>Valor</td>
+								</tr>
 								<?php $a = 0; ?>
 								@if(!empty($despesas))
 									@foreach($despesas as $despesa)
 									<tr> <?php $a += 1; ?>
-										<td hidden style="font-size: 11px; width:200px"><input type="text" id="id_<?php echo $a; ?>" name="id_<?php echo $a;?>" readonly = "true" class="form-control" value="<?php echo $despesa->id?>" /> </td>
-										<td style="font-size: 11px; width:175px"><input type="text" id="nivel" name="nivel" readonly = "true" class="form-control" value="<?php echo $despesa->Nivel?>" /> </td>
-										<td style="font-size: 11px; width:160px"><input type="text" id="cargo" name="cargo" readonly = "true" class="form-control" value="<?php echo $despesa->Cargo?>"/> </td>
-										<td style="font-size: 11px; width:70px"><input type="text" id="quant_<?php echo $a; ?>" name="quant_<?php echo $a;?>"  class="form-control" value="<?php echo $despesa->Quant?>"/></td>
-										<td style="font-size: 11px; width:130px"><input type="text" id="valor_<?php echo $a; ?> " name="valor_<?php echo $a?>" class="form-control" value="<?php echo $despesa->Valor?>"/></td>
+										<td hidden style="font-size: 11px; width:190px"><input type="text" id="id_<?php echo $a; ?>" name="id_<?php echo $a;?>" readonly="true" class="form-control" value="<?php echo $despesa->id?>" /> </td>
+										<td style="font-size: 11px; width:350px"><input type="text" id="nivel" name="nivel" readonly="true" class="form-control" value="<?php echo $despesa->Nivel?>" /> </td>
+										<td style="font-size: 11px; width:500px"><input type="text" id="cargo" name="cargo" readonly="true" class="form-control" value="<?php echo $despesa->Cargo?>"/> </td>
+										<td></td>
+										<td style="font-size: 11px; width:120px"><input type="text" id="quant_<?php echo $a; ?>" name="quant_<?php echo $a;?>"  class="form-control" value="<?php echo $despesa->Quant?>"/></td>
+										<td></td>
+										<td style="font-size: 11px; width:220px"><input type="text" id="valor_<?php echo $a; ?> " name="valor_<?php echo $a?>" class="form-control" value="<?php echo $despesa->Valor?>"/></td>
 									</tr>
 									@endforeach
-								  @endif
+								@endif
+							</table>
+							<table>	  
 							 <tr>
-								<td align="right" colspan="5"> 
+								<td>
+								  <p style="margin-left: 700px;;"> 	  
 								   <a href="{{route('despesasRH', array($unidade->id))}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-								   <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
+								   <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
+								  </p>
 								</td>
 							 </tr>
 							</table>

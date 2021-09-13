@@ -7,17 +7,15 @@
 			<h3 style="font-size: 18px;">EXCLUIR DEMONSTRAÇÕES CONTÁBEIS E PARECERES:</h3>
 		</div>
 	</div>
-	
 	@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
 	@endif
-	
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-12">

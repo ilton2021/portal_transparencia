@@ -7,14 +7,11 @@
 </script>
 
 @section('content')
-
 <head>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
   <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
   <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-
 <script>
 document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
 	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
@@ -53,17 +50,15 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
             <h5 style="font-size: 18px;">EXCLUIR INSTITUCIONAL:</h5>
         </div> 
     </div><br/>
-
-	@if (Session::has('mensagem'))
-		@if ($text == true)
-		<div class="container">
-	     <div class="alert alert-danger {{ Session::get ('mensagem')['class'] }} ">
-		      {{ Session::get ('mensagem')['msg'] }}
-		 </div>
-		</div>
-		@endif
-	@endif
-	
+	@if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
     <div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
