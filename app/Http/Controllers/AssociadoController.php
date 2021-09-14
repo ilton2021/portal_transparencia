@@ -117,7 +117,7 @@ class AssociadoController extends Controller
 			'cpf'  => 'required|max:14|min:14',
 		]);
 		if ($validator->fails()) {
-			return view('trasparencia/membros/membros_novo', compact('unidades','unidadesMenu','unidade','associados'))
+			return view('transparencia/membros/membros_novo', compact('unidades','unidadesMenu','unidade','associados'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {

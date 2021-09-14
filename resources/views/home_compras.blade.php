@@ -7,8 +7,7 @@
         <title>Portal da Transparencia - HCP</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('css/style.css')}}">
-	    <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
         <style>
         .navbar .dropdown-menu .form-control {
             width: 300px;
@@ -74,9 +73,9 @@
                 @foreach($unidades as $unidade)
                 @if(!isset($unidade->cnes) || $unidade->cnes === null)
                 <td>
-                    <img id="img-unity" src="{{asset('img')}}/{{$unidade->path_img}}" class="rounded-sm" alt="..." style="width:150px">
+                    <img id="img-unity" src="{{asset('img')}}/{{$unidade->path_img}}" class="rounded-sm" alt="..." style="width:150px" title="<?php echo $unidade->name; ?>">
                     <div class="card-body text-center">
-                      <a href="{{route('trasparenciaOrdemCompra', $unidade->id)}}"  class="btn btn-outline-success">Clique Aqui</a>
+                      <a href="{{route('transparenciaOrdemCompra', $unidade->id)}}" class="btn btn-outline-success">Clique Aqui</a>
                     </div>
                 </td>
                 @endif

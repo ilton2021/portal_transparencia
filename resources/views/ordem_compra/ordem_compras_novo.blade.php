@@ -5,7 +5,8 @@
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
         <title>Portal da Transparencia - HCP</title>
         <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
-        <style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+		<style>
         .navbar .dropdown-menu .form-control {
             width: 300px;
         }
@@ -37,102 +38,82 @@
                     Ordem de Compra <i class="fas fa-check-circle"></i>
                 </a>
                 </div>
-				    <table class="table">
-					<tr>
-					  <td> NÚMERO SOLICITAÇÃO </td>
-					  <td> DATA SOLICITAÇÃO </td>
-					  <td> Nº ORDEM COMPRA </td>
-					  <td> DATA AUTORIZAÇÃO O.C. </td>
-					</tr>
-					<tr>  
-					@foreach($processos as $prc)
-					  <td> {{ $prc->numeroSolicitacao }} </td>
-					  <td> {{ date('d-m-Y', strtotime($prc->dataSolicitacao)) }} </td>
-					  <td> {{ $prc->numeroOC }} </td>
-					  <td> {{ date('d-m-Y', strtotime($prc->dataAutorizacao)) }} </td>
-					@endforeach
-					</tr>
-					</table> <BR><BR>
-                    <form method="post" action="{{route('storeOrdemCompra', array($unidade[0]->id)) }}">
+				    <form method="post" action="{{route('storeOrdemCompra', array($unidade[0]->id)) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<table class="table">
                 	  <thead>
 						<tr> 
-							<td> Nº SOLICITAÇÃO </td>
-							<td> <input type="text" id="numeroSolicitacao" name="numeroSolicitacao" class="form-control" /> </td>
-						</tr>
-						<tr>
-							<td> DATA DA SOLICITAÇÃO </td>
-							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" /> </td>
+							<td> Nº Solicitação </td>
+							<td> <input type="text" id="numeroSolicitacao" name="numeroSolicitacao" class="form-control" value="{{ old('numeroSolicitacao') }}" required /> </td>
+							<td> Data da Solicitação </td>
+							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" value="{{ old('dataSolicitacao') }}" required /> </td>
+							<td> Data de Autorização O.C. </td>
+							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" value="{{ old('dataAutorizacao') }}" required /> </td>
 						</tr>
 						<tr> 	
 							<td> Nº O.C </td>
-							<td> <input type="text" id="numeroOC" name="numeroOC" class="form-control" /> </td>
-						</tr>
-						<tr> 	
-							<td> DATA DE AUTORIZAÇÃO O.C. </td>
-							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" /> </td>
-						</tr>
-						<tr> 	
-							<td> FORNECEDOR </td>
-							<td> <input type="text" id="fornecedor" name="fornecedor" class="form-control" /> </td>
-						</tr>
-						<tr> 	
+							<td> <input type="text" id="numeroOC" name="numeroOC" class="form-control" value="{{ old('numeroOC') }}" required /> </td>
+							<td> Fornecedor </td>
+							<td> <input type="text" id="fornecedor" name="fornecedor" class="form-control" value="{{ old('fornecedor') }}" required /> </td>
 							<td> CNPJ </td>
-							<td> <input type="text" id="cnpj" name="cnpj" class="form-control" /> </td>
+							<td> <input type="text" id="cnpj" name="cnpj" class="form-control" value="{{ old('cnpj') }}" required /> </td>
 						</tr>
 						<tr> 	
-						    <td> QUANTIDADE DA O.C. </td>
-							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" /> </td>
-						</tr>
-						<tr> 		
-							<td> VALOR TOTAL DA O.C. </td>
-							<td> <input type="text" id="totalValorOC" name="totalValorOC" class="form-control" /> </td>
-						</tr>
-						<tr> 	
-							<td> PRODUTO </td>
-							<td> <input type="text" id="produto" name="produto" class="form-control" /> </td>
-						</tr>
-						<tr> 		
-							<td> CLASSIFICAÇÃO DO ITEM </td>
-							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" /> </td>
+						    <td> Quantidade da O.C. </td>
+							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" value="{{ old('qtdOrdemCompra') }}" required /> </td>
+							<td> Valor Total da O.C. </td>
+							<td> <input type="text" id="totalValorOC" name="totalValorOC" class="form-control" value="{{ old('totalValorOC') }}" required /> </td>
+							<td> Produto </td>
+							<td> <input type="text" id="produto" name="produto" class="form-control" value="{{ old('produto') }}" required /> </td>
 						</tr>
 						<tr> 	
-							<td> QUANTIDADE RECEBIDA </td>
-							<td> <input type="text" id="quantidadeRecebida" name="quantidadeRecebida" class="form-control" /> </td>
+							<td> Classificação do Item </td>
+							<td> <input type="text" id="classificacaoItem" name="classificacaoItem" class="form-control" value="{{ old('classificacaoItem') }}" required /> </td>
+							<td> Quantidade Recebida </td>
+							<td> <input type="text" id="quantidadeRecebida" name="quantidadeRecebida" class="form-control" value="{{ old('quantidadeRecebida') }}" required /> </td>
+							<td> Valor Total Recebido </td>
+							<td> <input type="text" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" value="{{ old('valorTotalRecebido') }}" required /> </td>
 						</tr>
 						<tr> 	
-							<td> VALOR TOTAL RECEBIDO </td>
-							<td> <input type="text" id="valorTotalRecebido" name="valorTotalRecebido" class="form-control" /> </td>
+							<td> Nº Nota Fiscal </td>
+							<td> <input type="text" id="numeroNotaFiscal" name="numeroNotaFiscal" class="form-control" value="{{ old('numeroNotaFiscal') }}" required /> </td>
+							<td> Chave De Acesso </td>
+							<td> <input type="text" id="chaveAcesso" name="chaveAcesso" class="form-control" value="{{ old('chaveAcesso') }}" required /> </td>
+							<td> Código Ibge </td>
+							<td> <input type="text" id="codigoIBGE" name="codigoIBGE" class="form-control" value="{{ old('codigoIBGE') }}" required /> </td>
 						</tr>
-						<tr> 	
-							<td> Nº NOTA FISCAL </td>
-							<td> <input type="text" id="numeroNotaFiscal" name="numeroNotaFiscal" class="form-control" /> </td>
-						</tr>
-						<tr> 	
-							<td> CHAVE DE ACESSO </td>
-							<td> <input type="text" id="chaveAcesso" name="chaveAcesso" class="form-control" /> </td>
-						</tr>
-						<tr> 	
-							<td> CÓDIGO IBGE </td>
-							<td> <input type="text" id="codigoIbge" name="codigoIbge" class="form-control" /> </td>
+						<tr>
+						<td colspan="6">
+						 <a href="{{route('transparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
+					    </td>
 						</tr>
 						</thead>
 					</table>					
 					<table>
-						 <tr>
-						   <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
-						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
-						  </tr>
+						 <tr> 
+						  	<td  style="margin-left: 500px;"> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
+							<td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
+						 </tr>
 					</table>			
-					<br/>
-					<table>
-					 <tr>
-					   <td align="left">
-						 <a href="{{route('trasparenciaOrdemCompraNovo', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
-					   </td>
-					 </tr>
+					<table class="table table-sm">
+					<tr>
+					  <td><center> ID OC </center></td>
+					  <td><center> Número da Solicitação </center></td>
+					  <td><center> Data da Solicitação </center></td>
+					  <td><center> Nº da Ordem Compra </center></td>
+					  <td><center> Data da Autorização O.C. </center></td>
+					</tr>
+					@foreach($processos as $prc)
+					<tr>
+					  <td><center> {{ $prc->id }} </center></td>	  
+					  <td><center> {{ $prc->numeroSolicitacao }} </center></td>
+					  <td><center> {{ date('d-m-Y', strtotime($prc->dataSolicitacao)) }} </center></td>
+					  <td><center> {{ $prc->numeroOC }} </center></td>
+					  <td><center> {{ date('d-m-Y', strtotime($prc->dataAutorizacao)) }} </center></td>
+					</tr>
+					@endforeach
+					<tr><td colspan="5"><b><center>Ordens de Compras cadastradas neste Mês!</center></b></td></tr>
 					</table>
                   </div>
             </div>

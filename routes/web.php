@@ -3,14 +3,14 @@
 Route::get('/', 'IndexController@index')->name('welcome');
 
 Route::prefix('transparencia')->group( function(){
-	Route::get('/{id}', 'IndexController@trasparenciaHome')->name('trasparenciaHome');	
+	Route::get('/{id}', 'IndexController@transparenciaHome')->name('transparenciaHome');	
 	Route::get('associados/export', 'IndexController@exportAssociados')->name('exportAssociados');
     Route::get('conselhoadmin/export', 'IndexController@exportConselhoAdm')->name('exportConselhoAdm');
     Route::get('conselhofisc/export', 'IndexController@exportConselhoFisc')->name('exportConselhoFisc');
     Route::get('superintendente/export', 'IndexController@exportSuperintendente')->name('exportSuperintendente');
     Route::get('estatuto/{id}', 'IndexController@transparenciaEstatuto')->name('transparenciaEstatuto');
     Route::get('documentos/{id}/{escolha}', 'IndexController@transparenciaDocumento')->name('transparenciaDocumento');
-	Route::get('organizacional/{id}', 'IndexController@trasparenciaOrganizacional')->name('trasparenciaOrganizacional');
+	Route::get('organizacional/{id}', 'IndexController@transparenciaOrganizacional')->name('transparenciaOrganizacional');
     Route::get('decreto/{id}', 'IndexController@transparenciaDecreto')->name('transparenciaDecreto');
     Route::get('manual/{id}', 'IndexController@transparenciaManual')->name('transparenciaManual');
     Route::get('pregao/{id}', 'IndexController@transparenciaPregao')->name('transparenciaPregao');
@@ -61,12 +61,13 @@ Route::middleware(['auth'])->group( function() {
 
 	//Ordem de Compra
 	Route::get('home_compras', 'HomeController@home_compras')->name('home_compras');
-	Route::get('home_compras/ordem_compra/{id}','HomeController@trasparenciaOrdemCompra')->name('trasparenciaOrdemCompra');
-	Route::get('home_compras/ordem_compra/novo/{id}','HomeController@trasparenciaOrdemCompraNovo')->name('trasparenciaOrdemCompraNovo');
+	Route::get('home_compras/ordem_compra/{id}','HomeController@transparenciaOrdemCompra')->name('transparenciaOrdemCompra');
+	Route::post('home_compras/ordem_compra/{id}','HomeController@procuraOrdemCompra')->name('procuraOrdemCompra');
+
+	Route::get('home_compras/ordem_compra/novo/{id}','HomeController@transparenciaOrdemCompraNovo')->name('transparenciaOrdemCompraNovo');
 	Route::get('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@ordemCompraAlterar')->name('ordemCompraAlterar');
 	Route::get('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@ordemCompraExcluir')->name('ordemCompraExcluir');
-
-	Route::get('home_compras/ordem_compra/cadastro/{id}','HomeController@procuraOrdemCompra')->name('procuraOrdemCompra');
+	
 	Route::post('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/{id_processo}','HomeController@storeArquivoOrdemCompra')->name('storeArquivoOrdemCompra');
 	Route::get('home_compras/ordem_compra/{id}/cadastroArquivosOrdemCompra/addOrdemCompra','HomeController@addOrdemCompra')->name('addOrdemCompra');
 	Route::post('home_compras/ordem_compra/{id}/cadastcadastroArquivosOrdemCompraroCotacoes/addOrdemCompra', 'HomeController@storeExcelOrdemCompra')->name('storeExcelOrdemCompra');

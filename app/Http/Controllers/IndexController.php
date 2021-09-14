@@ -78,7 +78,7 @@ class IndexController extends Controller
        return view('welcome', compact('unidades'));
     }
 
-    public function trasparenciaHome($id)
+    public function transparenciaHome($id)
     {
 		$unidadesMenu = $this->unidade->all();
         $unidade = $this->unidade->find($id);
@@ -97,7 +97,7 @@ class IndexController extends Controller
 	    return view('transparencia.ouvidoria', compact('unidade','unidadesMenu','lastUpdated','permissao_users','ouvidorias'));
     }
 
-    public function trasparenciaOrganizacional($id)
+    public function transparenciaOrganizacional($id)
     { 
         $unidadesMenu = $this->unidade->all();
         $unidade = $unidadesMenu->find($id);

@@ -6,7 +6,6 @@
         <title>Portal da Transparencia - HCP</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{asset('css/style.css')}}">
 	   <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
         <style>
         .navbar .dropdown-menu .form-control {
@@ -41,66 +40,22 @@
                     </a>
                     <form method="post" action="{{ route('destroyOrdemCompra', array($unidade[0]->id,$processos[0]->id)) }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">
+					<table border="0" class="table">
 						<tr> 
-							<td> Nº SOLICITAÇÃO </td>
-							<td> <input type="text" id="numeroSolicitacao" readonly = "true" name="numeroSolicitacao" class="form-control" value =" <?php echo $processos[0]->numeroSolicitacao ?>"/> </td>
-						</tr>
-						<tr>
-							<td> DATA DA SOLICITAÇÃO </td>
-							<td> <input type="date" id="dataSolicitacao" readonly = "true" name="dataSolicitacao" class="form-control" value ="<?php echo $processos[0]->dataSolicitacao?>" /> </td>
-						</tr>
-						<tr> 	
+							<td> Nº Solicitação </td>
+							<td> <input type="text" id="numeroSolicitacao" readonly="true" name="numeroSolicitacao" class="form-control" value="<?php echo $processos[0]->numeroSolicitacao; ?>" /> </td>
+							<td> Data da Solicitação </td>
+							<td> <input type="date" id="dataSolicitacao" readonly="true" name="dataSolicitacao" class="form-control" value="<?php echo $processos[0]->dataSolicitacao; ?>" /> </td>
 							<td> Nº O.C </td>
-							<td> <input type="text" id="numeroOC" readonly = "true" name="numeroOC" class="form-control"value =" <?php echo $processos[0]->numeroOC ?>"/> </td>
+							<td> <input type="text" id="numeroOC" readonly="true" name="numeroOC" class="form-control" value="<?php echo $processos[0]->numeroOC; ?>" /> </td>
 						</tr>
 						<tr> 	
-							<td> DATA DE AUTORIZAÇÃO O.C. </td>
-							<td> <input type="date" id="dataAutorizacao" readonly = "true" name="dataAutorizacao" class="form-control" value ="<?php echo $processos[0]->dataAutorizacao?> "/> </td>
-						</tr>
-						<tr> 	
-							<td> FORNECEDOR </td>
-							<td> <input type="text" id="fornecedor" readonly = "true" name="fornecedor" class="form-control"value ="<?php echo $processos[0]->forncedor?> "/> </td>
-						</tr>
-						<tr> 	
+							<td> Data de Autorização O.C. </td>
+							<td> <input type="date" id="dataAutorizacao" readonly="true" name="dataAutorizacao" class="form-control" value="<?php echo $processos[0]->dataAutorizacao; ?>" /> </td>
+							<td> Fornecedor </td>
+							<td> <input type="text" id="fornecedor" readonly="true" name="fornecedor" class="form-control" value="<?php echo $processos[0]->fornecedor; ?>" /> </td>
 							<td> CNPJ </td>
-							<td> <input type="text" id="cnpj" readonly = "true" name="cnpj" class="form-control"value =" <?php echo $processos[0]->cnpj?>" /> </td>
-						</tr>
-						<tr> 	
-						    <td> QUANTIDADE DA O.C. </td>
-							<td> <input type="text" id="qtdOrdemCompra" readonly = "true" name="qtdOrdemCompra" class="form-control"value =" <?php echo $processos[0]->qtdOrdemCompra ?>" /> </td>
-						</tr>
-						<tr> 		
-							<td> VALOR TOTAL DA O.C. </td>
-							<td> <input type="text" id="totalValorOC" readonly = "true" name="totalValorOC" class="form-control" value ="<?php echo $processos[0]->totalValorOC?>" /> </td>
-						</tr>
-						<tr> 	
-							<td> PRODUTO </td>
-							<td> <input type="text" id="produto" readonly = "true" name="produto" class="form-control" value ="<?php echo $processos[0]->produto?>" /> </td>
-						</tr>
-						<tr> 		
-							<td> CLASSIFICAÇÃO DO ITEM </td>
-							<td> <input type="text" id="classificacaoItem" readonly = "true" name="classificacaoItem" class="form-control" value ="<?php echo $processos[0]->cassificacaoItem?> "/> </td>
-						</tr>
-						<tr> 	
-							<td> QUANTIDADE RECEBIDA </td>
-							<td> <input type="text" id="quantidadeRecebida" readonly = "true"name="quantidadeRecebida" class="form-control"value ="<?php echo $processos[0]->quantidadeRecebida?>" /> </td>
-						</tr>
-						<tr> 	
-							<td> VALOR TOTAL RECEBIDO </td>
-							<td> <input type="text" id="valorTotalRecebido" readonly = "true" name="valorTotalRecebido" class="form-control"value ="<?php echo $processos[0]->valorTotalRecebido?> "/> </td>
-						</tr>
-						<tr> 	
-							<td> Nº NOTA FISCAL </td>
-							<td> <input type="text" id="numeroNotaFiscal" readonly = "true" name="numeroNotaFiscal" class="form-control"value ="<?php echo $processos[0]->numeroNotaFiscal?> "/> </td>
-						</tr>
-						<tr> 	
-							<td> CHAVE DE ACESSO </td>
-							<td> <input type="text" id="chaveAcesso"readonly = "true" name="chaveAcesso" class="form-control"value ="<?php echo $processos[0]->chaveAcesso?> "/> </td>
-						</tr>
-						<tr> 	
-							<td> CÓDIGO IBGE </td>
-							<td> <input type="text" id="codigoIbge" readonly = "true" name="codigoIbge" class="form-control"value ="<?php echo $processos[0]->codigoIbge?> "/> </td>
+							<td> <input type="text" id="cnpj" readonly="true" name="cnpj" class="form-control" value="<?php echo $processos[0]->cnpj; ?>" /> </td>
 						</tr>
 					</table>
 					
@@ -111,12 +66,12 @@
 					</table>
 					
 					<br/><br/>
-					<p><h6 align="left"> Deseja realmente Excluir esta Ordem de Compra? </h6></p>
+					<p><h6 align="left"> <b>Deseja realmente Excluir esta Ordem de Compra?</b> </h6></p>
 					<table>
 					 <tr>
 					   <td align="left">
-						 <a href="{{route('ordemCompraExcluir', array($unidade[0]->id, $processos[0]->id))}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Excluir" id="Excluir" name="Excluir" /> 
+						 <a href="{{route('transparenciaOrdemCompra', array($unidade[0]->id, $processos[0]->id))}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+					     <input type="submit" class="btn btn-danger btn-sm" style="margin-top: 10px;" value="Excluir" id="Excluir" name="Excluir" /> 
 					   </td>
 					 </tr>
 					</table>

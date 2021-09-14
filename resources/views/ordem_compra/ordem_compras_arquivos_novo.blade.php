@@ -67,7 +67,7 @@
 					  <table style="margin-left: 545px;" class="table-sm">							
 					    <tr>					     
 						   <td align="left">						 
-						     <br /><a href="{{route ('trasparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="padding:8px; width:80px; margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
+						     <br /><a href="{{route ('transparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="padding:8px; width:80px; margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
 							 <input type="submit" class="btn btn-success btn-sm" style="padding:8px; margin-top: 10px; width:80px" value="Salvar" id="Salvar" name="Salvar" /> 					     
 						   </td>					    
 						</tr>					  
@@ -103,7 +103,7 @@
 				<!--	  <table>							
 					    <tr>					     
 						   <td align="left">						 
-						     <br /><a href="{{route ('trasparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
+						     <br /><a href="{{route ('transparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
 							 <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 					     
 						   </td>					    
 						</tr>					  

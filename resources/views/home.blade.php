@@ -54,7 +54,7 @@
             <div class="card border-0 text-white" >
                 <img id="img-unity" src="{{asset('img')}}/{{$unidade->path_img}}" class="card-img" alt="...">
                 <div class="card-body text-center">
-                    <a href="{{route('trasparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>
+                    <a href="{{route('transparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>
                 </div>
             </div>
             @endif
@@ -96,7 +96,7 @@
                 <div id="img-body" class="sborder-0 text-white text-center">
                     <img id="img-unity" src="{{asset('img')}}/{{$unidade->path_img}}" class="rounded-sm" alt="...">
                     <div class="card-body text-center">
-                        <a href="{{route('trasparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>
+                        <a href="{{route('transparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>
                         <span class="font-weight-bold">{{$unidade->name}}</span>
                     </div>
                 </div>

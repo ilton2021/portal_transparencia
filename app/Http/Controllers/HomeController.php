@@ -31,7 +31,7 @@ class HomeController extends Controller
         }
       }
 	
-	    public function trasparenciaHome($id)
+	    public function transparenciaHome($id)
       {
         $unidadesMenu = $this->unidade->all();
         $unidades = $unidadesMenu;
@@ -40,19 +40,21 @@ class HomeController extends Controller
         return view('transparencia.institucional', compact('unidade','unidades','unidadesMenu','lastUpdated'));
       }
 
-      public function trasparenciaOrdemCompra($id)
+      public function transparenciaOrdemCompra($id)
       {
         $unidade      = Unidade::where('id',$id)->get();
-        $processos    = Processos::where('unidade_id',$id)->get();
+        $processos    = Processos::where('unidade_id',$id)->paginate(30);
         $processo_arq = ProcessoArquivos::where('unidade_id',$id)->get();
         return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos','processo_arq'));
       }
 
-      public function trasparenciaOrdemCompraNovo($id)
+      public function transparenciaOrdemCompraNovo($id)
       {
         $unidade = Unidade::where('id',$id)->get();
         $mes = date('m',strtotime('now')); 
-        $processos = Processos::whereMonth('created_at',$mes)->where('unidade_id',$id)->get();
+        $ano = date('Y', strtotime('now'));
+        $processos = Processos::whereMonth('created_at',$mes)->whereYear('created_at',$ano)
+                               ->where('unidade_id',$id)->get();
         return view('ordem_compra/ordem_compras_novo', compact('unidade','processos'));
       }
 
@@ -75,12 +77,15 @@ class HomeController extends Controller
           'quantidadeRecebida' => 'required|max:255',
           'valorTotalRecebido' => 'required|max:255',
           'chaveAcesso'        => 'required|max:255',
-          'codigoIbge'         => 'required|max:255' 
+          'codigoIBGE'         => 'required|max:255' 
         ]);
         if ($validator->fails()) {
-          $processos = Processos::where('unidade_id',$id)->get();
-          $validator = 'A Ordem de Compra(OC) foi cadastrada com sucesso!';
-           return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos'))
+          $mes = date('m',strtotime('now')); 
+          $ano = date('Y', strtotime('now'));
+          $processos = Processos::whereMonth('created_at',$mes)->whereYear('created_at',$ano)
+                                 ->where('unidade_id',$id)->get();
+          $processo_arq = ProcessoArquivos::where('unidade_id',$id)->get();
+           return view('ordem_compra/ordem_compras_novo', compact('unidade','processos','processo_arq'))
               ->withErrors($validator)
 						  ->withInput(session()->flashInput($request->input()));
           
@@ -90,7 +95,9 @@ class HomeController extends Controller
           $mes = date('m',strtotime($processos[0]->created_at));
           $now = date('m',strtotime('now')); 
           $processos = Processos::whereMonth('created_at',$mes)->where('unidade_id',$id)->get();
-          return view('ordem_compra/ordem_compras_novo', compact('unidade','processos'))
+          $validator = 'A Ordem de Compra(OC) foi cadastrada com sucesso!';
+          $processo_arq = ProcessoArquivos::where('unidade_id',$id)->get();
+          return view('ordem_compra/ordem_compras_novo', compact('unidade','processos','processo_arq'))
 						 ->withErrors($validator)
 						 ->withInput(session()->flashInput($request->input()));
         }
@@ -123,8 +130,8 @@ class HomeController extends Controller
           'quantidadeRecebida' => 'required|max:255',
           'valorTotalRecebido' => 'required|max:255',
           'chaveAcesso'        => 'required|max:255',
-          'codigoIbge'         => 'required|max:255' 
-        ]);
+          'codigoIBGE'         => 'required|max:255' 
+        ]); 
         if ($validator->fails()) {
           return view('ordem_compra/ordem_compras_alterar', compact('unidade','processos'))
 						->withErrors($validator)
@@ -132,9 +139,10 @@ class HomeController extends Controller
         } else { 
           $processos = Processos::find($id);
           $processos->update($input);
-          $processos = Processos::where('id',$id)->get();        
+          $processos = Processos::where('id',$id)->paginate(30);       
+          $processo_arq = ProcessoArquivos::where('unidade_id',$unidade_id)->get(); 
           $validator = 'A Ordem de Compra(OC) foi alterada com sucesso!';
-          return view('ordem_compra/ordem_compras_novo', compact('unidade','processos'))
+          return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos','processo_arq'))
 						->withErrors($validator)
 						->withInput(session()->flashInput($request->input()));
         }
@@ -151,57 +159,59 @@ class HomeController extends Controller
       { 
         Processos::find($id)->delete(); 
         $unidade = Unidade::where('id',$unidade_id)->get();
-        $processos = Processos::where('unidade_id', $unidade_id)->get();
+        $processos = Processos::where('unidade_id', $unidade_id)->paginate(30);
 		    $input = $request->all();
-        $validator = 'A Ordem de Compra(OC) foi excluida com sucesso!';
-        return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos'))
+        $validator = 'A Ordem de Compra(OC) foi excluída com sucesso!';
+        $processo_arq = ProcessoArquivos::where('unidade_id',$unidade_id)->get(); 
+        return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos','processo_arq'))
           ->withErrors($validator)
           ->withInput(session()->flashInput($request->input()));	
       }
     
  
       public function procuraOrdemCompra($unidade_id, Request $request)
-	    {
+	    {    
         $input = $request->all();
         $unidade =  Unidade::where('id',$unidade_id)->get();
         $funcao = $input['funcao'];
         $funcao2 = $input['funcao2'];
         $text = $input['text'];
-        $data = $input['data'];
+        $data = $input['data']; 
         if ($funcao2 == "1"){
           if($funcao == "1") {
-              $processos = Processos::where('fornecedor','like','%' . $text . '%')->where('dataSolicitacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else if($funcao == "2" ){
-              $processos = Processos::where('fornecedor','like','%' . $text . '%')->where('dataAutorizacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else {
-              $processos = Processos::where('unidade_id', $unidade_id)->get();
+              $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
           }
         } else if ($funcao2 == "2"){
           if($funcao == "1") {
-              $processos = Processos::where('numeroSolicitacao','like','%' . $text . '%' )->where('dataSolicitacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else if($funcao == "2") {
-              $processos = Processos::where('numeroSolicitacao','like','%' . $text .'%')->where('dataAutorizacao',$data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else {
-              $processos = Processos::where('unidade_id', $unidade_id)->get();
+              $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
           }
-        } else if ($funcao2 == "3"){
+        } else if ($funcao2 == "3"){ 
           if($funcao == "1") {
-              $processos = Processos::where('numeroNotaFiscal','like','%' . $text . '%')->where('dataSolicitacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('produto','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else if($funcao == "2") {
-              $processos = Processos::where('numeroNotaFiscal','like','%' . $text . '%')->where('dataAutorizacao', $data)->where('unidade_id', $unidade_id)->get();	
-          } else if($funcao == ""){
-              $processos = Processos::where('unidade_id', $unidade_id)->get();
+              $processos = Processos::where('produto','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+          } else {
+              $processos = Processos::where('produto','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
           }         
         } else {
           if($funcao == "1") {
-              $processos = Processos::where('dataSolicitacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else if($funcao == "2") {
-              $processos = Processos::where('dataAutorizacao', $data)->where('unidade_id', $unidade_id)->get();	
+              $processos = Processos::where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
           } else if($funcao == "0") {
-              $processos = Processos::where('unidade_id',$unidade_id)->get(); 		  
+              $processos = Processos::where('unidade_id',$unidade_id)->paginate(30); 		  
           }
         }
-       	return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos'));	
+        $processo_arq = ProcessoArquivos::where('unidade_id', $unidade_id)->paginate(30);   
+       	return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos','processo_arq'));	
 	  }
 
 	  public function addOrdemCompra($id)
