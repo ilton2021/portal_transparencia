@@ -229,7 +229,7 @@ class HomeController extends Controller
       $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
       $unidade = Unidade::where('id' , $id)->get();
       $processos = Processos::where('unidade_id', $id)->where('id', $id_processo)->get();
-      $input = $request->all();
+      $input = $request->all(); $a = 0;
         for($i=1; $i<=5; $i++){
            if(!empty($input['file_path_'.$i])){
               $solicitacao = $input['numeroSolicitacao'];
@@ -243,20 +243,29 @@ class HomeController extends Controller
                     $input['title'] = $input['title'.$i];
                     ProcessoArquivos::create($input);	
                     $log = LoggerUsers::create($input);
-                    $lastUpdated = $log->max('updated_at');
+                    $lastUpdated = $log->max('updated_at'); $a += 1;
                 }else{
                     $validator = 'Só suporta arquivos do tipo PDF!';
                     return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
                         ->withErrors($validator)
-                         ->withInput(session()->flashInput($request->input()));
+                        ->withInput(session()->flashInput($request->input()));
                 }          
             }
           }
-          $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
-          $validator = 'Arquivo de Ordem de Compra, cadastrado com sucesso!';
-          return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
-            ->withErrors($validator)
-            ->withInput(session()->flashInput($request->input()));		
+          if($a > 0){
+            $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
+            $validator = 'Arquivo de Ordem de Compra, cadastrado com sucesso!';
+            return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
+              ->withErrors($validator)
+              ->withInput(session()->flashInput($request->input()));		
+          } else {
+            $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
+            $validator = 'Informe um Arquivo para o Cadastro!';
+            return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
+              ->withErrors($validator)
+              ->withInput(session()->flashInput($request->input()));		
+          }
+          
 	  } 
 
     public function cadastroOrdemCompra($id_unidade)

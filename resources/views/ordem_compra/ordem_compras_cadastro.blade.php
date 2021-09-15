@@ -24,8 +24,19 @@
 				</ul>
 			</div>
 	@endif
+ 
  <section id="unidades">
-    <div class="container" style="margin-top:30px; margin-bottom:20px;">
+ <table>   
+    <tr> 
+        <td> 
+            <a class="btn btn-warning btn-sm" class="form-control" style="color: #FFFFFF; margin-left: 120px; margin-bottom: 15px; height: 30px;" href="{{url('/home')}}"> Voltar <i class="fas fa-undo-alt"></i></a>     
+        </td>
+        <td>  
+            <a class="btn btn-dark btn-sm" class="form-control" style="color: #FFFFFF; margin-left: 970px; height: 30px;" href="{{route('transparenciaOrdemCompraNovo', $unidade[0]->id)}}" > Novo <i class="fas fa-check"></i></a>    
+        </td>
+    </tr>
+  </table>       
+    <div class="container" style="margin-top:05px; margin-bottom:10px;">
         <div class="row">
             <div class="col-12 text-center">
                 <span><h3 style="color:#65b345; margin-bottom:0px;">ORDENS DE COMPRAS</h3></span>
@@ -49,17 +60,14 @@
    <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
     <table class="table" style = "margin-left:-50px">
         <tr>    
-            <td>
-               <a class="btn btn-warning btn-sm" class="form-control" style="color: #FFFFFF; margin-left: 70px; margin-bottom: 15px; height: 35px;" href="{{url('/home')}}"> Voltar <i class="fas fa-undo-alt"></i></a>    
-            </td>
             <td> 
-              <select class="custom-select mr-sm-2" style="width: 200px" id="funcao" name="funcao">
+              <select class="custom-select mr-sm-2" style="width: 200px; margin-left: 150px;" id="funcao" name="funcao">
                   <option id="funcao" name="funcao" value="0">Selecione...</option>
                   <option id="funcao" name="funcao" value="1">Data de Solicitação</option>
                   <option id="funcao" name="funcao" value="2">Data de Autorização</option>
               </select> 
             </td>         
-            <td><input type="date" id="data" name="data" class="form-control" style="width: 170px" ></td>
+            <td><input type="date" id="data" name="data" class="form-control" style="width: 160px" ></td>
             <td> <select class="custom-select mr-sm-2" style="width: 220px" id="funcao2" name="funcao2">
                   <option id="funcao2" name="funcao2" value="0">Selecione...</option>
                   <option id="funcao2" name="funcao2" value="2">Número da Solicitação</option>
@@ -71,9 +79,7 @@
               <input id="text" name="text" type="text" class="form-control" style="width: 240px;" placeholder="...">
             </td>
             <td>
-              <button type="submit" class="btn btn-primary" style="margin-right: 35px; margin-bo 15px; height: 35px;" >Pesquisar  <i class="fas fa-search"></i></button>
-            </td><td>  
-              <a class="btn btn-dark" class="form-control" style="color: #FFFFFF; height: 35px;" href="{{route('transparenciaOrdemCompraNovo', $unidade[0]->id)}}" > Novo <i class="fas fa-check"></i></a>    
+              <button type="submit" class="btn btn-primary" style="margin-right: 35px; height: 35px;" >Pesquisar  <i class="fas fa-search"></i></button>
             </td>
         </tr>   
     </table>
