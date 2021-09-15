@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Model\ServidoresCedidosRH;
+use App\Http\Controllers\PermissaoUsersController;
 use App\Model\Unidade;
 use App\Model\LoggerUsers;
 use App\Model\PermissaoUsers;
@@ -26,19 +27,37 @@ class ServidoresCedidosController extends Controller
 		return view('home', compact('unidades')); 		
     }
 	
-	public function servidoresCadastro($id_unidade){
+	public function servidoresCadastro($id_unidade, Request $request)
+	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->orderBy('nome','ASC')->get();
-		return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','servidores'));
+		if($validacao == 'ok') {
+			return view('transparencia/servidores/servidor_cadastro', compact('unidades','unidadesMenu','unidade','servidores'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
-	public function servidoresNovo($id_unidade){
+	public function servidoresNovo($id_unidade, Request $request)
+	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
-		return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'));
+		if($validacao == 'ok') {
+			return view('transparencia/servidores/servidor_novo', compact('unidades','unidadesMenu','unidade'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
 	public function storeServidores($id_unidade, Request $request) 
@@ -71,13 +90,21 @@ class ServidoresCedidosController extends Controller
 		}
 	}
 	
-	public function servidoresAlterar($id_servidor, $id_unidade)
+	public function servidoresAlterar($id_servidor, $id_unidade, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->where('id', $id_servidor)->get();
-		return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
+		if($validacao == 'ok') {
+			return view('transparencia/servidores/servidor_alterar', compact('unidades','unidadesMenu','unidade','servidores'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
 	public function updateServidores($id_servidor, $id_unidade, Request $request) 
@@ -112,12 +139,21 @@ class ServidoresCedidosController extends Controller
 		}
 	}
 	
-	public function servidoresExcluir($id_servidor, $id_unidade){
+	public function servidoresExcluir($id_servidor, $id_unidade, Request $request)
+	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade  = $this->unidade->find($id_unidade);
 		$servidores = ServidoresCedidosRH::where('unidade_id', $id_unidade)->where('id', $id_servidor)->get();
-		return view('transparencia/servidores/servidor_excluir', compact('unidades','unidadesMenu','unidade','servidores'));
+		if($validacao == 'ok') {
+			return view('transparencia/servidores/servidor_excluir', compact('unidades','unidadesMenu','unidade','servidores'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
 	public function destroyServidores($id_servidor, $id_unidade, Request $request) {

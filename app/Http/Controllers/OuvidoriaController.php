@@ -8,6 +8,7 @@ use App\Model\LoggerUsers;
 use App\Model\Unidade;
 use Illuminate\Support\Facades\Storage;
 use App\Model\PermissaoUsers;
+use App\Http\Controllers\PermissaoUsersController;
 use Auth;
 use Validator;
 
@@ -19,7 +20,7 @@ class OuvidoriaController extends Controller
 		$this->ouvidoria = $ouvidoria;
     }
     
-    public function sicCadastro($id)
+    public function sicCadastro($id, Request $request)
     {
         $validacao = permissaoUsersController::Permissao($id);
 		$unidade   = $this->unidade->find($id);
@@ -40,7 +41,7 @@ class OuvidoriaController extends Controller
 		}
     }
 
-    public function ouvidoriaNovo($id)
+    public function ouvidoriaNovo($id, Request $request)
     {
         $validacao = permissaoUsersController::Permissao($id);
 		$unidade   = $this->unidade->find($id);
@@ -56,7 +57,7 @@ class OuvidoriaController extends Controller
 		}
     }
 
-    public function ouvidoriaAlterar($id, $id_ouvidoria)
+    public function ouvidoriaAlterar($id, $id_ouvidoria, Request $request)
     {
         $validacao = permissaoUsersController::Permissao($id);
 		$unidade   = $this->unidade->find($id);
@@ -73,7 +74,7 @@ class OuvidoriaController extends Controller
 		}
     }
 
-    public function ouvidoriaExcluir($id, $id_ouvidoria)
+    public function ouvidoriaExcluir($id, $id_ouvidoria, Request $request)
     {
         $validacao = permissaoUsersController::Permissao($id);
 		$unidade   = $this->unidade->find($id);

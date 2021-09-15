@@ -7,6 +7,7 @@ use App\Model\Permissao;
 use App\Model\PermissaoUsers;
 use App\Model\Unidade;
 use App\Model\User;
+use App\Http\Controllers\PermissaoUsersController;
 use DB;
 
 class PermissaoController extends Controller
@@ -24,8 +25,9 @@ class PermissaoController extends Controller
 		return view ('transparencia.permissao', compact('unidades'));
 	}
 	
-	public function cadastroPermissao($id)
+	public function cadastroPermissao($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
@@ -36,47 +38,86 @@ class PermissaoController extends Controller
 		->where('unidade_id', $id)
 		->get();
 		$lastUpdated = $permissoes->max('updated_at');
-		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
+		} else {
+			$validator = 'Você não tem Permissão!!';		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+		}
 	}
 	
-	public function permissaoNovo($id)
+	public function permissaoNovo($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
-		return view('transparencia/permissao/permissao_novo', compact('unidade','unidades','unidadesMenu'));
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_novo', compact('unidade','unidades','unidadesMenu'));
+		} else {
+			$validator = 'Você não tem Permissão!!';		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+		}
 	}
 	
-	public function permissaoUsuarioNovo($id)
+	public function permissaoUsuarioNovo($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$users = User::all();
 		$permissoes = Permissao::all();
-		return view('transparencia/permissao/permissao_usuario_novo', compact('unidade','unidades','unidadesMenu','users','permissoes'));
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_usuario_novo', compact('unidade','unidades','unidadesMenu','users','permissoes'));
+		} else {
+			$validator = 'Você não tem Permissão!!';		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+		}
 	}
 	
-	public function permissaoAlterar($id, $id_permissao)
+	public function permissaoAlterar($id, $id_permissao, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$permissoes = Permissao::where('unidade_id', $id)->where('id', $id_permissao)->get();
 		$lastUpdated = $permissoes->max('updated_at');
 		$users = User::all();
-		return view('transparencia/permissao/permissao_alterar', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes','users'));
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_alterar', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes','users'));
+		} else {
+			$validator = 'Você não tem Permissão!!';		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+		}
 	}
 	
-	public function permissaoExcluir($id, $id_permissao)
+	public function permissaoExcluir($id, $id_permissao, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$permissoes = Permissao::where('unidade_id', $id)->where('id', $id_permissao)->get();
 		$lastUpdated = $permissoes->max('updated_at');
 		$users = User::all();
-		return view('transparencia/permissao/permissao_excluir', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes','users'));
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_excluir', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes','users'));
+		} else {
+			$validator = 'Você não tem Permissão!!';		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));		
+		}
 	}
 	
 	public function store($id, Request $request)
@@ -94,7 +135,9 @@ class PermissaoController extends Controller
 	    ->select('permissao_user.*','users.name as Nome','permissao.tela','permissao.acao')
 		->where('unidade_id', $id)
 		->get();
-		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidadesMenu','unidades','permissoes','lastUpdated'));
+		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidadesMenu','unidades','permissoes','lastUpdated'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 	}
 	
 	public function storePermissaoUsuario($id, Request $request)
@@ -121,7 +164,9 @@ class PermissaoController extends Controller
 		->where('unidade_id', $id)
 		->get();
 		$unidade = $this->unidade->find($id);	
-		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidadesMenu','unidades','permissoes','lastUpdated'));
+		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidadesMenu','unidades','permissoes','lastUpdated'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 	}
 	
 	public function destroy()

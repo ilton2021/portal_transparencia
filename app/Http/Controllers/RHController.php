@@ -421,13 +421,21 @@ class RHController extends Controller
 		$unidade = $this->unidade->find($id);
 	}
 
-	public function despesasRH($id)
+	public function despesasRH($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
 		$ano = 0; $mes = 0; $tipo = 0;
-		return view('transparencia/rh/rh_despesas_exibe', compact('unidade','unidades','unidadesMenu','ano','mes','tipo')); 
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesas_exibe', compact('unidade','unidades','unidadesMenu','ano','mes','tipo')); 
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
 	public function despesasRHProcurar($id, Request $request)
@@ -454,11 +462,19 @@ class RHController extends Controller
 		}else if($id == 8){
 			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano',$ano)->where('tipo',$tipo)->get();	
 		}
-		return view('transparencia/rh/rh_despesas_exibe	', compact('unidade','despesas','unidadesMenu','ano','mes','tipo'));
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesas_exibe	', compact('unidade','despesas','unidadesMenu','ano','mes','tipo'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 
-	public function alterarRH($id, $ano, $mes, $tipo)
+	public function alterarRH($id, $ano, $mes, $tipo, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
@@ -477,11 +493,19 @@ class RHController extends Controller
 		}else if($id == 8){
 			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
 		}
-		return view('transparencia/rh/rh_despesas_alterar', compact('unidade','unidades','unidadesMenu','despesas','ano','mes','tipo')); 
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesas_alterar', compact('unidade','unidades','unidadesMenu','despesas','ano','mes','tipo')); 
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 
-	public function deletarRH($id, $ano, $mes, $tipo)
+	public function deletarRH($id, $ano, $mes, $tipo, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
@@ -500,7 +524,14 @@ class RHController extends Controller
 		}else if($id == 8){
 			$despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
 		}
-		return view('transparencia/rh/rh_despesas_excluir', compact('unidade','unidades','unidadesMenu','despesas','ano','mes','tipo')); 
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesas_excluir', compact('unidade','unidades','unidadesMenu','despesas','ano','mes','tipo')); 
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 
 	public function updateDespesasRH($id, Request $request)
@@ -547,12 +578,20 @@ class RHController extends Controller
 			->withInput(session()->flashInput($request->input()));		
 	}
 
-	public function excluirDespesasRH($id)
+	public function excluirDespesasRH($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu; 
 		$unidade = $this->unidade->find($id);
-		return view('transparencia/rh/rh_despesas_excluir', compact('unidade','unidades','unidadesMenu')); 
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesas_excluir', compact('unidade','unidades','unidadesMenu')); 
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 
 	public function destroyDespesasRH($id, Request $request)

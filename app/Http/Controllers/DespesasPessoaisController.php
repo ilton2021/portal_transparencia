@@ -15,12 +15,20 @@ class DespesasPessoaisController extends Controller
 		$this->unidade = $unidade;
 	}
 	
-    public function cadastroDespesas($id)
+    public function cadastroDespesas($id, Request $request)
 	{
+		$validacao = permissaoUsersController::Permissao($id);
 		$unidades = $this->unidade->all();
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
-		return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'));
+		if($validacao == 'ok') {
+			return view('transparencia/rh/rh_despesasp_cadastro', compact('unidades','unidade','unidadesMenu'));
+		} else {
+			$validator = 'Você não tem Permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
 	}
 	
 	public function storeDespesas($id_unidade, Request $request)
