@@ -999,10 +999,10 @@
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
 															<?php if($contrato->cadastro == 0){  ?>
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
 															<?php } else { ?>
-															<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">Contrato</a>	
-															<?php } ?>
+															<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>	
+															<?php } ?> <?php $idC = 1; ?>
 															@foreach($aditivos as $aditivo) 
 																@if($aditivo->contrato_id == $contrato->ID)
 																	@if($aditivo->opcao == 1)
@@ -1018,11 +1018,11 @@
 																	    @else
 																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
 																		@endif
-																	@else 
+																	@else <?php $idC += 1; ?>
 																		@if($aditivo->ativa == 1)
-																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>	
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>	
 																	    @else
-																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>		
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>		
 																		@endif
 																	@endif
 																@endif
