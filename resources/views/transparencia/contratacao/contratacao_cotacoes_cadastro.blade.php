@@ -8,15 +8,16 @@
     <h3 style="font-size: 18px;">CONTRATAÇÕES</h3>		
 </div>	
 </div>	
-	@if ($errors->any())
-      <div class="alert alert-success">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-      </div>
-	@endif 
+    @if (Session::has('mensagem'))		
+        @if ($text == true)		
+            <div class="container">	     
+                <div class="alert alert-success {{ Session::get ('mensagem')['class'] }} ">		      
+                {{ Session::get ('mensagem')['msg'] }}		 
+                </div>		
+            </div>		
+        @endif	
+    @endif	
+   
     <div class="row" style="margin-top: 25px;">		
      <div class="col-md-12 col-sm-12 text-center">			
       <div class="accordion" id="accordionExample">				
@@ -32,7 +33,7 @@
 		 <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('cotacoesNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a>					
 		</h2>				  
        </div>					 
-	   @if($unidade->id < 8)
+	   @if(($unidade->id > 1) && ($unidade->id < 8))
 					<div class="card-body">
 						<p>
 							<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Processos de Compra</a>
@@ -48,8 +49,7 @@
 									<div class="collapse border-0" id="multiCollapseExample3">
 									<div class="card card-body border-0">
 										<div class="container">
-										@if(!empty($cotacoes))	
-										@foreach ($cotacoes as $cotacaoFiles) 	      
+										@foreach ($cotacoes as $cotacaoFiles) 	       
 										   @if ($cotacaoFiles->proccess_name == 'MAPA DE COTAÇÕES') 	          
 											<table class="table table-sm">
 										    <thead>
@@ -69,13 +69,13 @@
 											</table>
 											@endif 	  
 										@endforeach		
-										@endif
 										</div>
-									</div>  
+									</div>
 									</div>
 									<div class="collapse border-0" id="multiCollapseExample4">
 									<div class="card card-body border-0">
 										<div class="container">
+											  <p align="right"><a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('addCotacao', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
 											  <table class="table table-sm" >
 											  <thead class="bg-success">
 													<tr> 	
@@ -87,11 +87,12 @@
 													  <th scope="col" style="width: 100px">CNPJ</th>
 													  <th scope="col" style="width: 100px">Nº O.C.</th>
 													  <th scope="col" style="width: 100px">Valor Total da O.C.</th>            
-													 
+													  <th scope="col" style="width: 100px">Arquivos</th>
+													  <th scope="col" style="width: 100px">Download</th>
 													</tr>         
 												 </thead>
-												<?php $qtd = sizeof($processos);  ?>  
-												@if($qtd > 0)  
+												 
+												@if(!empty($processos))
 												@foreach($processos as $processo)
 											    <tbody> 	
 													<td class="text-truncate" style="max-width: 100px; font-size: 12px"> {{ $processo->numeroSolicitacao }}</td> 	
@@ -102,11 +103,22 @@
 													<td class="text-truncate" style="max-width: 100px; font-size: 12px">{{ $processo->cnpj }} </td>
 												    <td class="text-truncate" style="max-width: 100px; font-size: 12px">{{ $processo->numeroOC }}</td>
 													<td class="text-truncate" style="max-width: 100px; font-size: 12px">{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</td>
-													
+													<td> <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('arquivosCotacoes', array($unidade->id, $processo->id))}}" > <i class="fas fa-edit"></i></a> </td>
+													<td> 
+													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														Visualizar
+														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
+															@foreach($processo_arquivos as $processoA) 
+																@if($processoA->processo_id == $processo->id)
+																	<a id="div" class="dropdown-item" href="{{asset('../public/storage/')}}/{{$processoA->file_path}}" target="_blank">Arquivo</a>
+																@endif
+															@endforeach
+														</div>	
+														</a>
+													</td>
 												  </tbody>             
 											   @endforeach
-											   @endif 
-											   <tr><td> {{ $processos->appends(['pesq' => isset($pesq) ? $pesq : ''])->render() }} </td></tr>
+											   @endif
 											   </table>    
 										</div>
 									</div>
@@ -122,8 +134,8 @@
 									<table class="table table-responsive" >
 									   <thead>
 										  <tr>
-											<th style="width: 400px">Título</th>
-											<th style="width: 400px">Download</th>
+											<th scope="col" style="width: 400px">Título</th>
+											<th scope="col" style="width: 400px">Download</th>
 											<th>Excluir</th>
 											<th>Validar</th>
 										  </tr>
@@ -132,7 +144,7 @@
 											<td align="center" colspan="3"> 
 											   <a style="font-size: 15px; color: #28a745" class="btn" data-toggle="collapse" role="button" aria-expanded="false">
 											   <strong>{{$cotacao}}</strong> </a>  
-										    </td> 
+										    </td>
 											@foreach ($cotacoes as $cotacaoFiles)
 												@if($cotacaoFiles->proccess_name == $cotacao)
 												<tr>
@@ -151,11 +163,11 @@
 								    @endforeach 
 								  </div>
 							</div>
-							</div> 
+							</div>
 						</div>
 					</div>	
-			@else 
-					<div class="card-body"> 
+					@elseif($unidade->id == 8)
+					<div class="card-body">
 						<p>
 							<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Processos de Compra</a>
 							<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Aquisições</a>
@@ -187,9 +199,9 @@
 													  <th scope="col" style="width: 100px">Download</th>
 													</tr>         
 												 </thead>
-												<?php $qtd = sizeof($processos); ?>
-												@if($qtd > 0) 
-												@foreach($processos as $processo) 
+												 
+												@if(!empty($processos))
+												@foreach($processos as $processo)
 											    <tbody> 	
 													<td class="text-truncate" style="max-width: 100px; font-size: 12px"> {{ $processo->numeroSolicitacao }}</td> 	
 													<td class="text-truncate" style="max-width: 100px; font-size: 12px"><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ $processo->dataSolicitacao }} <?php } ?></td> 	
@@ -215,8 +227,7 @@
 												  </tbody>             
 											   @endforeach
 											   @endif
-											   <tr><td> {{ $processos->appends(['pesq' => isset($pesq) ? $pesq : ''])->render() }} </td></tr>
-											   </table>     
+											   </table>    
 										</div>
 							</div>
 							</div>
@@ -276,7 +287,7 @@
 														<th>
 															@foreach ($cotacoes as $cotacaoFiles)
 															 @if ($cotacaoFiles->proccess_name == $cotacao)
-																<a target="_blank" href="{{asset('../storage')}}/{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 12px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="fas fa-download"></i></a>
+																<a target="_blank" href="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 12px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="fas fa-download"></i></a>
 															 @endif
 															@endforeach
 														</th>
@@ -289,7 +300,9 @@
 							  </div>
 							</div>
 					</div>
-			@endif
+					@endif
+					
+	
       </div>				
      </div>							
     </div> 	        

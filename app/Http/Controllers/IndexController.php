@@ -464,6 +464,18 @@ class IndexController extends Controller
 		$z = 0;
         return view('transparencia.contratacao', compact('unidade','unidadesMenu','contratos','cotacoes','aditivos','lastUpdated','processos','processo_arquivos','permissao_users','a','z'));
     }
+
+    public function rp()
+    {
+        $unidades = Unidade::all();
+        return view('rp', compact('unidades'));
+    }
+
+    public function rp2($id)
+    {
+        $unidades = Unidade::where('id',$id)->get();
+        return view('rp2', compact('unidades'));
+    }
 	
 	public function pesquisarMesCotacao($id, $mes, $ano)
     {
@@ -478,7 +490,7 @@ class IndexController extends Controller
 		$aditivos = Aditivo::where('unidade_id', $id)->get();
 		$cotacoes = Cotacao::where('unidade_id', $id)->get();
 		$processos = Processos::where('unidade_id', $id)->whereMonth('dataAutorizacao',$mes)->whereYear('dataAutorizacao', $ano)->get();
-		$z = 0;
+        $z = 0;
 		if($ano == "2020"){ $z = 1; } else if($ano == "2021"){ $z = 2; }
 		$processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
 		$lastUpdated = $processo_arquivos->max('updated_at');

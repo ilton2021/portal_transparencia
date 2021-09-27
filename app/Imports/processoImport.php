@@ -29,9 +29,9 @@ class processoImport implements ToModel, WithHeadingRow
 		if($row['no_de_solicitacao'] != "") {
 			return new Processos([
 				'numeroSolicitacao'  => $row['no_de_solicitacao'],
-				'dataSolicitacao'    => date("Y-m-d",strtotime($row['data_da_solicitacao'])),
+				'dataSolicitacao'    => $row['data_da_solicitacao'],
 				'numeroOC' 			 => $row['n0_ordem_compra'],
-				'dataAutorizacao' 	 => date('Y-m-d', strtotime($row['data_de_autorizacao_da_ordem_de_compra'])),
+				'dataAutorizacao' 	 => $row['data_de_autorizacao_da_ordem_de_compra'],
 				'fornecedor' 		 => $row['fornecedor_razao_social'],
 				'cnpj' 				 => $row['cnpj_do_fornecedor'],
 				'produto'            => $row['produto'],

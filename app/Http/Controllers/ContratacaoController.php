@@ -187,13 +187,6 @@ class ContratacaoController extends Controller
 					\Excel::import(new processoImport($id), $request->file('file_path'));
 					$processosD = Processos::where('unidade_id', $id)->get();
 					$qtdD = sizeof($processosD);
-					if($qtdA == $qtdD)
-					{
-						$validator = 'Erro ao salvar processo! O número do protocolo já existe!';
-						return view('transparencia/contratacao/cotacao_excel', compact('unidades','unidade','unidadesMenu','processos'))
-							->withErrors($validator)
-							->withInput(session()->flashInput($request->input()));
-					}
 					$cotacoes = Cotacao::where('unidade_id', $id)->get();
 					$contratos = Contrato::where('unidade_id', $id)->get();
 					$processos = Processos::where('unidade_id', $id)->get();

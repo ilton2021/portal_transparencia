@@ -1,6 +1,8 @@
 <?php
 
 Route::get('/', 'IndexController@index')->name('welcome');
+Route::get('/rp', 'IndexController@rp')->name('rp');
+Route::get('/rp2/{id}', 'IndexController@rp2')->name('rp2');
 
 Route::prefix('transparencia')->group( function(){
 	Route::get('/{id}', 'IndexController@transparenciaHome')->name('transparenciaHome');	

@@ -109,9 +109,9 @@
                    @foreach($processos as $prc)
                    <tr>
                     <td style = "font-size: 13px;" title="<?php echo $prc->numeroSolicitacao; ?>"><center> {{ $prc->numeroSolicitacao }} </center></td>
-                    <td style = "font-size: 13px;" title="<?php echo date('d/m/Y', strtotime($prc->dataSolicitacao)); ?>">  <center> {{ date('d/m/Y', strtotime($prc->dataSolicitacao)) }} </center></td>
+                    <td style = "font-size: 13px;" title="<?php echo $prc->dataSolicitacao; ?>">  <center> {{ $prc->dataSolicitacao }} </center></td>
                     <td style = "font-size: 13px;" title="<?php echo $prc->numeroOC; ?>"><center>{{ substr($prc->numeroOC,0,10) }}</center> </td>
-                    <td style = "font-size: 13px;" title="<?php echo date('d/m/Y', strtotime($prc->dataAutorizacao)); ?>"><center> {{ date('d/m/Y', strtotime($prc->dataAutorizacao)) }} </center></td>
+                    <td style = "font-size: 13px;" title="<?php echo $prc->dataAutorizacao; ?>"><center> {{ $prc->dataAutorizacao }} </center></td>
                     <td style = "font-size: 13px;" title="<?php echo $prc->fornecedor; ?>"> {{ (substr($prc->fornecedor, 0, 25)) }} </td>
                     <td style = "padding-right: 10px; font-size: 13px;"><center> {{ $prc->cnpj }} </center></td>
                     <td style = "font-size: 13px;" title="<?php echo $prc->produto; ?>"> {{ (substr($prc->produto, 0, 25)) }} </td>

@@ -176,7 +176,7 @@ class HomeController extends Controller
         $funcao = $input['funcao'];
         $funcao2 = $input['funcao2'];
         $text = $input['text'];
-        $data = $input['data']; 
+        $data = date('d/m/Y', strtotime($input['data'])); 
         if ($funcao2 == "1"){
           if($funcao == "1") {
               $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
