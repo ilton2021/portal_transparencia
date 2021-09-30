@@ -1,39 +1,5 @@
 @extends('navbar.default-navbar')
 
-<script>
- window.onload = function(){
-  <?php if($unidade->id == 8 && $a == 1) { ?>
-    <?php if($z == 1) { ?>
-	var elemento = document.getElementById('multiCollapseExample5');
-	elemento.className=elemento.className.replace('', 'show');
-    <?php } else if($z == 2){ ?>
-	var elemento = document.getElementById('multiCollapseExample6');
-	elemento.className=elemento.className.replace('', 'show');
-	<?php } ?>
-	var elemento = document.getElementById('multiCollapseExample3');
-	elemento.className=elemento.className.replace('', 'show');
-	var elemento2 = document.getElementById('multiCollapseExample1');
-	elemento2.className=elemento2.className.replace('', 'show');
-	var elemento3 = document.getElementById('collapseTwo');
-	elemento3.className=elemento3.className.replace('', 'show');
-  <?php } ?>
-  <?php if($unidade->id != 8 && $a == 1) { ?>
-    <?php if($z == 1) { ?>
-	var elemento = document.getElementById('multiCollapseExample5');
-	elemento.className=elemento.className.replace('', 'show');
-    <?php } else if($z == 2){ ?>
-	var elemento = document.getElementById('multiCollapseExample6');
-	elemento.className=elemento.className.replace('', 'show');
-	<?php } ?>
-	var elemento = document.getElementById('multiCollapseExample4');
-	elemento.className=elemento.className.replace('', 'show');
-	var elemento2 = document.getElementById('multiCollapseExample1');
-	elemento2.className=elemento2.className.replace('', 'show');
-	var elemento3 = document.getElementById('collapseTwo');
-	elemento3.className=elemento3.className.replace('', 'show');
-  <?php } ?>
- }
-</script>
 @section('content')
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
@@ -109,9 +75,9 @@
 								<div class="container">
 								<p>
 								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample3" role="button" aria-expanded="false" aria-controls="multiCollapseExample3">Síntese: Mapa do Sistema de Síntese</a> 
-								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample4" role="button" aria-expanded="false" aria-controls="multiCollapseExample4">Demais Processos</a> 
+								<a class="btn btn-success" href="{{route('visualizarOrdemCompra', $unidade->id)}}" role="button">Demais Processos</a> 
 								</p>
-									<div class="collapse border-0" id="multiCollapseExample3">
+								 <div class="collapse border-0" id="multiCollapseExample3">
 									<div class="card card-body border-0">
 										<div class="container">
 										@foreach ($cotacoes as $cotacaoFiles) 	       
@@ -130,240 +96,11 @@
 										@endforeach		
 										</div>
 									</div>
-									</div>
-									<div class="collapse border-0" id="multiCollapseExample4">
-									<div class="card card-body border-0">
-										<div class="container">
-										 <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample5">2020</a> 
-										 <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample6" role="button" aria-expanded="false" aria-controls="multiCollapseExample6">2021</a> 
-										</div>
-									</div>
-									</div>
-									<?php if(empty($mes)) { $mes = 0; } else {  } ?>
-									<?php $z = 0; ?>
-									<div class="collapse border-0" id="multiCollapseExample5">
-									<div class="card card-body border-0">
-										<div class="container">
-										@if($mes <= 9)
-											  <table WIDTH="1500px;" border="2">
-												 <thead class="bg-success">
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 120px"><center>Tipo de Pedido</center></th>            
-													  <th scope="col" style="width: 200px"><center>Qt. de Itens do Formulário</center></th>
-													  <th scope="col" style="width: 850px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 150px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 200px"><center>Valor Total da O.C.</center></th>            
-													  <th scope="col" style="width: 190px"><center>Data da Solicitação</center></th>            
-													  <th scope="col" style="width: 170px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"> {{ $processo->numeroSolicitacao }}</td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->tipoPedido }}">{{ $processo->tipoPedido }}</td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdItens }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}">{{ $processo->fornecedor }} </td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}">{{ $processo->cnpj }} </td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}">{{ $processo->numeroOC }}</td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px">{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></td>
-													 <td> 
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-														  @endforeach
-														 </div>	
-														</a>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-											@elseif($mes > 9)
-												<table  WIDTH="2800px;" border="2">
-												 <thead class="bg-success" border="2">
-												    <tr>
-													  <td colspan="2"><center><b>DADOS DA SOLICITAÇÃO</b></center></td>
-													  <td colspan="10"><center><b>DADOS DA ORDEM DE COMPRAS</b></center></td>
-													  <td colspan="4"><center><b>DADOS DA NOTA FISCAL</b></center></td>
-													</tr>
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Solicitação</center></th>            
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 800px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 120px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 850px"><center>Produto</center></th>            
-													  <th scope="col" style="width: 100px"><center>Qtd O.C.</center></th>            
-													  <th scope="col" style="width: 150px"><center>Valor Total O.C</center></th>            
-													  <th scope="col" style="width: 680px"><center>Classificação Item</center></th>        
-													  <th scope="col" style="width: 150px"><center>Qtd Recebida</center></th>            
-													  <th scope="col" style="width: 200px"><center>Valor Tot. Recebido</center></th>            
-													  <th scope="col" style="width: 150px"><center>Nº Nota Fiscal</center></th>            
-													  <th scope="col" style="width: 150px"><center>Chave Acesso</center></th>            
-													  <th scope="col" style="width: 130px"><center>Código IBGE</center></th>            
-													  <th scope="col" style="width: 100px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"><center> {{ $processo->numeroSolicitacao }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}"><center>{{ $processo->numeroOC }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></center></td> 		
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}"><center>{{ $processo->fornecedor }} </center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}"><center>{{ $processo->cnpj }} </center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->produto }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdOrdemCompra }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->classificacaoItem }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->quantidadeRecebida }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->valorTotalRecebido, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->numeroNotaFiscal }}</center></td>
-												     <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->chaveAcesso }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->codigoIBGE }}</center></td>
-													 <td> <center>
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-														  @endforeach
-														 </div>	
-														</a> </center>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-											@endif
-												 <nav aria-label="Page navigation example">
-												  <ul class="pagination justify-content-center">
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,1,2020)) }}">Jan</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,2,2020)) }}">Fev</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,3,2020)) }}">Mar</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,4,2020)) }}">Abr</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,5,2020)) }}">Mai</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,6,2020)) }}">Jun</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,7,2020)) }}">Jul</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,8,2020)) }}">Ago</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,9,2020)) }}">Set</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,10,2020)) }}">Out</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,11,2020)) }}">Nov</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,12,2020)) }}">Dez</a></li>
-												  </ul>
-												</nav>
-											   </table>
-										</div>
-									</div>
-									</div>
-									
-									<div class="collapse border-0" id="multiCollapseExample6">
-									<div class="card card-body border-0">
-										<div class="container">
-												<table  WIDTH="3000px;" border="2">
-												 <thead class="bg-success" border="2">
-												    <tr>
-													  <td colspan="2"><center><b>DADOS DA SOLICITAÇÃO</b></center></td>
-													  <td colspan="10"><center><b>DADOS DA ORDEM DE COMPRAS</b></center></td>
-													  <td colspan="4"><center><b>DADOS DA NOTA FISCAL</b></center></td>
-													</tr>
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Solicitação</center></th>            
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 900px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 120px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 1000px"><center>Produto</center></th>            
-													  <th scope="col" style="width: 100px"><center>Qtd O.C.</center></th>            
-													  <th scope="col" style="width: 150px"><center>Valor Total O.C</center></th>            
-													  <th scope="col" style="width: 600px"><center>Classificação Item</center></th>        
-													  <th scope="col" style="width: 150px"><center>Qtd Recebida</center></th>            
-													  <th scope="col" style="width: 200px"><center>Valor Tot. Recebido</center></th>            
-													  <th scope="col" style="width: 150px"><center>Nº Nota Fiscal</center></th>            
-													  <th scope="col" style="width: 650px"><center>Chave Acesso</center></th>            
-													  <th scope="col" style="width: 380px"><center>Código IBGE</center></th>            
-													  <th scope="col" style="width: 100px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"><center> {{ $processo->numeroSolicitacao }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}"><center>{{ $processo->numeroOC }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></center></td> 		
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}"><center>{{ $processo->fornecedor }} </center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}"><center>{{ $processo->cnpj }} </center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->produto }}"><center>{{ $processo->produto }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdOrdemCompra }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->classificacaoItem }}"><center>{{ $processo->classificacaoItem }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->quantidadeRecebida }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->valorTotalRecebido, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->numeroNotaFiscal }}</center></td>
-													 <td class="text-truncate" style="max-width: 180px; font-size: 12px" title="{{ $processo->chaveAcesso }}"><center>{{ $processo->chaveAcesso }}</center></td>
-													 <td class="text-truncate" style="max-width: 180px; font-size: 12px" title="{{ $processo->codigoIBGE }}"><center>{{ $processo->codigoIBGE }}</center></td>
-													 <td> <center>
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-														  @endforeach
-														 </div>	
-														</a> </center>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-												 <nav aria-label="Page navigation example">
-												  <ul class="pagination justify-content-center">
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,1,2021)) }}">Jan</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,2,2021)) }}">Fev</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,3,2021)) }}">Mar</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,4,2021)) }}">Abr</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,5,2021)) }}">Mai</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,6,2021)) }}">Jun</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,7,2021)) }}">Jul</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,8,2021)) }}">Ago</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,9,2021)) }}">Set</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,10,2021)) }}">Out</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,11,2021)) }}">Nov</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,12,2021)) }}">Dez</a></li>
-												  </ul>
-												</nav>
-											   </table>
-										</div>
-									</div>
-									</div>
-								</div>
+								 </div>
+							    </div>
 							</div>
 							</div>
-							
+
 							<div class="collapse border-0" id="multiCollapseExample2">
 							<div class="card card-body border-0">
 								<div class="container">	
@@ -395,257 +132,24 @@
 								  </div>
 							</div>
 							</div>
-						</div>
-					</div>	
+					</div>
+				  </div>	
 				  @elseif($unidade->id == 8)
 				  <div id="collapseTwo" class="collapse multi-collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
 					<div class="card-body">
-						<p>
+						  <p>
 							<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Processos de Compra</a>  
-						</p>
+						  </p>
 							<div class="collapse border-0" id="multiCollapseExample1">
-							<div class="card card-body border-0">
-							<div class="container">
-							<p>
-							 <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Mapa de Síntese</a>
-							 <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample3" role="button" aria-expanded="false" aria-controls="multiCollapseExample3">Demais Processos</a>
-						    </p>
-							<div class="collapse border-0" id="multiCollapseExample3">
-								<div class="card card-body border-0">
-									<div class="container">
-									  <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample5">2020</a> 
-									  <a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample6" role="button" aria-expanded="false" aria-controls="multiCollapseExample6">2021</a> 
-									</div>
-								</div>
-							</div>
-									<?php if(empty($mes)) { $mes = 0; } else {  } ?>
-									<?php $z = 0; ?>
-									<div class="collapse border-0" id="multiCollapseExample5">
-									<div class="card card-body border-0">
-										<div class="container">
-										@if($mes <= 9)
-											  <table WIDTH="1500px;" border="2">
-												 <thead class="bg-success">
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 120px"><center>Tipo de Pedido</center></th>            
-													  <th scope="col" style="width: 220px"><center>Qt. de Itens do Formulário</center></th>
-													  <th scope="col" style="width: 750px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 170px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 200px"><center>Valor Total da O.C.</center></th>            
-													  <th scope="col" style="width: 190px"><center>Data da Solicitação</center></th>            
-													  <th scope="col" style="width: 170px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"> {{ $processo->numeroSolicitacao }}</td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->tipoPedido }}">{{ $processo->tipoPedido }}</td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdItens }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}">{{ $processo->fornecedor }} </td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}">{{ $processo->cnpj }} </td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}">{{ $processo->numeroOC }}</td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px">{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></td>
-													 <td> 
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-														  @endforeach
-														 </div>	
-														</a>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-											@elseif($mes > 9)
-												<table  WIDTH="2800px;" border="2">
-												 <thead class="bg-success" border="2">
-												    <tr>
-													  <td colspan="2"><center><b>DADOS DA SOLICITAÇÃO</b></center></td>
-													  <td colspan="11"><center><b>DADOS DA ORDEM DE COMPRAS</b></center></td>
-													  <td colspan="4"><center><b>DADOS DA NOTA FISCAL</b></center></td>
-													</tr>
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Solicitação</center></th>            
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 950px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 120px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 850px"><center>Produto</center></th>            
-													  <th scope="col" style="width: 100px"><center>Qtd O.C.</center></th>            
-													  <th scope="col" style="width: 150px"><center>Valor Total O.C</center></th>            
-													  <th scope="col" style="width: 680px"><center>Classificação Item</center></th>        
-													  <th scope="col" style="width: 150px"><center>Qtd Recebida</center></th>            
-													  <th scope="col" style="width: 200px"><center>Valor Tot. Recebido</center></th>            
-													  <th scope="col" style="width: 150px"><center>Nº Nota Fiscal</center></th>            
-													  <th scope="col" style="width: 150px"><center>Chave Acesso</center></th>            
-													  <th scope="col" style="width: 130px"><center>Código IBGE</center></th>            
-													  <th scope="col" style="width: 100px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"><center> {{ $processo->numeroSolicitacao }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}"><center>{{ $processo->numeroOC }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></center></td> 		
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}"><center>{{ $processo->fornecedor }} </center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}"><center>{{ $processo->cnpj }} </center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->produto }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdOrdemCompra }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->classificacaoItem }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->quantidadeRecebida }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->valorTotalRecebido, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 150px; font-size: 12px"><center>{{ $processo->numeroNotaFiscal }}</center></td>
-												     <td class="text-truncate" style="max-width: 150px; font-size: 12px"><center>{{ $processo->chaveAcesso }}</center></td>
-													 <td class="text-truncate" style="max-width: 150px; font-size: 12px"><center>{{ $processo->codigoIBGE }}</center></td>
-													 <td> <center>
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-															
-														  @endforeach
-														 </div>	
-														</a> </center>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-												 
-											@endif
-												 <nav aria-label="Page navigation example">
-												  <ul class="pagination justify-content-center">
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,1,2020)) }}">Jan</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,2,2020)) }}">Fev</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,3,2020)) }}">Mar</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,4,2020)) }}">Abr</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,5,2020)) }}">Mai</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,6,2020)) }}">Jun</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,7,2020)) }}">Jul</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,8,2020)) }}">Ago</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,9,2020)) }}">Set</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,10,2020)) }}">Out</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,11,2020)) }}">Nov</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,12,2020)) }}">Dez</a></li>
-												  </ul>
-												</nav>
-											   </table>
-										</div>
-									</div>
-									</div>
-									
-									<div class="collapse border-0" id="multiCollapseExample6">
-									<div class="card card-body border-0">
-										<div class="container">
-												<table  WIDTH="2800px;" border="2">
-												 <thead class="bg-success" border="2">
-												    <tr>
-													  <td colspan="2"><center><b>DADOS DA SOLICITAÇÃO</b></center></td>
-													  <td colspan="10"><center><b>DADOS DA ORDEM DE COMPRAS</b></center></td>
-													  <td colspan="4"><center><b>DADOS DA NOTA FISCAL</b></center></td>
-													</tr>
-													<tr> 	
-													  <th scope="col" style="width: 140px"><center>Nº Solicitação</center></th> 	
-													  <th scope="col" style="width: 170px"><center>Data Solicitação</center></th>            
-													  <th scope="col" style="width: 100px"><center>Nº O.C.</center></th>
-													  <th scope="col" style="width: 170px"><center>Data Autorização</center></th>
-													  <th scope="col" style="width: 950px"><center>Fornecedor</center></th>
-													  <th scope="col" style="width: 120px"><center>CNPJ</center></th>
-													  <th scope="col" style="width: 850px"><center>Produto</center></th>            
-													  <th scope="col" style="width: 100px"><center>Qtd O.C.</center></th>            
-													  <th scope="col" style="width: 150px"><center>Valor Total O.C</center></th>            
-													  <th scope="col" style="width: 780px"><center>Classificação Item</center></th>        
-													  <th scope="col" style="width: 150px"><center>Qtd Recebida</center></th>            
-													  <th scope="col" style="width: 200px"><center>Valor Tot. Recebido</center></th>            
-													  <th scope="col" style="width: 150px"><center>Nº Nota Fiscal</center></th>            
-													  <th scope="col" style="width: 650px"><center>Chave Acesso</center></th>            
-													  <th scope="col" style="width: 430px"><center>Código IBGE</center></th>            
-													  <th scope="col" style="width: 100px"><center>Arquivos</center></th>
-													</tr>         
-												 </thead>
-												@if(!empty($processos))
-												  @foreach($processos as $processo)
-													<div class="collapse border-0" id="{{$mes}}" >
-													<tbody> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" alt="{{$processo->numeroSolicitacao }}"><center> {{ $processo->numeroSolicitacao }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataSolicitacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataSolicitacao)) }} <?php } ?></center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->numeroOC }}"><center>{{ $processo->numeroOC }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center><?php if($processo->dataAutorizacao == '1970-01-01'){ echo ""; ?> <?php }else{ ?> {{ date('d/m/Y', strtotime($processo->dataAutorizacao)) }} <?php } ?></center></td> 		
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px; width: 50px;"  title="{{ $processo->fornecedor }}"><center>{{ $processo->fornecedor }} </center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px" title="{{ $processo->cnpj }}"><center>{{ $processo->cnpj }} </center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->produto }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->qtdOrdemCompra }}</center></td> 	
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ "R$ ".number_format($processo->totalValorOC, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->classificacaoItem }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->quantidadeRecebida }}</center></td>
-													 <td class="text-truncate" style="max-width: 180px; font-size: 12px"><center>{{ "R$ ".number_format($processo->valorTotalRecebido, 2,',','.') }}</center></td>
-													 <td class="text-truncate" style="max-width: 100px; font-size: 12px"><center>{{ $processo->numeroNotaFiscal }}</center></td>
-													 <td class="text-truncate" style="max-width: 180px; font-size: 12px" title="{{ $processo->chaveAcesso }}"><center>{{ $processo->chaveAcesso }}</center></td>
-													 <td class="text-truncate" style="max-width: 180px; font-size: 12px" title="{{ $processo->codigoIBGE }}"><center>{{ $processo->codigoIBGE }}</center></td>
-													 <td> <center>
-													   <a class="badge badge-pill badge-primary dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														Visualizar
-														 <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-														  @foreach($processo_arquivos as $processoA) 
-															@if($processoA->processo_id == $processo->id)
-															  <a id="div" class="dropdown-item" href="{{asset('../storage/')}}/{{$processoA->file_path}}" target="_blank">{{ $processoA->title }}</a>
-															@endif
-														  @endforeach
-														 </div>	
-														</a> </center>
-													 </td>
-													</tr>	
-													</tbody>
-													</div>
-												  @endforeach
-												 @endif
-												 <nav aria-label="Page navigation example">
-												  <ul class="pagination justify-content-center">
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,1,2021)) }}">Jan</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,2,2021)) }}">Fev</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,3,2021)) }}">Mar</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,4,2021)) }}">Abr</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,5,2021)) }}">Mai</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,6,2021)) }}">Jun</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,7,2021)) }}">Jul</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,8,2021)) }}">Ago</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,9,2021)) }}">Set</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,10,2021)) }}">Out</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,11,2021)) }}">Nov</a></li>
-													<li class="page-item"><a class="page-link" href="{{ route('pesquisarMesCotacao', array($unidade->id,12,2021)) }}">Dez</a></li>
-												  </ul>
-												</nav>
-											   </table>   
-												
-										</div>
-							     </div>
-							   </div>
-							</div>
-							</div>
-							</div>
-						   
+							 <div class="card card-body border-0">
+							  <div class="container">
+								<p>
+								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Mapa de Síntese</a>
+								<a class="btn btn-success" href="{{route('visualizarOrdemCompra', $unidade->id)}}" role="button" >Demais Processos</a> 
+								</p>
+							  </div>
+							 </div>
+							</div>		
 							<div class="collapse border-0" id="multiCollapseExample2">
 							<div class="card card-body border-0">
 								<div class="container">	
@@ -674,14 +178,13 @@
 									 </table>
 									 @endif										
 								    @endforeach 
-								  </div>
+								</div>
 							</div>
 							</div>
-						  </div>	
-						 </div>
-						@endif
-					</div>
-					
+						</div>	
+					  </div>
+					@endif
+				   </div>
 				<!-- AQUISIÇõES -->
 				@if($unidade->id == 8)
 				<div class="card">

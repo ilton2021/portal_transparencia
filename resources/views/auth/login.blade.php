@@ -47,9 +47,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
-                            
-							@if (Route::has('password.request'))
+                        <div class="form-group row mb-0" style="margin-left: 345px;">
+                          	@if (Route::has('password.request'))
 								<a class="btn btn-link" href="{{ route('password.request') }}">
                                    {{ __('Esqueceu sua senha?') }}
                                 </a>

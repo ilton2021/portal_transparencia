@@ -44,6 +44,10 @@ Route::prefix('transparencia')->group( function(){
 	Route::get('relfinanceiroExercicio/{id}','IndexController@transparenciaMensalFinanceiroExercico')->name('transparenciaMensalFinanceiroExercico');
 	Route::get('resultadoProcessosCotacao/{id}','IndexController@transparenciaProcessoCotacao')->name('transparenciaProcessoCotacao');
 	Route::get('ouvidoria/{id}','IndexController@transparenciaOuvidoria')->name('transparenciaOuvidoria');
+	Route::get('home_compras/ordem_compra/ordemCompraVisualizar/{id}','IndexController@visualizarOrdemCompra')->name('visualizarOrdemCompra');
+	Route::post('home_compras/ordem_compra/ordemCompraVisualizar/{id}','IndexController@procuraVisualizarOrdemCompra')->name('procuraVisualizarOrdemCompra');
+	Route::get('recursos-humanos/{id}/selecaoPcadastro/despesasUsuarioRH','IndexController@despesasUsuarioRH')->name('despesasUsuarioRH');
+	Route::post('recursos-humanos/{id}/selecaoPcadastro/despesasRH','IndexController@despesasUsuarioRHProcurar')->name('despesasUsuarioRHProcurar');
 });
 
 Auth::routes();
@@ -67,6 +71,8 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('home_compras/ordem_compra/{id}','HomeController@procuraOrdemCompra')->name('procuraOrdemCompra');
 
 	Route::get('home_compras/ordem_compra/novo/{id}','HomeController@transparenciaOrdemCompraNovo')->name('transparenciaOrdemCompraNovo');
+	Route::get('home_compras/ordem_compra/novo/{id}/arquivo','HomeController@transparenciaOrdemCompraNovoArquivo')->name('transparenciaOrdemCompraNovoArquivo');
+	Route::post('home_compras/ordem_compra/novo/{id}/arquivo','HomeController@storeOrdemCompraNovoArquivo')->name('storeOrdemCompraNovoArquivo');
 	Route::get('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@ordemCompraAlterar')->name('ordemCompraAlterar');
 	Route::get('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@ordemCompraExcluir')->name('ordemCompraExcluir');
 	

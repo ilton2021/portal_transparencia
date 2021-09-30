@@ -75,8 +75,8 @@
 					  <table>						   
 					    <tr>						     
 						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>							 
-						   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="arquivosCotacoes" /> </td>							 
-						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarArquivoCotacoes" /> </td>							 
+						   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="arquivos_oc" /> </td>							 
+						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="novos_arquivos_oc" /> </td>							 
 						   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>						   
 						</tr>						
 					  </table> <br><br>	
@@ -84,30 +84,20 @@
 						<thead class="bg-success">
 						   <tr> 	
 							<th scope="col" style="width: 200px">Nº Solicitação</th> 	
-							<th scope="col" style="width: 200px">Pedido</th>            
 							<th scope="col" style="width: 200px">Arquivo</th>       
 						   </tr>         
 						</thead>
 						@if(!empty($processo_arquivos))
 							@foreach($processo_arquivos as $processoA)
 								@if($processoA->processo_id == $processos[0]->id)
-						<tbody> 	
-							<th style="font-size: 12px">{{ $processos[0]->numeroSolicitacao }}</p></th> 	
-							<th style="font-size: 12px">{{ $processos[0]->tipoPedido }}</th> 	
-							<th style="font-size: 12px">{{ $processoA->title }}</th> 	
-						</tbody>
+								<tbody> 	
+									<th style="font-size: 12px">{{ $processos[0]->numeroSolicitacao }}</p></th> 	
+									<th style="font-size: 12px">{{ $processoA->title }}</th> 	
+								</tbody>
 								@endif
 							@endforeach
 					    @endif
-					  </table> 				
-				<!--	  <table>							
-					    <tr>					     
-						   <td align="left">						 
-						     <br /><a href="{{route ('transparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
-							 <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 					     
-						   </td>					    
-						</tr>					  
-					   </table>	!-->			  
+					  </table> 					  
 					  </form>				
 				</div>							  
 			</div> 	        

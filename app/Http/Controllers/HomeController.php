@@ -9,6 +9,7 @@ use App\Model\Processos;
 use App\Model\Cotacao;
 use App\Model\LoggerUsers;
 use App\Http\Controllers\ContratacaoController;
+use App\Imports\processoImport;
 use Auth;
 use Validator;
 
@@ -85,13 +86,14 @@ class HomeController extends Controller
           $processos = Processos::whereMonth('created_at',$mes)->whereYear('created_at',$ano)
                                  ->where('unidade_id',$id)->get();
           $processo_arq = ProcessoArquivos::where('unidade_id',$id)->get();
-           return view('ordem_compra/ordem_compras_novo', compact('unidade','processos','processo_arq'))
+          return view('ordem_compra/ordem_compras_novo', compact('unidade','processos','processo_arq'))
               ->withErrors($validator)
 						  ->withInput(session()->flashInput($request->input()));
           
         } else {
           $processos = Processos::create($input);
           $processos = Processos::all();
+          $log = LoggerUsers::create($input);
           $mes = date('m',strtotime($processos[0]->created_at));
           $now = date('m',strtotime('now')); 
           $processos = Processos::whereMonth('created_at',$mes)->where('unidade_id',$id)->get();
@@ -100,6 +102,50 @@ class HomeController extends Controller
           return view('ordem_compra/ordem_compras_novo', compact('unidade','processos','processo_arq'))
 						 ->withErrors($validator)
 						 ->withInput(session()->flashInput($request->input()));
+        }
+      }
+
+      public function transparenciaOrdemCompraNovoArquivo($unidade_id, Request $request)
+      {
+        $unidade =  Unidade::where('id',$unidade_id)->get();
+        return view('ordem_compra/ordem_compras_novo_planilha', compact('unidade'));
+      }
+
+      public function storeOrdemCompraNovoArquivo($unidade_id, Request $request)
+      { 
+        $input = $request->all();
+        $unidade = Unidade::where('id',$unidade_id)->get();
+        $nome = $_FILES['file_path']['name']; 
+        $extensao = pathinfo($nome, PATHINFO_EXTENSION);
+        if($request->file('file_path') === NULL) {	
+          $validator = 'Informe o arquivo da Ordem de Compra!';
+          return view('ordem_compra/ordem_compras_novo_planilha', compact('unidade'))
+            ->withErrors($validator)
+            ->withInput(session()->flashInput($request->input()));
+        } else {	
+            if(($extensao === 'csv') || ($extensao === 'xls') || ($extensao === 'xlsx')) {
+              $validator = Validator::make($request->all(), [
+                'file_path' => 'required',
+              ]);
+              if ($validator->fails()) {
+                $validator = 'o campo arquivo é obrigatório!';
+                return view('ordem_compra/ordem_compras_novo_planilha', compact('unidade'))
+                  ->withErrors($validator)
+                  ->withInput(session()->flashInput($request->input()));
+              }else {
+                \Excel::import(new processoImport($unidade_id), $request->file('file_path'));
+                $input['user_id'] = Auth::user()->id;
+                $log = LoggerUsers::create($input);
+                $processos = Processos::where('unidade_id', $unidade_id)->paginate(30);
+                $processo_arq = ProcessoArquivos::where('unidade_id',$unidade_id)->get();
+                return view('ordem_compra/ordem_compras_cadastro', compact('unidade','processos','processo_arq'));		
+            }
+          } else {
+            $validator = 'Só são suportados arquivos tipo: .csv, .xls, .xlsx';
+            return view('ordem_compra/ordem_compras_novo_planilha', compact('unidade'))
+            ->withErrors($validator)
+            ->withInput(session()->flashInput($request->input()));
+          }
         }
       }
 
@@ -117,9 +163,9 @@ class HomeController extends Controller
         $processos = Processos::where('id',$id)->get();
         $validator = Validator::make($request->all(), [
           'numeroSolicitacao'  => 'required|max:255',
-          'dataSolicitacao'    => 'required|date',
+          'dataSolicitacao'    => 'required',
           'numeroOC'           => 'required|max:255',
-          'dataAutorizacao'    => 'required|date',
+          'dataAutorizacao'    => 'required',
           'fornecedor'         => 'required|max:255',
           'cnpj'               => 'required|max:14',
           'produto'            => 'required|max:500',
@@ -139,6 +185,8 @@ class HomeController extends Controller
         } else { 
           $processos = Processos::find($id);
           $processos->update($input);
+          $input['user_id'] = Auth::user()->id;
+          $logs = LoggerUsers::create($input);
           $processos = Processos::where('id',$id)->paginate(30);       
           $processo_arq = ProcessoArquivos::where('unidade_id',$unidade_id)->get(); 
           $validator = 'A Ordem de Compra(OC) foi alterada com sucesso!';
@@ -157,7 +205,10 @@ class HomeController extends Controller
       
       public function destroyOrdemCompra($unidade_id, $id, Request $request)
       { 
+        $input = $request->all();
         Processos::find($id)->delete(); 
+        $input['user_id'] = Auth::user()->id;
+        $logs = LoggerUsers::create($input);
         $unidade = Unidade::where('id',$unidade_id)->get();
         $processos = Processos::where('unidade_id', $unidade_id)->paginate(30);
 		    $input = $request->all();
@@ -170,7 +221,7 @@ class HomeController extends Controller
     
  
       public function procuraOrdemCompra($unidade_id, Request $request)
-	    {    
+	    {     
         $input = $request->all();
         $unidade =  Unidade::where('id',$unidade_id)->get();
         $funcao = $input['funcao'];
@@ -220,8 +271,8 @@ class HomeController extends Controller
 		  $unidade = $this->unidade->find($id);
       $validator = 'Arquivo adicionado com Sucesso!';
 			return view('transparencia/contratacao/cotacao_excel', compact('unidades','unidade'))
-      ->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
+        ->withErrors($validator)
+        ->withInput(session()->flashInput($request->input()));	
 	  }
 
   	public function storeArquivoOrdemCompra($id, $id_processo, Request $request)
@@ -242,8 +293,7 @@ class HomeController extends Controller
                     $input['file_path'] = $nome;
                     $input['title'] = $input['title'.$i];
                     ProcessoArquivos::create($input);	
-                    $log = LoggerUsers::create($input);
-                    $lastUpdated = $log->max('updated_at'); $a += 1;
+                    $a += 1;
                 }else{
                     $validator = 'Só suporta arquivos do tipo PDF!';
                     return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
@@ -253,6 +303,9 @@ class HomeController extends Controller
             }
           }
           if($a > 0){
+            $input['user_id'] = Auth::user()->id;
+            $logs = LoggerUsers::create($input);
+            $lastUpdated = $logs->max('updated_at'); 
             $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
             $validator = 'Arquivo de Ordem de Compra, cadastrado com sucesso!';
             return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
@@ -285,5 +338,5 @@ class HomeController extends Controller
       $processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
       $unidade = Unidade::where('id',$id)->get();
 			return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'));
-	  }
+    }   
 }

@@ -60,9 +60,11 @@
 					</table>
 					
 					<table>
-					   <tr>
-						 <t<d> <input hidden type="text" class="form-control" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /> </td>
-					   </tr>
+						<tr>
+						    <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="excluir_planilha_oc"> </td>  
+							<td> <input hidden type="text" class="form-control" id="acao" name="acao" value="delete_planilha_oc"> </td>  
+							<td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
+						 </tr>
 					</table>
 					
 					<br/><br/>

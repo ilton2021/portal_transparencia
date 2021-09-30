@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Mail;
 use App\Model\User;
 use App\Model\Auth;
 use App\Model\Unidade;
+use App\Model\AlterarSenha;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Validator;
+use Str;
 
 class UserController extends Controller
 {
@@ -88,15 +90,17 @@ class UserController extends Controller
 	public function resetarSenha(Request $request)
 	{
 		$input = $request->all();		
+		$token = "";
 		$validator = Validator::make($request->all(), [
 			'email'    => 'required|email',
             'password' => 'required|same:password_confirmation',
+			'token_'	   => 'required',
 			'password_confirmation' => 'required'
     	]);		
 		if ($validator->fails()) {
-			return view('auth.passwords/reset')
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+			return view('auth.passwords/reset', compact('token'))
+					  ->withErrors($validator)
+                      ->withInput(session()->flashInput($request->input()));						
 		} else {
 			if(!empty($input['password'])){ 
 				$input['password'] = Hash::make($input['password']);
@@ -104,12 +108,34 @@ class UserController extends Controller
 				$input = array_except($input,array('password'));    
 			}
 			$email = $input['email'];
-			$user = User::find(5);
-			$user->update($input);
-			$validator = 'Senha alterado com sucesso!';
-			return view('auth.login')
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+			$token_ = $input['token_'];
+			$user = User::where('email',$email)->get();
+			$qtd = sizeof($user);
+			if($qtd > 0){
+				$alt_senha = AlterarSenha::where('token',$token_)->where('user_id',$user[0]->id)->get();
+				$qtdAlt = sizeof($alt_senha);
+				if($qtdAlt > 0){
+					$user = User::find($user[0]->id);
+					$user->update($input);
+					$validator = 'Senha alterada com sucesso!';
+					$unidades  = $this->unidade->all();
+					return view('auth.login', compact('unidades','user'))						
+						  ->withErrors($validator)
+						  ->withInput(session()->flashInput($request->input()));								
+				} else {
+					$validator = 'Token Inválido!';
+					return view('auth.passwords.reset',compact('token'))						
+						  ->withErrors($validator)
+						  ->withInput(session()->flashInput($request->input()));								
+				}
+			} else {
+				$validator = 'Usuário não existe!';
+				$unidades  = Unidade::all();
+				$token = '';
+				return view('auth.passwords.reset', compact('unidades','user','token'))
+					  ->withErrors($validator)
+                      ->withInput(session()->flashInput($request->input()));								
+			}
 		}
 	}
 	
@@ -179,31 +205,56 @@ class UserController extends Controller
                         ->with('success','User deleted successfully');
     }
 
-	public function emailReset(Request $request){
-
+	public function emailReset(Request $request)
+	{
 		$input = $request->all(); 
 		$email = $input['email'];
 		$usuarios = User::where('email',$email)->get();
+		$qtd = sizeof($usuarios);
 		$validator = Validator::make($request->all(), [
 			'email' => 'required|email',
 		]);	
-		$email2 = 'ilton.albuquerque@hcpgestao.org.br';
-		if(!empty($usuarios)){
-			Mail::send('transparencia.email.emailReset', [], function($m) use ($email,$email2) {
-				$m->from('portal@hcpgestao.org.br', 'PORTAL DA TRANSPARENCIA');
-				$m->subject('Solicitação de Alteração de Senha');
-				$m->to($email);
-				$m->cc($email2);
-			});		
-			$validator = 'E-mail enviado com sucesso! Verifique sua caixa de mensagens';
+		if($validator->fails()){
 			return view('auth.passwords.email', compact('email','usuarios'))
-		    	->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	  
-		}else{
-			$validator = 'Verifique o E-mail digitado e preencha novamente.';
-			return view('auth.passwords.email', compact('email','usuarios'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+		} else {
+			if($qtd > 0){
+				$input['token']   = Str::random('40');
+				$input['user_id'] = $usuarios[0]->id;
+				$alt_senha = AlterarSenha::where('token',$input['token'])->get();
+				$qtdAlt = sizeof($alt_senha);
+				if($qtdAlt > 0){
+					$validator = 'ESTE TOKEN JÁ FOI CADASTRADO';
+					return view('auth.passwords.email', compact('email','usuarios'))
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
+				} else {
+					$alt = AlterarSenha::where('user_id', $input['user_id'])->get();
+					$qtdUser = sizeof($alt);
+					if($qtdUser > 0){
+						DB::statement('DELETE FROM alterar_senha WHERE user_id = '.$input['user_id']);
+					}
+					$alt_senha = AlterarSenha::create($input);
+					$token = DB::table('alterar_senha')->max('token');
+					$email2 = 'ilton.albuquerque@hcpgestao.org.br';
+					Mail::send('email.emailReset', ['token' => $token], function($m) use ($email,$email2,$token) {
+						$m->from('ilton.albuquerque@hcpgestao.org.br', 'PORTAL DA TRANSPARÊNCIA');
+						$m->subject('Solicitação de Alteração de Senha');
+						$m->to($email);
+						$m->cc($email2);
+					});		
+					$validator = 'ABRA SUA CAIXA DE E-MAIL PARA VALIDAR SUA SENHA NOVA';
+					return view('auth.passwords.email', compact('email','usuarios'))
+						->withErrors($validator)
+						->withInput(session()->flashInput($request->input()));
+				}
+			}else{ 
+				$validator = 'Este E-mail não foi cadastrado no Portal da Transparência.';
+				return view('auth.passwords.email', compact('email','usuarios'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
+			}
 		}
 	}
 }

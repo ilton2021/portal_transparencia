@@ -456,13 +456,9 @@ class IndexController extends Controller
         ->get();
 		$aditivos = Aditivo::where('unidade_id', $id)->get();
 		$cotacoes = Cotacao::where('unidade_id', $id)->get();
-		$processos = Processos::where('unidade_id', $id)->whereMonth('dataSolicitacao',0)->get();
-		$processo_arquivos = ProcessoArquivos::where('unidade_id',$id)->get();
 		$lastUpdated = $contratos->max('created_at'); 
 		$permissao_users = PermissaoUsers::where('unidade_id', $id)->get();
-		$a = 0;
-		$z = 0;
-        return view('transparencia.contratacao', compact('unidade','unidadesMenu','contratos','cotacoes','aditivos','lastUpdated','processos','processo_arquivos','permissao_users','a','z'));
+	    return view('transparencia.contratacao', compact('unidade','unidadesMenu','contratos','cotacoes','aditivos','lastUpdated','permissao_users'));
     }
 
     public function rp()
@@ -536,5 +532,96 @@ class IndexController extends Controller
         $pdf = PDF::loadView('transparencia.pdf.assistencial', compact('assistencials','unidade'));
         $pdf->setPaper('A4', 'landscape');
         return $pdf->download('assistencial.pdf');
+    }
+
+    public function visualizarOrdemCompra($id)
+    { 
+      $unidade      = Unidade::where('id',$id)->get();
+      $processos    = Processos::where('unidade_id',$id)->paginate(20);
+      $processo_arq = ProcessoArquivos::where('unidade_id',$id)->get();
+      return view('ordem_compra/ordem_compra_usuarios', compact('unidade','processos','processo_arq'));
+    }
+
+    public function procuraVisualizarOrdemCompra($unidade_id, Request $request)
+    {    
+      $input = $request->all();
+      $unidade =  Unidade::where('id',$unidade_id)->get();
+      $funcao = $input['funcao'];
+      $funcao2 = $input['funcao2'];
+      $text = $input['text'];
+      $data = $input['data']; 
+      if ($funcao2 == "1"){
+        if($funcao == "1") {
+            $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else if($funcao == "2" ){
+            $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else {
+            $processos = Processos::where('fornecedor','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
+        }
+      } else if ($funcao2 == "2"){
+        if($funcao == "1") {
+            $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else if($funcao == "2") {
+            $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else {
+            $processos = Processos::where('numeroSolicitacao','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
+        }
+      } else if ($funcao2 == "3"){ 
+        if($funcao == "1") {
+            $processos = Processos::where('produto','like','%'.$text.'%')->where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else if($funcao == "2") {
+            $processos = Processos::where('produto','like','%'.$text.'%')->where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else {
+            $processos = Processos::where('produto','like','%'.$text.'%')->where('unidade_id',$unidade_id)->paginate(30);
+        }         
+      } else {
+        if($funcao == "1") {
+            $processos = Processos::where('dataSolicitacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else if($funcao == "2") {
+            $processos = Processos::where('dataAutorizacao',$data)->where('unidade_id',$unidade_id)->paginate(30);	
+        } else if($funcao == "0") {
+            $processos = Processos::where('unidade_id',$unidade_id)->paginate(30); 		  
+        }
+      }
+      $processo_arq = ProcessoArquivos::where('unidade_id', $unidade_id)->paginate(30);   
+      return view('ordem_compra/ordem_compra_usuarios', compact('unidade','processos','processo_arq'));	
+    }
+
+    public function despesasUsuarioRH($id)
+    {
+        $unidadesMenu = $this->unidade->all();
+        $unidades = $unidadesMenu; 
+        $unidade = $this->unidade->find($id);
+        $ano  = 0;
+        $mes  = 0;
+        $tipo = 0;
+        return view('transparencia/rh/rh_despesas_exibe_usuario', compact('unidade','unidades','unidadesMenu','ano','mes', 'tipo')); 
+    }
+
+    public function despesasUsuarioRHProcurar($id, Request $request)
+    {
+        $input = $request->all();
+        $unidade = $this->unidade->find($id);		
+        $unidadesMenu = $this->unidade->all();
+        $mes  = $input['mes'];
+        $ano  = $input['ano'];
+        $tipo = $input['tipo']; 
+        if($tipo == NULL){ $tipo = ""; }
+        if ($id == 2){
+            $despesas = DB::table('desp_com_pessoal_hmr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }else if ($id == 3){
+            $despesas = DB::table('desp_com_pessoal_belo_jardim')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }else if($id == 4){
+            $despesas = DB::table('desp_com_pessoal_arcoverde')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+       }else if($id == 5){
+            $despesas = DB::table('desp_com_pessoal_arruda')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }else if($id == 6){
+            $despesas = DB::table('desp_com_pessoal_upaecaruaru')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }else if($id == 7){
+            $despesas = DB::table('desp_com_pessoal_hss')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }else if($id == 8){
+            $despesas = DB::table('desp_com_pessoal_hpr')->where('mes',$mes)->where('ano', $ano)->where('tipo', $tipo)->get();	
+        }   
+        return view('transparencia/rh/rh_despesas_exibe_usuario	', compact('unidade','despesas','unidadesMenu','ano','mes','tipo'));   
     }
 }

@@ -44,13 +44,13 @@
 							<td> Nº Solicitação </td>
 							<td> <input type="text" id="numeroSolicitacao" name="numeroSolicitacao" class="form-control" value="<?php echo $processos[0]->numeroSolicitacao; ?>" required /> </td>
 							<td> Data da Solicitação </td>
-							<td> <input type="date" id="dataSolicitacao" name="dataSolicitacao" class="form-control" value="<?php echo $processos[0]->dataSolicitacao; ?>" required /> </td>
+							<td> <input type="text" id="dataSolicitacao" name="dataSolicitacao" class="form-control" value="<?php echo $processos[0]->dataSolicitacao; ?>" required /> </td>
 							<td> Nº O.C </td>
 							<td> <input type="text" id="numeroOC" name="numeroOC" class="form-control" value="<?php echo $processos[0]->numeroOC; ?>" required /> </td>
 						</tr>
 						<tr> 	
 							<td> Data de Autorização O.C. </td>
-							<td> <input type="date" id="dataAutorizacao" name="dataAutorizacao" class="form-control" value="<?php echo $processos[0]->dataAutorizacao; ?>" required /> </td>
+							<td> <input type="text" id="dataAutorizacao" name="dataAutorizacao" class="form-control" value="<?php echo $processos[0]->dataAutorizacao; ?>" required /> </td>
 							<td> Fornecedor </td>
 							<td> <input type="text" id="fornecedor" name="fornecedor" class="form-control" value="<?php echo $processos[0]->fornecedor; ?>" required /> </td>
 							<td> CNPJ </td>
@@ -84,9 +84,9 @@
 					</table>					
 					<table>
 						 <tr>
-						   <td> <input hidden type="text" class="form-control" id="validar" name="validar" value="1"> </td>
-						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
-		        		   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
+						    <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="alterar_planilha_oc"> </td>  
+							<td> <input hidden type="text" class="form-control" id="acao" name="acao" value="update_planilha_oc"> </td>  
+							<td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
 						 </tr>
 					</table>			
 					<br/>
@@ -98,6 +98,7 @@
 					   </td>
 					 </tr>
 					</table>
+					</form>
                   </div>
             </div>
         </div>

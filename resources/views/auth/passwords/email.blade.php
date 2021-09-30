@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Alterar Senha:') }}</div>
+                <div class="card-header">{{ __('Resetar Senha:') }}</div>
 
                 <div class="card-body">
                 @if ($errors->any())
@@ -35,7 +35,7 @@
                         <div class="form-group row mb-0">
 							<a style="margin-left: 260px;" href="{{ route ('welcome') }}" class="btn btn-warning"> Voltar </a>
                             &nbsp;&nbsp;&nbsp;
-							<button type="submit" class="btn btn-primary"> {{ __('Enviar link de redefinição de senha') }} </button>
+							<button type="submit" class="btn btn-primary"> {{ __('Enviar E-mail') }} </button>
                         </div>
                     </form>
                 </div>
