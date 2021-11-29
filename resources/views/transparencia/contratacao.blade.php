@@ -511,15 +511,15 @@
 																	@if($aditivo->opcao == 1)
 																		<?php $id += 1; ?>
 																		@if($aditivo->ativa == 1)
-																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 																	    @else
-																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>	
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>	
 																		@endif
 																	@elseif($aditivo->opcao == 2)
 																	    @if($aditivo->ativa == 1)
-																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>	
+																		  <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>	
 																	    @else
-																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>		
+																		  <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>		
 																		@endif
 																	@else <?php $idC += 1; ?>
 																		@if($aditivo->ativa == 1)

@@ -18,7 +18,7 @@
 		<div class="col-md-6 col-sm-6">
 		<table class="table" style="width: 800px;">	
 			@foreach($unidades as $und)
-			  @if($und->id == 3 || $und->id == 4 || $und->id == 6)
+			  @if($und->id == 3 || $und->id == 4)
 				<tr>
 					<td style="width: 800px;"> {{ $und->name }} </td>
 					<td> <center>
@@ -31,7 +31,9 @@
 			@endforeach
 		</table>	
 		</div>
-	</div><br><br>
+	</div><br><br><br><br><br><br>
+	<center><b>As Propostas devem ser enviadas a partir do dia: 03/11/2021 até o dia: 10/11/2021.</b></center>
+	<br>
 	<center><b>Envie sua proposta para: juliana.silva@hcpgestao.org.br , franklin.rodrigues@hcpgestao.org.br</b></center>
 </div>
 </div>

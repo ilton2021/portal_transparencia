@@ -527,7 +527,7 @@ class IndexController extends Controller
     public function assistencialPdf($id, $year)
     {
         $unidadesMenu = $this->unidade->all();
-        $unidade =$unidadesMenu->find($id);
+        $unidade = $unidadesMenu->find($id);
         $assistencials = Assistencial::where('unidade_id', $id)->where('ano_ref', $year)->get();
         $pdf = PDF::loadView('transparencia.pdf.assistencial', compact('assistencials','unidade'));
         $pdf->setPaper('A4', 'landscape');

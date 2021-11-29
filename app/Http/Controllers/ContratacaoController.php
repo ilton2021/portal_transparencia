@@ -229,13 +229,16 @@ class ContratacaoController extends Controller
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();
+		$contratos = Contrato::where('unidade_id',$id_unidade)->get();
+		$vinculos = Aditivo::where('vinculado')->get();
 		if($validacao == 'ok') {
-			return view('transparencia/contratacao/contratacao_novo', compact('unidades','unidade','unidadesMenu'));
+			return view('transparencia/contratacao/contratacao_novo', compact('unidades','unidade','unidadesMenu','contratos','vinculos'));
+			
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 	
@@ -246,14 +249,31 @@ class ContratacaoController extends Controller
 		$unidade = $this->unidade->find($id_unidade);
 		$unidadesMenu = $this->unidade->all();
 		$contratos = Contrato::where('unidade_id', $id_unidade)->where('prestador_id', $id_prestador)->get();
-		$prestadores = Prestador::where('id', $id_prestador)->get();
+		$aditivos = Aditivo::where('unidade_id', $id_unidade)->where('opcao')->get();
+		$prestadores = Prestador::where('id', $id_prestador)->get();	
+		$ccontratos = DB::table('contratos')
+		->join('aditivos', 'aditivos.contrato_id', '=', 'contratos.id')
+		->join('prestadors', 'prestadors.id', '=', 'contratos.prestador_id')
+		->select('contratos.id','contratos.prestador_id','contratos.unidade_id','aditivos.id','aditivos.opcao','prestadors.prestador','prestadors.cnpj_cpf')
+		->where('contratos.unidade_id', '=' , $id_unidade)
+		->where('contratos.prestador_id', '=', $id_prestador)
+		->where('aditivos.opcao', '=', '0')
+		->get();
+		$vinculos = DB::table('contratos')
+		->join('aditivos', 'aditivos.contrato_id', '=', 'contratos.id')
+		->join('prestadors', 'prestadors.id', '=', 'contratos.prestador_id')
+		->select('contratos.id','aditivos.contrato_id as cont_id','contratos.prestador_id','contratos.unidade_id','aditivos.file_path','aditivos.id','aditivos.opcao','prestadors.prestador','prestadors.cnpj_cpf','aditivos.vinculado')
+		->where('contratos.unidade_id', '=' , $id_unidade)
+		->where('contratos.prestador_id', '=', $id_prestador)
+		->where('aditivos.opcao', '!=', '0')
+		->get();
 		if($validacao == 'ok') {
-			return view('transparencia/contratacao/contratacao_alterar', compact('unidades','unidade','unidadesMenu','contratos','prestadores'));
+			return view('transparencia/contratacao/contratacao_alterar', compact('unidades','unidade','unidadesMenu','contratos','prestadores','vinculos','ccontratos','aditivos'));
 		} else {
 			$validator = 'Você não tem permissão!!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));			
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));			
 		}
 	}
 
@@ -273,6 +293,124 @@ class ContratacaoController extends Controller
 			return view('home', compact('unidades','unidade','unidadesMenu'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));		
+		}
+	}
+
+	public function alterarAditivo($id_unidade, $id_aditivo, $id_contrato){
+
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+		$unidades = $unidadesMenu = $this->unidade->all();
+		$unidade = $this->unidade->find($id_unidade);
+		$unidadesMenu = $this->unidade->all();
+		$contratos = Contrato::where('unidade_id', $id_unidade)->where('id', $id_contrato)->get();
+		$aditivos = Aditivo::where('unidade_id', $id_unidade)->where('id',$id_aditivo)->get();
+		$prestadores = Prestador::where('id', $contratos[0]->id)->get();
+		if($validacao == 'ok'){
+			return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'));
+		}else{
+			$validator = 'Você não tem permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
+	}
+
+	public function updateAditivo($id_unidade,$id_aditivo,$id_contrato,Request $request){
+		$unidades = $unidadesMenu = $this->unidade->all();
+		$unidade = $this->unidade->find($id_unidade);
+		$unidadesMenu = $this->unidade->all();
+		$contratos = Contrato::where('unidade_id', $id_unidade)->where('id', $id_contrato)->get();
+		$aditivos = Aditivo::where('unidade_id', $id_unidade)->where('id',$id_aditivo)->get();
+		$prestadores = Prestador::where('id', $contratos[0]->id)->get();
+		$input = $request->all();
+		if($input['file_path_'] !== "") {
+			$extensao = 'pdf';
+		}
+		$data1 = $input['inicio'];
+		$data2 = $input['fim'];
+		if(strtotime($data1) > strtotime($data2)){
+			$validator = 'O campo data fim, não pode ser maior que o campo data início';
+			return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+		}
+
+		$input['yellow_alert'] = 90;
+		$input['red_alert']    = 60;
+		if ($input['valor'] < 0) {
+			$validator = 'O campo valor é inválido!';
+			return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+		}
+
+		$validator = Validator::make($request->all(), [
+			'objeto' 	=> 'required|max:255',
+			'valor' 	=> 'required'
+
+		]);
+		if ($validator->fails()) {
+			$failed = $validator->failed();
+			return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+			->withErrors()
+			->withInput(session()->flashInput($request->input()));
+		} else {
+			if($request->file('file_path') === NULL && $input['file_path_'] == "") {	
+				$validator = 'Informe o arquivo da contratação!';
+				return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+			} else {
+				if($extensao == 'pdf') {
+					$input['ativa'] = 1;
+					$qtdUnidades = sizeof($unidades);
+					for ($i = 1; $i <= $qtdUnidades; $i++) {						
+						if ($unidade['id'] === $i) {							
+							$txt1 = $unidades[$i-1]['path_img'];
+							$txt1 = explode(".jpg", $txt1);
+							$nome = $_FILES['file_path']['name'];
+							if($request->file('file_path') !== NULL) {
+								$request->file('file_path')->move('../public/storage/contratos/'.$txt1[0].'/', $nome);
+								$input['file_path'] = 'contratos/'.$txt1[0].'/'.$nome;
+							}
+
+							$aditivos = Aditivo::find($id_aditivo); 
+							$aditivos->update($input);
+							$log = LoggerUsers::create($input);
+							$lastUpdated = $log->max('updated_at');
+						}
+					}
+					$aditivos = Aditivo::where('unidade_id', $id_unidade)->get();
+					$validator = 'Contratação cadastrada com sucesso!';
+					return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
+				} else {	
+					$validator = 'Só são suportador arquivos do tipo PDF!';
+					return view('transparencia/contratacao/contratacao_alterar_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'))
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
+				}	
+			}
+		}
+	}
+
+	public function excluirAditivo($id_unidade,$id_prestador,$id_contrato, Request $request){
+
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+		$unidades = $unidadesMenu = $this->unidade->all();
+		$unidade = $this->unidade->find($id_unidade);
+		$unidadesMenu = $this->unidade->all();
+		$contratos = Contrato::where('unidade_id', $id_unidade)->where('id',$id_contrato)->get();
+		$aditivos = Aditivo::where('unidade_id', $id_unidade)->where('contrato_id',$id_contrato)->get();
+		$prestadores = Prestador::where('id', $id_prestador)->get();  
+		if($validacao == 'ok'){ 
+			return view('transparencia/contratacao/contratacao_excluir_aditivo',compact('unidades','unidade','unidadesMenu','contratos','prestadores','aditivos'));
+		}else{
+			$validator = 'Você não tem permissão!!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 
@@ -607,28 +745,35 @@ class ContratacaoController extends Controller
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
+		$i = $input['i'];  
+		for($a = 1; $a <= $i; $a++){			
+			$vinculado     = $input['cont_'.$a];  
+			$id			   = $input['id_'.$a];
+			DB::update(DB::RAW("update aditivos set vinculado = '$vinculado' where id = ".$id));
+		}				
 		$input['yellow_alert'] = 90;
 		$input['red_alert']    = 60;
 		if ($input['valor'] < 0) {
 			$validator = 'O campo valor é inválido!';
 			return view('transparencia/contratacao/contratacao_alterar', compact('unidades','unidade','unidadesMenu','contratos','prestadores'))
-				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
 		}
 		$validator = Validator::make($request->all(), [
 			'objeto' 	=> 'required|max:255',
 			'valor' 	=> 'required'
 		]);
 		if ($validator->fails()) {
+			$failed = $validator->failed();
 			return view('transparencia/contratacao/contratacao_alterar', compact('unidades','unidade','unidadesMenu','contratos','prestadores'))
-				->withErrors()
-				->withInput(session()->flashInput($request->input()));
+			->withErrors()
+			->withInput(session()->flashInput($request->input()));
 		} else {
 			if($request->file('file_path') === NULL && $input['file_path_'] == "") {	
 				$validator = 'Informe o arquivo da contratação!';
 				return view('transparencia/contratacao/contratacao_alterar', compact('unidades','unidade','unidadesMenu','contratos','prestadores'))
-					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
 			} else {
 				if($extensao == 'pdf') {
 					$input['ativa'] = 1;
@@ -658,14 +803,15 @@ class ContratacaoController extends Controller
 					$aditivos = Aditivo::where('unidade_id', $id_unidade)->get();
 					$validator = 'Contratação cadastrada com sucesso!';
 					return view('transparencia/contratacao/contratacao_cadastro', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated','aditivos'))
-						->withErrors($validator)
-						->withInput(session()->flashInput($request->input()));
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
 				} else {	
 					$validator = 'Só são suportador arquivos do tipo PDF!';
 					return view('transparencia/contratacao/contratacao_novo', compact('unidades','unidade','unidadesMenu','contratos','lastUpdate'))
-						->withErrors($validator)
-						->withInput(session()->flashInput($request->input()));
-				}		
+					->withErrors($validator)
+					->withInput(session()->flashInput($request->input()));
+				}
+			
 			}
 		}
 	}
@@ -906,4 +1052,19 @@ class ContratacaoController extends Controller
 			->withErrors($validator)
 			->withInput(session()->flashInput($request->input()));	
     }
+
+	public function destroyAditivo($id_unidade,$id_aditivo,$id_prestador, Request $request){		
+		$aditivos = Aditivo::where('unidade_id', $id_unidade)->where('id',$id_aditivo)->get();
+		$qtd = sizeof($aditivos);
+		Aditivo::find($id_aditivo)->delete();	
+		$unidades = $unidadesMenu = $this->unidade->all();
+		$unidade = $this->unidade->find($id_unidade);
+		$unidadesMenu = $this->unidade->all();
+		$contratos = Contrato::where('unidade_id', $id_unidade)->get();
+		$aditivos  = Aditivo::where('unidade_id', $id_unidade)->get();
+		$validator = 'Aditivo Excluído com sucesso!';
+		return view('transparencia/contratacao/contratacao_cadastro', compact('unidades','unidade','unidadesMenu','aditivos','contratos'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+	}
 }

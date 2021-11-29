@@ -20,7 +20,8 @@ class Aditivo extends Model
         'created_at',
         'updated_at',
         'unidade_id',
-        'opcao'
+        'opcao',
+        'vinculado'
     ];
 
     public function contratos()

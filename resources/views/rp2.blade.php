@@ -10,7 +10,7 @@
 <div class="container-fluid">
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
-			<h5  style="font-size: 18px;">Termo de Referência</h5>
+			<h5  style="font-size: 18px;">Termo de Referência <br><br> Proposta de Contratação: {{ $unidades[0]->name }}</h5>
 		</div>
 	</div>	
 	<div class="row" style="margin-top: 25px; margin-left: 300px;">
@@ -19,100 +19,36 @@
 			@foreach($unidades as $und)
 			 @if($und->id == 3) 	
 				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Cardiologia Teste Ergométrico </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Cardiologia Teste Ergométrico.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Cardiologia </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Cardiologia.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Dermotato </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Dermotato.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Gastro - Colonoscopia </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Gastro - Colonoscopia.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Gastro - Consulta Ambulatorial </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Gastro - Consulta Ambulatorial.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Gineologia </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Gineologia.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR Serviços Médicos - Neurologia </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-						<a href="{{asset('img/tr/Belo/TR Serviços Médicos - Neurologia.pdf')}}" width="100px"> Clique</a>
-					</div></center>
+					<td style="width: 800px;"><p align="justify"> A UPAE BELO JARDIM, através do HCP Gestão, esta realizando Processo de 
+					Contratação de Prestação em Serviços Médicos para Consultas, Exames e Procedimentos, nas seguintes 
+					Especialidades:</p>
+					<ul>
+					<li>CARDIOLOGIA</li>
+					<li>GASTROENTEROLOGIA</li>
+					<li>GINECOLOGIA</li>
+					<li>VASCULAR</li>
+					<li>ENDOCRINOLOGIA</li>
+					<li>NEUROLOGIA</li>
+					<li>MASTOLOGIA</li></ul>
+					<br>Acesse o Processo de Contratação aqui: 
+					<a href="{{asset('img/tr/Belo/Termo de Especificações - Processo de Contratação de Serviços Médicos UPAE BELO JARDIM.pdf')}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
 					</td>
 				</tr>
 			@elseif($und->id == 4)
-				<tr>
-					<td style="width: 800px;"> TR VASCULAR </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Arco/TR VASCULAR.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR GASTRO-COLONOSCOPIA </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Arco/TR GASTRO-COLONOSCOPIA.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR CARDIOLOGISTA </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-						<a href="{{asset('img/tr/Arco/TR CARDIOLOGISTA.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR ENDOCRINO </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-					<a href="{{asset('img/tr/Arco/TR ENDOCRINO.pdf')}}" width="100px"> Clique</a>
-					</div></center>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 800px;"> TR MASTOLOGISTA </td>
-					<td> <center>
-					<div class="card border-0 text-white" >
-						<a href="{{asset('img/tr/Arco/TR MASTOLOGISTA.pdf')}}" width="100px"> Clique</a>
-					</div></center>
+			<tr>
+					<td style="width: 800px;"><p align="justify"> A UPAE ARCOVERDE, através do HCP Gestão, esta realizando Processo de 
+					Contratação de Prestação em Serviços Médicos para Consultas, Exames e Procedimentos, nas seguintes 
+					Especialidades:</p>
+					<ul>
+					<li>CARDIOLOGIA</li>
+					<li>GASTROENTEROLOGIA</li>
+					<li>GINECOLOGIA</li>
+					<li>VASCULAR</li>
+					<li>ENDOCRINOLOGIA</li>
+					<li>NEUROLOGIA</li>
+					<li>MASTOLOGIA</li></ul>
+					<br>Acesse o Processo de Contratação aqui: 
+					<a href="{{asset('img/tr/Arco/Termo de Especificações - Processo de Contratação de Serviços Médicos UPAE ARCOVERDE.pdf')}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
 					</td>
 				</tr>
 			@endif

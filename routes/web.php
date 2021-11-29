@@ -220,8 +220,8 @@ Route::middleware(['auth'])->group( function() {
 
 		//Contratacoes
 		Route::get('contratacao/{id}/contratacaoCadastro','ContratacaoController@contratacaoCadastro')->name('contratacaoCadastro');
-		Route::get('contratacao/{id}/cadastroContratos','ContratacaoController@cadastroContratos')->name('cadastroContratos');
-		Route::get('contratacao/{id}/cadastroContratos/pesquisarPrestador','ContratacaoController@pesquisarPrestador')->name('pesquisarPrestador');	
+		Route::get('contratacao/{id}/cadastroContratos/','ContratacaoController@cadastroContratos')->name('cadastroContratos');
+		Route::get('contratacao/{id}/cadastroContratos/pesquisarPrestador/','ContratacaoController@pesquisarPrestador')->name('pesquisarPrestador');	
 		Route::post('contratacao/{id}/cadastroContratos/procurarPrestador','ContratacaoController@procurarPrestador')->name('procurarPrestador');	
 		Route::get('contratacao/{id}/cadastroContratos/{id_prestador}','ContratacaoController@pesqPresdator')->name('pesqPresdator');
 		Route::get('contratacao/{id}/cadastroPrestador','ContratacaoController@prestadorCadastro')->name('prestadorCadastro');
@@ -232,11 +232,15 @@ Route::middleware(['auth'])->group( function() {
 		Route::get('contratacao/{id}/excluirCotacoes/{id_cotacao}','ContratacaoController@excluirCotacoes')->name('excluirCotacoes');
 		Route::get('contratacao/{id}/validarCotacoes/{id_cotacao}','ContratacaoController@validarCotacoes')->name('validarCotacoes');
 		Route::get('contratacao/{id}/alterarContratos/{id_contrato}/{id_prestador}', 'ContratacaoController@alterarContratos')->name('alterarContratos');
+		Route::get('contratacao/{id}/alterarAditivo/{id_contrato}/{id_prestador}', 'ContratacaoController@alterarAditivo')->name('alterarAditivo');
 		Route::get('contratacao/{id}/cadastroCotacoes/addCotacao','ContratacaoController@addCotacao')->name('addCotacao');
 		Route::get('contratacao/{id}/cadastroArquivosCotacoes/{id_processo}','ContratacaoController@arquivosCotacoes')->name('arquivosCotacoes');
 		Route::post('contratacao/{id}/alterarContratos/{id_contrato}/{id_prestador}', 'ContratacaoController@updateContratos')->name('updateContratos');
+		Route::post('contratacao/{id}/alterarAditivo/{id_contrato}/{id_prestador}', 'ContratacaoController@updateAditivo')->name('updateAditivo');
 		Route::post('contratacao/{id}/excluirContratos/{id_contrato}/{id_prestador}','ContratacaoController@destroy')->name('destroy');
 		Route::get('contratacao/{id}/excluirContratos/{id_aditivo}', 'ContratacaoController@excluirAditivos')->name('excluirAditivos');
+		Route::get('contratacao/{id}/excluirAditivos/{id_aditivo}/{id_prestador}', 'ContratacaoController@excluirAditivo')->name('excluirAditivo');
+		Route::post('contratacao/{id}/excluirAditivos/{id_aditivo}/{id_prestador}','ContratacaoController@destroyAditivo')->name('destroyAditivo');
 		////
 
 		//Cotacoes
