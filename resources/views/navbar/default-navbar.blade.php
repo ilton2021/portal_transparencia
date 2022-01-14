@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="pt-br">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
     <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
     <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
     <title>HCP - Gestão</title>
@@ -17,47 +18,48 @@
     <!-- Font Awesome KIT -->
     <script src="https://kit.fontawesome.com/7656d93ed3.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Sidebar  -->
-        <nav id="sidebar" >
+        <nav id="sidebar">
             <div class="sidebar-header d-flex justify-content-center" style="background-color:  #3c3c3c">
-				@if(Auth::check())
-				<a href="{{route('home')}}">
-                    <img src="{{asset('img/favico.png')}}" width="80" >
+                @if(Auth::check())
+                <a href="{{route('home')}}">
+                    <img src="{{asset('img/favico.png')}}" width="80">
                 </a>
-				@else
-				<a href="{{route('welcome')}}">
-                    <img src="{{asset('img/favico.png')}}" width="80" >
+                @else
+                <a href="{{route('welcome')}}">
+                    <img src="{{asset('img/favico.png')}}" width="80">
                 </a>
-				@endif
-		    </div>
+                @endif
+            </div>
             <ul class="list-unstyled components" style="padding-top: 0px;">
-				<li class="{{ (\Request::route()->getName() == 'transparenciaHome') ? 'active' : '' }}">
-					<a href="{{route('transparenciaHome', $unidade->id)}}" style="font-size: 10px;">INSTITUCIONAL</a>
-			    </li>
-				@if($unidade->id != 1)
-				<li class="{{ (\Request::route()->getName() == 'transparenciaHome') ? 'active' : '' }}">
-					<a href="{{route('transparenciaHome', 1)}}" style="font-size: 10px;">INSTITUCIONAL OSS</a>
-			    </li>
-				@endif
+                <li class="{{ (\Request::route()->getName() == 'transparenciaHome') ? 'active' : '' }}">
+                    <a href="{{route('transparenciaHome', $unidade->id)}}" style="font-size: 10px;">INSTITUCIONAL</a>
+                </li>
+                @if($unidade->id != 1)
+                <li class="{{ (\Request::route()->getName() == 'transparenciaHome') ? 'active' : '' }}">
+                    <a href="{{route('transparenciaHome', 1)}}" style="font-size: 10px;">INSTITUCIONAL OSS</a>
+                </li>
+                @endif
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaOrganizacional') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">ESTRUTURA ORGANIZACIONAL</a>
-                    <div class="dropdown-menu list-unstyled" aria-labelledby="navbarDropdown">                        
+                    <div class="dropdown-menu list-unstyled" aria-labelledby="navbarDropdown">
                         <a style="font-size: 10px !important;" href="{{route('transparenciaOrganizacional', $unidade->id)}}">Regimento interno</a>
                         <a style="font-size: 10px !important;" href="{{route('transparenciaOrganizacional', $unidade->id)}}">Organograma</a>
                     </div>
-				<li>
-				@if($unidade->id != 1)
-				<li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaOrganizacional') ? 'active' : '' }}">
+                <li>
+                    @if($unidade->id != 1)
+                <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaOrganizacional') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">ESTRUTURA ORGANIZACIONAL OSS</a>
-                    <div class="dropdown-menu list-unstyled" aria-labelledby="navbarDropdown">                        
+                    <div class="dropdown-menu list-unstyled" aria-labelledby="navbarDropdown">
                         <a style="font-size: 10px !important;" href="{{route('transparenciaOrganizacional', 1)}}">Regimento interno</a>
                         <a style="font-size: 10px !important;" href="{{route('transparenciaOrganizacional', 1)}}">Organograma</a>
                     </div>
-				<li>	
-				@endif
-                @if($unidade->id == 1 || $unidade->id == 9)
+                <li>
+                    @endif
+                    @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaMembros') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="membros" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">MEMBROS DIRIGENTES</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="membros">
@@ -68,7 +70,7 @@
                     </div>
                 </li>
                 @endif
-				@if($unidade->id != 1)
+                @if($unidade->id != 1)
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaMembros') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="membros" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">MEMBROS DIRIGENTES OSS</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="membros">
@@ -81,7 +83,7 @@
                 @endif
                 @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaCompetencia') ? 'active' : '' }}">
-                <a href="{{route('transparenciaCompetencia', $unidade->id)}}" style="font-size: 10px;">COMPETÊNCIAS</a>
+                    <a href="{{route('transparenciaCompetencia', $unidade->id)}}" style="font-size: 10px;">COMPETÊNCIAS</a>
                 </li>
                 @endif
                 @if($unidade->id == 1 || $unidade->id == 9)
@@ -89,12 +91,12 @@
                     <a href="{{route('transparenciaEstatuto', $unidade->id)}}" style="font-size: 10px;">ESTATUTO SOCIAL E ATAS DO ESTATUTO</a>
                 </li>
                 @endif
-				@if($unidade->id != 1)
+                @if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaEstatuto') ? 'active' : '' }}">
                     <a href="{{route('transparenciaEstatuto', 1)}}" style="font-size: 10px;">ESTATUTO SOCIAL E ATAS DO ESTATUTO OSS</a>
                 </li>
                 @endif
-                @if($unidade->id == 1 || $unidade->id == 9)                
+                @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaDocumento') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="regularidade" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">DOCUMENTAÇÃO DE REGULARIDADE</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="regularidade">
@@ -109,7 +111,7 @@
                         <a href="{{route('transparenciaDocumento', ['id' => $unidade->id, 'escolha' => 'CEBAS'])}}" style="font-size: 10px !important;">CEBAS</a>
                     </div>
                 </li>
-                @else  
+                @else
                 <li class="nav-item dropdown {{ (\Request::route()->getName() == 'transparenciaDocumento') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" id="regularidade" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">DOCUMENTAÇÃO DE REGULARIDADE OSS</a>
                     <div class="dropdown-menu list-unstyled" aria-labelledby="regularidade">
@@ -146,64 +148,64 @@
                         @if($unidade->id == 7 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'HOSPITAL SÃO SEBASTIÃO'])}}" style="font-size: 10px !important;">HOSPITAL SÃO SEBASTIÃO</a>
                         @endif
-			            @if($unidade->id == 8 || $unidade->id == 1 || $unidade->id == 9)
+                        @if($unidade->id == 8 || $unidade->id == 1 || $unidade->id == 9)
                         <a href="{{route('transparenciaContratoGestao', ['id' => $unidade->id, 'escolha' => 'HOSPITAL PROVISÓRIO DO RECIFE'])}}" style="font-size: 10px !important;">HOSPITAL PROVISÓRIO DO RECIFE</a>
                         @endif
                     </div>
                 </li>
                 @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaFinanReports') ? 'active' : '' }}">
-                <a href="{{route('transparenciaFinanReports', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO FINANCEIRO E DE EXECUÇÃO ANUAL</a>
+                    <a href="{{route('transparenciaFinanReports', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO FINANCEIRO E DE EXECUÇÃO ANUAL</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaCovenio') ? 'active' : '' }}">
-                <a href="{{route('transparenciaCovenio', $unidade->id)}}" style="font-size: 10px;">COVÊNIO</a>
+                    <a href="{{route('transparenciaCovenio', $unidade->id)}}" style="font-size: 10px;">COVÊNIO</a>
                 </li>
                 @endif
                 @if($unidade->id == 1 || $unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDecreto') ? 'active' : '' }}">
                     <a href="{{route('transparenciaDecreto', $unidade->id)}}" style="font-size: 10px;">DECRETO DE QUALIFICAÇÃO</a>
                 </li>
-				@endif
-				@if($unidade->id != 1)
+                @endif
+                @if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDecreto') ? 'active' : '' }}">
                     <a href="{{route('transparenciaDecreto', 1)}}" style="font-size: 10px;">DECRETO DE QUALIFICAÇÃO OSS</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
                 <li>
-                <a target="_blank" href="http://hcpgestao.org.br/transparencia/unidades/hcp/desp_com_pessoal/index.php" style="font-size: 10px;">DESPESAS COM PESSOAL</a>
+                    <a target="_blank" href="http://hcpgestao.org.br/transparencia/unidades/hcp/desp_com_pessoal/index.php" style="font-size: 10px;">DESPESAS COM PESSOAL</a>
                 </li>
-               @endif
-			   @if($unidade->id != 1)
+                @endif
+                @if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaAccountable') ? 'active' : '' }}">
-                <a href="{{route('transparenciaAccountable', $unidade->id)}}" style="font-size: 10px;">DEMONSTRAÇÕES CONTÁBEIS</a>
+                    <a href="{{route('transparenciaAccountable', $unidade->id)}}" style="font-size: 10px;">DEMONSTRAÇÕES CONTÁBEIS</a>
                 </li>
-				@endif
+                @endif
                 @if($unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaProcessoCotacao') ? 'active' : '' }}">
-                <a href="{{route('transparenciaProcessoCotacao', $unidade->id)}}" style="font-size: 10px;">PROCESSOS DE COTAÇÃO DE PREÇO</a>
+                    <a href="{{route('transparenciaProcessoCotacao', $unidade->id)}}" style="font-size: 10px;">PROCESSOS DE COTAÇÃO DE PREÇO</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaContasAtual') ? 'active' : '' }}">
-                <a href="{{route('transparenciaContasAtual', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO DE CONTAS ATUAL</a>
+                    <a href="{{route('transparenciaContasAtual', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO DE CONTAS ATUAL</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaRelMensalExecucao') ? 'active' : '' }}">
-                <a href="{{route('transparenciaRelMensalExecucao', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL DE EXECUÇÃO</a>
+                    <a href="{{route('transparenciaRelMensalExecucao', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL DE EXECUÇÃO</a>
                 </li>
                 @endif
                 @if($unidade->id == 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaMensalFinanceiroExercico') ? 'active' : '' }}">
-                <a href="{{route('transparenciaMensalFinanceiroExercico', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL FINANCEIRO DO EXERCÍCIO</a>
+                    <a href="{{route('transparenciaMensalFinanceiroExercico', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO MENSAL FINANCEIRO DO EXERCÍCIO</a>
                 </li>
                 @endif
                 @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDemonstrative') ? 'active' : '' }}">
-                <a href="{{route('transparenciaDemonstrative',  $unidade->id)}}" style="font-size: 10px;">DEMONSTRATIVOS FINANCEIROS</a>
+                    <a href="{{route('transparenciaDemonstrative',  $unidade->id)}}" style="font-size: 10px;">DEMONSTRATIVOS FINANCEIROS</a>
                 </li>
                 @endif
                 @if($unidade->id != 1 && $unidade->id != 9)
@@ -211,19 +213,19 @@
                     <a href="{{route('transparenciaAssistencial', $unidade->id)}}" style="font-size: 10px;">RELATÓRIO ASSISTENCIAL</a>
                 </li>
                 @endif
-				@if($unidade->id != 1)
-				<li class="{{ (\Request::route()->getName() == 'transparenciaRepasses') ? 'active' : '' }}">
-                <a href="{{route('transparenciaRepasses',  $unidade->id)}}" style="font-size: 10px;">REPASSES RECEBIDOS</a>
+                @if($unidade->id != 1)
+                <li class="{{ (\Request::route()->getName() == 'transparenciaRepasses') ? 'active' : '' }}">
+                    <a href="{{route('transparenciaRepasses',  $unidade->id)}}" style="font-size: 10px;">REPASSES RECEBIDOS</a>
                 </li>
-				@endif
+                @endif
                 @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaContratacao') ? 'active' : '' }}">
-                <a href="{{route('transparenciaContratacao', $unidade->id)}}" style="font-size: 10px;">CONTRATAÇÕES</a>
+                    <a href="{{route('transparenciaContratacao', $unidade->id)}}" style="font-size: 10px;">CONTRATAÇÕES</a>
                 </li>
                 @endif
                 @if($unidade->id != 1 && $unidade->id != 9)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaRecursosHumanos') ? 'active' : '' }}">
-                <a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" style="font-size: 10px;">RECURSOS HUMANOS</a>
+                    <a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" style="font-size: 10px;">RECURSOS HUMANOS</a>
                 </li>
                 @endif
                 @if($unidade->id == 1 || $unidade->id == 9)
@@ -231,20 +233,20 @@
                     <a href="{{route('transparenciaRegulamento', $unidade->id)}}" style="font-size: 10px;">REGULAMENTOS PRÓPRIOS</a>
                 </li>
                 @endif
-				@if($unidade->id != 1)
+                @if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaRegulamento') ? 'active' : '' }}">
                     <a href="{{route('transparenciaRegulamento', 1)}}" style="font-size: 10px;">REGULAMENTOS PRÓPRIOS OSS</a>
                 </li>
                 @endif
-				@if(Auth::check())
-					<?php $id = Auth::user()->id; ?>
-						@if($id == 1)
-					      <li class="{{ (\Request::route()->getName == 'cadastroPermissao') ? 'active' : '' }}">
-					         <a href="{{ route('cadastroPermissao', $unidade->id) }}" style="font-size: 10px">PERMISSÃO</a>
-						  </li>
-						@endif
-				@endif
-               <!--<li class="{{ (\Request::route()->getName() == 'transparenciaManual') ? 'active' : '' }}">
+                @if(Auth::check())
+                <?php $id = Auth::user()->id; ?>
+                @if($id == 1)
+                <li class="{{ (\Request::route()->getName == 'cadastroPermissao') ? 'active' : '' }}">
+                    <a href="{{ route('cadastroPermissao', $unidade->id) }}" style="font-size: 10px">PERMISSÃO</a>
+                </li>
+                @endif
+                @endif
+                <!--<li class="{{ (\Request::route()->getName() == 'transparenciaManual') ? 'active' : '' }}">
                     <a href="{{route('transparenciaManual', $unidade->id)}}" style="font-size: 10px;">MANUAIS</a>
                 </li>
                 <li class="{{ (\Request::route()->getName() == 'transparenciaPregao') ? 'active' : '' }}">
@@ -253,18 +255,23 @@
                 <li class="{{ (\Request::route()->getName() == 'transparenciaDespesas') ? 'active' : '' }}">
                     <a href="{{route('transparenciaDespesas', $unidade->id)}}" style="font-size: 10px;">DESPESAS COM PESSOAL</a>
                 </li>-->
-				@if($unidade->id != 1)
+                @if($unidade->id != 1)
                 <li class="{{ (\Request::route()->getName() == 'transparenciaBensPublicos') ? 'active' : '' }}">
-                  <a href="{{route('transparenciaBensPublicos', $unidade->id)}}" style="font-size: 10px;">BENS PÚBLICOS</a>
-                </li>			
-				@endif             
+                    <a href="{{route('transparenciaBensPublicos', $unidade->id)}}" style="font-size: 10px;">BENS PÚBLICOS</a>
+                </li>
+                @endif
                 <li class="{{ (\Request::route()->getName() == 'transparenciaOuvidoria') ? 'active' : '' }}">
-				  <a href="{{route('transparenciaOuvidoria', $unidade->id)}}" style="font-size: 10px;">SERVIÇO DE INFORMAÇÃO AO CIDADÃO - SIC <i class="fas fa-globe"></i></a>
-				</li>
+                    <a href="{{route('transparenciaOuvidoria', $unidade->id)}}" style="font-size: 10px;">SERVIÇO DE INFORMAÇÃO AO CIDADÃO - SIC <i class="fas fa-globe"></i></a>
+                </li>
+                
+                <li>
+                    <a href="{{route('paginaContratacaoServicos')}}" style="font-size: 12px;">Contração de Servicos</a>
+                </li>
+                
             </ul>
             <ul class="list-unstyled components">
                 <li class="active">
-               <a style="font-size: 10px;">  ÚLTIMA ATUALIZAÇÃO: <strong>{{ isset($lastUpdated) ? date("d/m/Y", strtotime($lastUpdated)) : ""  }}</strong></a>
+                    <a style="font-size: 10px;"> ÚLTIMA ATUALIZAÇÃO: <strong>{{ isset($lastUpdated) ? date("d/m/Y", strtotime($lastUpdated)) : ""  }}</strong></a>
                 </li>
             </ul>
         </nav>
@@ -301,42 +308,43 @@
             <!-- Bootstrap JS -->
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
             <script type="text/javascript">
-                $(document).ready(function () {
-                  $('#sidebarCollapse').on('click', function () {
+                $(document).ready(function() {
+                    $('#sidebarCollapse').on('click', function() {
                         $('#sidebar').toggleClass('active');
                     });
                 });
             </script>
 
-<script type="text/javascript">
-	 $("#cep").focusout(function(){
-		//Início do Comando AJAX
-		$.ajax({
-			//O campo URL diz o caminho de onde virá os dados
-			//É importante concatenar o valor digitado no CEP
-			url: 'https://viacep.com.br/ws/'+$(this).val()+'/json/unicode/',
-			//Aqui você deve preencher o tipo de dados que será lido,
-			//no caso, estamos lendo JSON.
-			dataType: 'json',
-			//SUCESS é referente a função que será executada caso
-			//ele consiga ler a fonte de dados com sucesso.
-			//O parâmetro dentro da função se refere ao nome da variável
-			//que você vai dar para ler esse objeto.
-			success: function(resposta){
-				//Agora basta definir os valores que você deseja preencher
-				//automaticamente nos campos acima.
-				$("#address").val(resposta.logradouro);
-				$("#further_info").val(resposta.complemento);
-				$("#district").val(resposta.bairro);
-				$("#city").val(resposta.localidade);
-				$("#uf").val(resposta.uf);
-				//Vamos incluir para que o Número seja focado automaticamente
-				//melhorando a experiência do usuário
-				$("#numero").focus();
-			}
-		});
-	 });
-	 </script>
+            <script type="text/javascript">
+                $("#cep").focusout(function() {
+                    //Início do Comando AJAX
+                    $.ajax({
+                        //O campo URL diz o caminho de onde virá os dados
+                        //É importante concatenar o valor digitado no CEP
+                        url: 'https://viacep.com.br/ws/' + $(this).val() + '/json/unicode/',
+                        //Aqui você deve preencher o tipo de dados que será lido,
+                        //no caso, estamos lendo JSON.
+                        dataType: 'json',
+                        //SUCESS é referente a função que será executada caso
+                        //ele consiga ler a fonte de dados com sucesso.
+                        //O parâmetro dentro da função se refere ao nome da variável
+                        //que você vai dar para ler esse objeto.
+                        success: function(resposta) {
+                            //Agora basta definir os valores que você deseja preencher
+                            //automaticamente nos campos acima.
+                            $("#address").val(resposta.logradouro);
+                            $("#further_info").val(resposta.complemento);
+                            $("#district").val(resposta.bairro);
+                            $("#city").val(resposta.localidade);
+                            $("#uf").val(resposta.uf);
+                            //Vamos incluir para que o Número seja focado automaticamente
+                            //melhorando a experiência do usuário
+                            $("#numero").focus();
+                        }
+                    });
+                });
+            </script>
 
-        </body>
+</body>
+
 </html>

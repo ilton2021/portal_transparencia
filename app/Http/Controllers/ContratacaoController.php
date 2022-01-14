@@ -915,6 +915,12 @@ class ContratacaoController extends Controller
 				$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
 				$validator = 'Contratação cadastrada com sucesso!';
 				$a = 0;
+				$contratos = DB::table('contratos')
+				->join('prestadors', 'contratos.prestador_id', '=', 'prestadors.id')
+				->select('contratos.id as ID', 'contratos.*', 'prestadors.prestador as nome', 'prestadors.*')
+				->where('contratos.unidade_id', $id_unidade)
+				->orderBy('nome', 'ASC')
+				->get();
 				return view('transparencia/contratacao', compact('unidades','unidade','unidadesMenu','contratos','lastUpdated','cotacoes','aditivos','permissao_users','a'))
 					->withErrors($validator)
 					->withInput(session()->flashInput($request->input()));

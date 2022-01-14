@@ -38,14 +38,15 @@ class PermissaoController extends Controller
 		->where('unidade_id', $id)
 		->get();
 		$lastUpdated = $permissoes->max('updated_at');
-		if($validacao == 'ok') {
-			return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
+		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
+
+		/*if($validacao == 'ok') {
 		} else {
 			$validator = 'Você não tem Permissão!!';		
 			return view('home', compact('unidades','unidade','unidadesMenu'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));		
-		}
+		}*/
 	}
 	
 	public function permissaoNovo($id, Request $request)
@@ -54,6 +55,7 @@ class PermissaoController extends Controller
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
+		$validacao = 'ok';
 		if($validacao == 'ok') {
 			return view('transparencia/permissao/permissao_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
@@ -72,6 +74,7 @@ class PermissaoController extends Controller
 		$unidades = $unidadesMenu;
 		$users = User::all();
 		$permissoes = Permissao::all();
+		$validacao = 'ok';
 		if($validacao == 'ok') {
 			return view('transparencia/permissao/permissao_usuario_novo', compact('unidade','unidades','unidadesMenu','users','permissoes'));
 		} else {

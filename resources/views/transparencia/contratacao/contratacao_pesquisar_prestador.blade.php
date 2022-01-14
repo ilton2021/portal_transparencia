@@ -39,11 +39,11 @@
 								  <option id="funcao" name="funcao" value="3">Tipo de Pessoa</option> 
 								</select>
 						   </td>
-						   <td> <input class="form-control" type="text" id="pesq" name="pesq" /> </td>
+						   <td> <input class="form-control" type="text" id="pesq" name="pesq"/> </td>
 						   <td width="100px"> <input type="submit" class="btn btn-info btn-sm" value="Pesquisar" id="Pesquisar" name="Pesquisar" /> </td>
 						  </tr>
 						</table>
-					  </form>
+					</form>
 				    	<table class="table table-sm">
 								<thead class="bg-success">
 									<tr>

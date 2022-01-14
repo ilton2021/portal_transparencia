@@ -7,7 +7,7 @@
             <h5  style="font-size: 18px;">RELATÓRIO ASSISTENCIAL</h5>
 			@if(Auth::check())
 			 @foreach ($permissao_users as $permissao)
-			  @if(($permissao->permissao_id == 8) && ($permissao->user_id == Auth::user()->id))
+			  @if(($permissao->permissao_id == 11) && ($permissao->user_id == Auth::user()->id))
 			   @if ($permissao->unidade_id == $unidade->id)
 				@if($unidade->id == 8)
 				<p align="right"><a href="{{route('assistencialCovidCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></p>

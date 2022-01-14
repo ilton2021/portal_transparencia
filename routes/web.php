@@ -48,6 +48,7 @@ Route::prefix('transparencia')->group( function(){
 	Route::post('home_compras/ordem_compra/ordemCompraVisualizar/{id}','IndexController@procuraVisualizarOrdemCompra')->name('procuraVisualizarOrdemCompra');
 	Route::get('recursos-humanos/{id}/selecaoPcadastro/despesasUsuarioRH','IndexController@despesasUsuarioRH')->name('despesasUsuarioRH');
 	Route::post('recursos-humanos/{id}/selecaoPcadastro/despesasRH','IndexController@despesasUsuarioRHProcurar')->name('despesasUsuarioRHProcurar');
+	
 });
 
 Auth::routes();
@@ -62,6 +63,7 @@ Route::get('auth/login/emailreset', 'UserController@emailReset')->name('emailRes
 Route::post('auth/login/emailreset','UserController@emailReset')->name('emailReset');
 Route::get('auth/passwords/reset', 'UserController@telaReset')->name('telaReset');
 Route::post('auth/passwords/reset','UserController@resetarSenha')->name('resetarSenha');
+
 
 Route::middleware(['auth'])->group( function() {
 
@@ -85,6 +87,40 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('home_compras/ordem_compra/novo/{id}','HomeController@storeOrdemCompra')->name('storeOrdemCompra');
 	Route::post('home_compras/ordem_compra/alterar/ordemCompraAlterar/{unidade_id}/{id}','HomeController@updateOrdemCompra')->name('updateOrdemCompra');
 	Route::post('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@destroyOrdemCompra')->name('destroyOrdemCompra');
+
+	//Contratação de serviços
+	Route::get('contracaoServicos/','contratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
+	Route::post('contracaoServicos/','contratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
+	Route::get('contracaoServicos/nova','contratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
+	Route::post('contracaoServicos/nova','contratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
+	Route::post('contracaoServicos/cadastro','contratacaoServicosController@salvarContratacaoServicos')->name('salvarContratacaoServicos');
+	Route::get('contracaoServicos/pesquisa','contratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
+	Route::post('contracaoServicos/pesquisa','contratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
+	Route::get('contracaoServicos/paginaexcluir/{id}','contratacaoServicosController@pagExcluirContratacao')->name('pagExcluirContratacao');
+	Route::get('contracaoServicos/confirmexcluir/{id}','contratacaoServicosController@excluirContratacao')->name('excluirContratacao');
+	Route::get('contracaoServicos/excEspContr/{idContr}/{idEsp}','contratacaoServicosController@exclEspeContr')->name('exclEspeContr');
+	Route::get('contracaoServicos/paginaAlterar/{id}','contratacaoServicosController@pagAlteraContratacao')->name('pagAlteraContratacao');
+	Route::get('contracaoServicos/confirAlterar/{id}','contratacaoServicosController@alteraContratacao')->name('alteraContratacao');
+	Route::post('contracaoServicos/confirAlterar/{id}','contratacaoServicosController@alteraContratacao')->name('alteraContratacao');
+	Route::get('contracaoServicos/exclArqContr/{id}','contratacaoServicosController@exclArqContr')->name('exclArqContr');
+	Route::post('contracaoServicos/exclArqContr/{id}','contratacaoServicosController@exclArqContr')->name('exclArqContr');
+	Route::get('contracaoServicos/pagProrrContr/{id}','contratacaoServicosController@pagProrrContr')->name('pagProrrContr');
+	Route::post('contracaoServicos/prorrContr/{id}','contratacaoServicosController@prorrContr')->name('prorrContr');
+
+	Route::get('especialidade/cadastro','contratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
+	Route::post('especialidade/cadastro','contratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
+	Route::get('especialidade/nova','contratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
+	Route::post('especialidade/nova','contratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
+	Route::post('especialidade/cadastro','contratacaoServicosController@salvarEspecialidade')->name('salvarEspecialidade');
+	Route::get('especialidade/','contratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
+	Route::post('especialidade/','contratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
+	Route::get('especialidade/paginaExclusao/{id}','contratacaoServicosController@pagExcluirEspeciali')->name('pagExcluirEspeciali');
+	Route::get('especialidade/confirExclusao/{id}','contratacaoServicosController@excluirEspecialidade')->name('excluirEspecialidade');
+	Route::get('especialidade/paginaAlterar/{id}','contratacaoServicosController@pagAlteraEspeciali')->name('pagAlteraEspeciali');
+	Route::get('especialidade/confirAlterar/{id}','contratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
+	Route::post('especialidade/confirAlterar/{id}','contratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
+
+	
 
 	Route::prefix('home')->group( function(){
 		Route::get('', 'HomeController@index')->name('home');
@@ -414,7 +450,10 @@ Route::middleware(['auth'])->group( function() {
 		Route::post('permissao/{id}/permissaoUsuarioNovo', 'PermissaoController@storePermissaoUsuario')->name('storePermissaoUsuario');
 		Route::post('contratacao/{id}/cadastroCotacoes/addCotacao', 'ContratacaoController@storeExcelCotacao')->name('storeExcelCotacao');
 		Route::post('contratacao/{id}/cadastroArquivosCotacoes/{id_processo}','ContratacaoController@storeArquivoCotacao')->name('storeArquivoCotacao');
-	  });	
+		
+		
+	
+	});	
 });
 
 Route::get('/admin', function(){

@@ -7,7 +7,7 @@
 			<h3 style="font-size: 18px;">DEMONSTRATIVOS FINANCEIROS</h3>
 			@if(Auth::check())
 			 @foreach ($permissao_users as $permissao)
-			  @if(($permissao->permissao_id == 7) && ($permissao->user_id == Auth::user()->id))
+			  @if(($permissao->permissao_id == 11) && ($permissao->user_id == Auth::user()->id))
 			   @if ($permissao->unidade_id == $unidade->id)
 				<p align="right"><a href="{{route('demonstrativoFinanCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></p>
 			   @endif
