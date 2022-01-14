@@ -910,7 +910,12 @@ class ContratacaoController extends Controller
 						}
 					}
 				}
-				$contratos = Contrato::where('unidade_id',$id_unidade)->get();
+				$contratos = DB::table('contratos')
+				->join('prestadors', 'contratos.prestador_id', '=', 'prestadors.id')
+				->select('contratos.id as ID', 'contratos.*', 'prestadors.prestador as nome', 'prestadors.*')
+				->where('contratos.unidade_id', $id_unidade)
+				->orderBy('nome', 'ASC')
+				->get();
 				$aditivos = Aditivo::where('unidade_id', $id_unidade)->get();
 				$permissao_users = PermissaoUsers::where('unidade_id', $id_unidade)->get();
 				$validator = 'Contratação cadastrada com sucesso!';
