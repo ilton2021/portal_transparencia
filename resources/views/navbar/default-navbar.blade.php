@@ -263,11 +263,11 @@
                 <li class="{{ (\Request::route()->getName() == 'transparenciaOuvidoria') ? 'active' : '' }}">
                     <a href="{{route('transparenciaOuvidoria', $unidade->id)}}" style="font-size: 10px;">SERVIÇO DE INFORMAÇÃO AO CIDADÃO - SIC <i class="fas fa-globe"></i></a>
                 </li>
-                
+                @if(Auth::check())
                 <li>
                     <a href="{{route('paginaContratacaoServicos')}}" style="font-size: 12px;">Contração de Servicos</a>
                 </li>
-                
+                @endif
             </ul>
             <ul class="list-unstyled components">
                 <li class="active">
