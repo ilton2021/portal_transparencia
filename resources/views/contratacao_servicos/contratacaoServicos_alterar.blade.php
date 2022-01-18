@@ -78,7 +78,7 @@
                                     @if($CS->arquivo !== "")
                                     <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:10px">Arquivo:</label>
                                     <td>
-                                        <a href="{{asset('storage/')}}/{{$CS->arquivo}}" target="_blank" class="list-group-item list-group-item-action" style="margin-top:10px;width:350px;height:50px; font-family:arial black; font-size:15px;margin-left:10px"><?php echo explode('/', ($CS->arquivo))[1]; ?></a>
+                                        <a href="{{asset('storage/')}}/{{$CS->arquivo}}" target="_blank" class="list-group-item list-group-item-action" style="width:350px;height:70px; font-family:arial black; font-size:15px;margin-left:10px"><?php echo explode('/', ($CS->arquivo))[1]; ?></a>
                                     </td>
                                     <td>
                                         <a type="submit" class="btn btn-danger btn-sm" href="{{route('exclArqContr',$CS->id)}}" style="margin-left:10px;;margin-top:20px;height:25px">X<i class="fas fa-times-circle"></i></a>
@@ -124,8 +124,8 @@
                                         <?php $m = 8; ?>
                                         @foreach($especialidades as $especialidade)
                                         <td>
-                                            <input type="checkbox" id="especialidade_<?php echo $i; ?>" class="especialidade" name="especialidade_<?php echo $i; ?>" value="<?php echo $especialidade->id; ?>">&nbsp{{$especialidade->nome}}</input>
-                                            @if($i == $m )
+                                            <input type="checkbox" id="especialidade[]" class="especialidade" name="especialidade[]" value="<?php echo $especialidade->id; ?>">&nbsp{{$especialidade->nome}}</input>
+                                            @if($i == $m)
                                             <?php $m += 8; ?>
                                         </td>
                                     </tr>

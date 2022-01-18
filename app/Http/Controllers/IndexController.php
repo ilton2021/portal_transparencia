@@ -52,6 +52,7 @@ use App\Model\RegimentoInterno;
 use App\Model\Aditivo;
 use App\Model\RelatorioFinanceiro;
 use App\Model\Covenio;
+use App\Model\contratacao_servicos;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use PDF;
@@ -61,6 +62,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Model\Ouvidoria;
 use Validator;
 use App\Http\Controllers\PermissaoUsersController;
+use App\Model\especialidade_contratacao;
+use App\Model\especialidades;
 
 class IndexController extends Controller
 {
@@ -462,15 +465,23 @@ class IndexController extends Controller
     }
 
     public function rp()
-    {
+    {   
+        $dtHoje = date('Y/m/d',strtotime('now'));
+        $contratacao_servicos = contratacao_servicos::all();
+        $count = sizeof($contratacao_servicos);
         $unidades = Unidade::all();
-        return view('rp', compact('unidades'));
+        return view('rp', compact('unidades','contratacao_servicos'));
     }
 
     public function rp2($id)
     {
-        $unidades = Unidade::where('id',$id)->get();
-        return view('rp2', compact('unidades'));
+        $contratacao_servicos = contratacao_servicos::where('id',$id)->get();
+        $unidade_id = $contratacao_servicos[0]->unidade_id;
+        $unidades = Unidade::where('id',$unidade_id)->get();
+        $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id',$id)->get();
+        $especialidades = especialidades::all();
+
+        return view('rp2', compact('contratacao_servicos','unidades','especialidade_contratacao','especialidades'));
     }
 	
 	public function pesquisarMesCotacao($id, $mes, $ano)
