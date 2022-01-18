@@ -267,7 +267,7 @@
                 <li>
                     <a href="{{route('paginaContratacaoServicos')}}" style="font-size: 12px;">Contração de Servicos</a>
                 </li> 
-                @endif
+                @endif 
             </ul>
             <ul class="list-unstyled components">
                 <li class="active">
