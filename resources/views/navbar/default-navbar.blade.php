@@ -266,7 +266,7 @@
                 @if(Auth::check())
                 <li>
                     <a href="{{route('paginaContratacaoServicos')}}" style="font-size: 12px;">Contração de Servicos</a>
-                </li>
+                </li> 
                 @endif
             </ul>
             <ul class="list-unstyled components">
