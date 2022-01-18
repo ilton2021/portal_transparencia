@@ -1,4 +1,3 @@
-
 @extends('layouts.app2')
 @section('content')
 
@@ -14,63 +13,53 @@
 		<div class="col-md-12 text-center">
 			<h5 style="font-size: 18px;">Termo de Referência</h5>
 		</div>
-	</div>
-
-	<div class="row" style="margin-top: 25px; margin-left: 200px;">
+	</div><br><br>
+	<?php $hoje = date('Y-m-d', strtotime('now'));?>
+	<div class="row" style="margin-top: 25px; margin-left: 80px;">
 		<div class="col-md-6 col-sm-6">
-			<table class="table" style="width: 800px;">
-				@foreach($unidades as $und)
-				@foreach($contratacao_servicos as $CS)
+			<table class="table table-sm table-bordered" style="width: 1200px;">
+			<tr>
+			@foreach($contratacao_servicos as $CS)
+			 @foreach($unidades as $und)
 				@if($und->id == $CS->unidade_id)
-				<?php $hoje = date('Y-m-d', strtotime('now'));?>
-				@if($hoje >= $CS->prazoInicial && $hoje <= $CS->prazoFinal)
-					<tr>
-						<td style="width: 800px;"> ({{$und->sigla}}) - {{ $und->name }} </td>
-						<td>
-							<center>
-								<div class="card border-0 text-white">
-									<a href="{{ route('rp2', $CS->id) }}"><img id="img-unity" src="{{asset('img')}}/{{$und->path_img}}" width="100px"></a>
-								</div>
-							</center>
-						</td>
-					</tr>
-
-					@elseif($CS->prazoProrroga != "" )
-					@if($CS->prazoProrroga >= $hoje)
-					<tr>
-						<td style="width: 800px;"> ({{$und->sigla}}) - {{ $und->name }}  </td>
-						<td>
-							<center>
-								<div class="card border-0 text-white">
-									<a href="{{ route('rp2', $CS->id) }}"><img id="img-unity" src="{{asset('img')}}/{{$und->path_img}}" width="100px"></a>
-								</div>
-							</center>
-						</td>
-					</tr>
-					@endif
-					@endif
-					@endif
-					@endforeach
-					@endforeach
+				 @if($hoje >= $CS->prazoInicial && $hoje <= $CS->prazoFinal)
+					<td>
+						<center>
+							<div class="card border-0 text-white">
+								<a href="{{ route('rp2', $CS->id) }}"><img id="img-unity" src="{{asset('img')}}/{{$und->path_img}}" width="150px"></a>
+							</div>
+						</center>
+					</td>
+					<td style="width: 300px;"><br><center><b> {{ $und->name }} </b></center></td>
+					<td>		
+						<center><br><b> As Propostas devem ser enviadas a partir do dia: <?php echo date('d/m/Y', strtotime($CS->prazoInicial)); ?> até o dia: <?php echo date('d/m/Y', strtotime($CS->prazoFinal));?>.</b></center>
+					</td>
+				 @elseif($CS->prazoProrroga != "")
+				  @if($CS->prazoProrroga >= $hoje)
+					<td>
+						<center>
+							<div class="card border-0 text-white">
+								<a href="{{ route('rp2', $CS->id) }}"><img id="img-unity" src="{{asset('img')}}/{{$und->path_img}}" width="100px"></a>
+							</div>
+						</center>
+					</td>
+					<td style="width: 200px;"> {{ $und->name }} </td>
+					<td>
+						<center><b>({{$und->sigla}}) - O envio das propostas foi prorrogado até o dia <?php echo date('d/m/Y', strtotime($CS->prazoProrroga)); ?></b></center>
+					</td>
+				  @endif
+				 @endif
+				@endif
+			 @endforeach
+			@endforeach
+			    </tr>	
 			</table>
 		</div>
-	</div><br><br><br><br><br><br>
-	@foreach($unidades as $und)
-	@foreach($contratacao_servicos as $CS)
-	@if($und->id == $CS->unidade_id)
-	@if($hoje >= $CS->prazoInicial && $hoje <= $CS->prazoFinal)
-		<center><b>({{$und->sigla}}) - As Propostas devem ser enviadas a partir do dia: <?php echo date('d/m/Y', strtotime($CS->prazoInicial)); ?> até o dia: <?php echo date('d/m/Y', strtotime($CS->prazoFinal));?>.</b></center>
-		<br>
-		@elseif($CS->prazoProrroga != "" )
-		@if($CS->prazoProrroga >= $hoje)
-		<center><b>({{$und->sigla}}) - O envio das propostas foi prorrogado até o dia <?php echo date('d/m/Y', strtotime($CS->prazoProrroga)); ?></b></center>
-		<br>
-		@endif
-		@endif
-		@endif
-		@endforeach
-		@endforeach
-		<center><b>Envie sua proposta para: juliana.silva@hcpgestao.org.br , franklin.rodrigues@hcpgestao.org.br</b></center>
+	</div>
+	
+	
+	<br><br><br><br><br><br>
+	<center><b>Envie sua proposta para: juliana.silva@hcpgestao.org.br , franklin.rodrigues@hcpgestao.org.br</b></center>
 </div>
 </div>
 @endsection

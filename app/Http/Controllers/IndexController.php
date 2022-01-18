@@ -52,7 +52,7 @@ use App\Model\RegimentoInterno;
 use App\Model\Aditivo;
 use App\Model\RelatorioFinanceiro;
 use App\Model\Covenio;
-use App\Model\contratacao_servicos;
+use App\Model\ContratacaoServicos;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use PDF;
@@ -62,8 +62,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Model\Ouvidoria;
 use Validator;
 use App\Http\Controllers\PermissaoUsersController;
-use App\Model\especialidade_contratacao;
-use App\Model\especialidades;
+use App\Model\EspecialidadeContratacao;
+use App\Model\Especialidades;
 
 class IndexController extends Controller
 {
@@ -467,7 +467,7 @@ class IndexController extends Controller
     public function rp()
     {   
         $dtHoje = date('Y/m/d',strtotime('now'));
-        $contratacao_servicos = contratacao_servicos::all();
+        $contratacao_servicos = ContratacaoServicos::all();
         $count = sizeof($contratacao_servicos);
         $unidades = Unidade::all();
         return view('rp', compact('unidades','contratacao_servicos'));
@@ -475,11 +475,11 @@ class IndexController extends Controller
 
     public function rp2($id)
     {
-        $contratacao_servicos = contratacao_servicos::where('id',$id)->get();
+        $contratacao_servicos = ContratacaoServicos::where('id',$id)->get();
         $unidade_id = $contratacao_servicos[0]->unidade_id;
         $unidades = Unidade::where('id',$unidade_id)->get();
-        $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id',$id)->get();
-        $especialidades = especialidades::all();
+        $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id',$id)->get();
+        $especialidades = Especialidades::all();
 
         return view('rp2', compact('contratacao_servicos','unidades','especialidade_contratacao','especialidades'));
     }

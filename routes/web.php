@@ -89,38 +89,36 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('home_compras/ordem_compra/excluir/ordemCompraExcluir/{unidade_id}/{id}','HomeController@destroyOrdemCompra')->name('destroyOrdemCompra');
 
 	//Contratação de serviços
-	Route::get('contracaoServicos/','contratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
-	Route::post('contracaoServicos/','contratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
-	Route::get('contracaoServicos/nova','contratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
-	Route::post('contracaoServicos/nova','contratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
-	Route::post('contracaoServicos/cadastro','contratacaoServicosController@salvarContratacaoServicos')->name('salvarContratacaoServicos');
-	Route::get('contracaoServicos/pesquisa','contratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
-	Route::post('contracaoServicos/pesquisa','contratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
-	Route::get('contracaoServicos/paginaexcluir/{id}','contratacaoServicosController@pagExcluirContratacao')->name('pagExcluirContratacao');
-	Route::get('contracaoServicos/confirmexcluir/{id}','contratacaoServicosController@excluirContratacao')->name('excluirContratacao');
-	Route::get('contracaoServicos/excEspContr/{idContr}/{idEsp}','contratacaoServicosController@exclEspeContr')->name('exclEspeContr');
-	Route::get('contracaoServicos/paginaAlterar/{id}','contratacaoServicosController@pagAlteraContratacao')->name('pagAlteraContratacao');
-	Route::get('contracaoServicos/confirAlterar/{id}','contratacaoServicosController@alteraContratacao')->name('alteraContratacao');
-	Route::post('contracaoServicos/confirAlterar/{id}','contratacaoServicosController@alteraContratacao')->name('alteraContratacao');
-	Route::get('contracaoServicos/exclArqContr/{id}','contratacaoServicosController@exclArqContr')->name('exclArqContr');
-	Route::post('contracaoServicos/exclArqContr/{id}','contratacaoServicosController@exclArqContr')->name('exclArqContr');
-	Route::get('contracaoServicos/pagProrrContr/{id}','contratacaoServicosController@pagProrrContr')->name('pagProrrContr');
-	Route::post('contracaoServicos/prorrContr/{id}','contratacaoServicosController@prorrContr')->name('prorrContr');
+	Route::get('contracaoServicos/','ContratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
+	Route::post('contracaoServicos/','ContratacaoServicosController@paginaContratacaoServicos')->name('paginaContratacaoServicos');
+	Route::get('contracaoServicos/nova','ContratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
+	Route::post('contracaoServicos/nova','ContratacaoServicosController@novaContratacaoServicos')->name('novaContratacaoServicos');
+	Route::post('contracaoServicos/cadastro','ContratacaoServicosController@salvarContratacaoServicos')->name('salvarContratacaoServicos');
+	Route::get('contracaoServicos/pesquisa','ContratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
+	Route::post('contracaoServicos/pesquisa','ContratacaoServicosController@pesquisarContratacao')->name('pesquisarContratacao');
+	Route::get('contracaoServicos/paginaexcluir/{id}','ContratacaoServicosController@pagExcluirContratacao')->name('pagExcluirContratacao');
+	Route::get('contracaoServicos/confirmexcluir/{id}','ContratacaoServicosController@excluirContratacao')->name('excluirContratacao');
+	Route::get('contracaoServicos/excEspContr/{idContr}/{idEsp}','ContratacaoServicosController@exclEspeContr')->name('exclEspeContr');
+	Route::get('contracaoServicos/paginaAlterar/{id}','ContratacaoServicosController@pagAlteraContratacao')->name('pagAlteraContratacao');
+	Route::get('contracaoServicos/confirAlterar/{id}','ContratacaoServicosController@alteraContratacao')->name('alteraContratacao');
+	Route::post('contracaoServicos/confirAlterar/{id}','ContratacaoServicosController@alteraContratacao')->name('alteraContratacao');
+	Route::get('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
+	Route::post('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
+	Route::get('contracaoServicos/pagProrrContr/{id}','ContratacaoServicosController@pagProrrContr')->name('pagProrrContr');
+	Route::post('contracaoServicos/prorrContr/{id}','ContratacaoServicosController@prorrContr')->name('prorrContr');
 
-	Route::get('especialidade/cadastro','contratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
-	Route::post('especialidade/cadastro','contratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
-	Route::get('especialidade/nova','contratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
-	Route::post('especialidade/nova','contratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
-	Route::post('especialidade/cadastro','contratacaoServicosController@salvarEspecialidade')->name('salvarEspecialidade');
-	Route::get('especialidade/','contratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
-	Route::post('especialidade/','contratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
-	Route::get('especialidade/paginaExclusao/{id}','contratacaoServicosController@pagExcluirEspeciali')->name('pagExcluirEspeciali');
-	Route::get('especialidade/confirExclusao/{id}','contratacaoServicosController@excluirEspecialidade')->name('excluirEspecialidade');
-	Route::get('especialidade/paginaAlterar/{id}','contratacaoServicosController@pagAlteraEspeciali')->name('pagAlteraEspeciali');
-	Route::get('especialidade/confirAlterar/{id}','contratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
-	Route::post('especialidade/confirAlterar/{id}','contratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
-
-	
+	Route::get('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
+	Route::post('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
+	Route::get('especialidade/nova','ContratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
+	Route::post('especialidade/nova','ContratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
+	Route::post('especialidade/cadastro','ContratacaoServicosController@salvarEspecialidade')->name('salvarEspecialidade');
+	Route::get('especialidade/','ContratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
+	Route::post('especialidade/','ContratacaoServicosController@pesquisarEspecialidade')->name('pesquisarEspecialidade');
+	Route::get('especialidade/paginaExclusao/{id}','ContratacaoServicosController@pagExcluirEspeciali')->name('pagExcluirEspeciali');
+	Route::get('especialidade/confirExclusao/{id}','ContratacaoServicosController@excluirEspecialidade')->name('excluirEspecialidade');
+	Route::get('especialidade/paginaAlterar/{id}','ContratacaoServicosController@pagAlteraEspeciali')->name('pagAlteraEspeciali');
+	Route::get('especialidade/confirAlterar/{id}','ContratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
+	Route::post('especialidade/confirAlterar/{id}','ContratacaoServicosController@AlteraEspeciali')->name('AlteraEspeciali');
 
 	Route::prefix('home')->group( function(){
 		Route::get('', 'HomeController@index')->name('home');

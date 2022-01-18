@@ -21,11 +21,11 @@
 					<td style="width: 800px;"><p align="justify">{{$CS->texto}}</p>
 					<ul>
 					@foreach($especialidades as $especialidade)
-                    @foreach($especialidade_contratacao as $Especialidade_contratacao)
-                	@if($especialidade->id == $Especialidade_contratacao->especialidades_id)
-					<li>{{$especialidade->nome}}</li>
-					@endif
-					@endforeach
+                     @foreach($especialidade_contratacao as $Especialidade_contratacao)
+                	  @if($especialidade->id == $Especialidade_contratacao->especialidades_id)
+					    <li>{{$especialidade->nome}}</li>
+					  @endif
+					 @endforeach
 					@endforeach
 					<br>Acesse o Processo de Contratação aqui: 
 					<a href="{{asset('storage/')}}/{{$CS->arquivo}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
@@ -34,7 +34,7 @@
 			@endforeach
 		</table>	
 		</div>
-	</div><br><br>
+	</div><br>
 	<center><b>Envie sua proposta para: juliana.silva@hcpgestao.org.br , franklin.rodrigues@hcpgestao.org.br</b></center>
 </div>
 </div>
