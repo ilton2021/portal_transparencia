@@ -13,45 +13,24 @@
 			<h5  style="font-size: 18px;">Termo de Referência <br><br> Proposta de Contratação: {{ $unidades[0]->name }}</h5>
 		</div>
 	</div>	
-	<div class="row" style="margin-top: 25px; margin-left: 300px;">
+	<div class="row" style="margin-top: 25px; margin-left: 230px;">
 		<div class="col-md-6 col-sm-6">
 		<table class="table" style="width: 800px;">	
-			@foreach($unidades as $und)
-			 @if($und->id == 3) 	
+			@foreach($contratacao_servicos as $CS)	
 				<tr>
-					<td style="width: 800px;"><p align="justify"> A UPAE BELO JARDIM, através do HCP Gestão, esta realizando Processo de 
-					Contratação de Prestação em Serviços Médicos para Consultas, Exames e Procedimentos, nas seguintes 
-					Especialidades:</p>
+					<td style="width: 800px;"><p align="justify">{{$CS->texto}}</p>
 					<ul>
-					<li>CARDIOLOGIA</li>
-					<li>GASTROENTEROLOGIA</li>
-					<li>GINECOLOGIA</li>
-					<li>VASCULAR</li>
-					<li>ENDOCRINOLOGIA</li>
-					<li>NEUROLOGIA</li>
-					<li>MASTOLOGIA</li></ul>
+					@foreach($especialidades as $especialidade)
+                    @foreach($especialidade_contratacao as $Especialidade_contratacao)
+                	@if($especialidade->id == $Especialidade_contratacao->especialidades_id)
+					<li>{{$especialidade->nome}}</li>
+					@endif
+					@endforeach
+					@endforeach
 					<br>Acesse o Processo de Contratação aqui: 
-					<a href="{{asset('img/tr/Belo/Termo de Especificações - Processo de Contratação de Serviços Médicos UPAE BELO JARDIM.pdf')}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
+					<a href="{{asset('storage/')}}/{{$CS->arquivo}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
 					</td>
 				</tr>
-			@elseif($und->id == 4)
-			<tr>
-					<td style="width: 800px;"><p align="justify"> A UPAE ARCOVERDE, através do HCP Gestão, esta realizando Processo de 
-					Contratação de Prestação em Serviços Médicos para Consultas, Exames e Procedimentos, nas seguintes 
-					Especialidades:</p>
-					<ul>
-					<li>CARDIOLOGIA</li>
-					<li>GASTROENTEROLOGIA</li>
-					<li>GINECOLOGIA</li>
-					<li>VASCULAR</li>
-					<li>ENDOCRINOLOGIA</li>
-					<li>NEUROLOGIA</li>
-					<li>MASTOLOGIA</li></ul>
-					<br>Acesse o Processo de Contratação aqui: 
-					<a href="{{asset('img/tr/Arco/Termo de Especificações - Processo de Contratação de Serviços Médicos UPAE ARCOVERDE.pdf')}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
-					</td>
-				</tr>
-			@endif
 			@endforeach
 		</table>	
 		</div>

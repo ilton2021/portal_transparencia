@@ -9,6 +9,7 @@ use App\Model\especialidades;
 use App\Model\especialidade_contratacao;
 use Illuminate\Support\Facades\Storage;
 use DB;
+use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\If_;
 use Symfony\Component\VarDumper\VarDumper;
 use Validator;
@@ -19,8 +20,8 @@ class contratacaoServicosController extends Controller
     {
         $unidades = Unidade::all();
         $contratacao_servicos = contratacao_servicos::all();
-        $sucesso = ""; 
-        return view('contratacao_servicos/contratacaoServicos_listagem', compact('contratacao_servicos', 'unidades','sucesso'));
+        $sucesso = "";
+        return view('contratacao_servicos/contratacaoServicos_listagem', compact('contratacao_servicos', 'unidades', 'sucesso'));
     }
 
     public function novaContratacaoServicos(Request $request)
@@ -29,9 +30,9 @@ class contratacaoServicosController extends Controller
         $Unidades = Unidade::all();
         $contratacao_servicos = contratacao_servicos::all();
         $especialidades = especialidades::all();
-        
 
-        return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'));
+
+        return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'));
     }
 
     public function salvarContratacaoServicos(Request $request)
@@ -58,34 +59,30 @@ class contratacaoServicosController extends Controller
             'prazoFinal' => 'required'
         ]);
         //Verificação de escolha de especialidade
-        $count = sizeof($especialidades);
+        $count = sizeof($input['especialidade']);
         $qtdEspSelec = array();
-        for ($i = 0; $i <= $count; $i++) {
-            if (!empty($input['especialidade_' . $i])){
-            $qtdEspSelec[$i] = $input['especialidade_' . $i];
-            }
-        }
+        $qtdEspSelec = $input['especialidade'];
 
         if ($validator->fails()) {
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
         } elseif ($dtPrazoIni >= $dtPrazoFim) {
             $sucesso = "no";
             $validator = 'A data inicial do prazo não pode ser maior ou igual que a data final ! ';
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
-        } elseif((sizeof($qtdEspSelec)) == 0){
+        } elseif ((sizeof($qtdEspSelec)) == 0) {
             $sucesso = "no";
             $validator = 'Escolha pelo menos um especialidade !';
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
-        }elseif ($request->file('nome_arq') === NULL) {
+        } elseif ($request->file('nome_arq') === NULL) {
             $sucesso = "no";
             $validator = 'Você esqueceu de anexar o arquivo!';
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
         } elseif ($extensao === 'pdf') {
@@ -96,29 +93,23 @@ class contratacaoServicosController extends Controller
             $input['titulo'] = 'Proposta de contratação' . '-' . $input['unidade_id'] . '-' . now();
             $contratacao_servicos = contratacao_servicos::create($input);
             $id_contratacao_servico = DB::table('contratacao_servicos')->max('id');
-            $count = sizeof($especialidades);
-            
-            for ($i = 0; $i <= $count; $i++) {
-                if (!empty($input['especialidade_' . $i])) {
-                    
-                    $especialidade_id = $input['especialidade_' . $i];
-                    if ($especialidade_id == $i) {
-                        $input['contratacao_servicos_id'] =  $id_contratacao_servico;
-                        $input['especialidades_id'] = $especialidade_id;
-                        $especialidade_contratacao = especialidade_contratacao::all();
-                        $especialidade_contratacao = especialidade_contratacao::create($input);
-                    }
-                }
+
+            foreach ($qtdEspSelec as $qtdEsp) {
+                $input['contratacao_servicos_id'] =  $id_contratacao_servico;
+                $input['especialidades_id'] = $qtdEsp;
+                $especialidade_contratacao = especialidade_contratacao::all();
+                $especialidade_contratacao = especialidade_contratacao::create($input);
             }
+
             $contratacao_servicos = contratacao_servicos::all();
             $sucesso = "ok";
             $validator = 'Contratação de serviço cadastrada sucesso!';
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','validator'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'validator'))
                 ->withInput(session()->flashInput($request->input()));
         } else {
             $sucesso = "no";
             $validator = 'Só são permitidos os arquivos do tipo: PDF';
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso'))
+            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
         }
@@ -138,17 +129,19 @@ class contratacaoServicosController extends Controller
         return view('contratacao_servicos/contratacaoServicos_listagem', compact('contratacao_servicos', 'unidades'));
     }
     //Pagina exclusão contratação
-    public function pagExcluirContratacao($id){
+    public function pagExcluirContratacao($id)
+    {
         $sucesso = "";
         $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
         $unidade_id = $contratacao_servicos[0]->unidade_id;
         $Unidades = Unidade::where('id', $unidade_id)->get();
         $especialidades = especialidades::all();
         $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
-        return view('contratacao_servicos/contratacaoServicos_excluir', compact('contratacao_servicos','Unidades','sucesso','especialidades','especialidade_contratacao'));
+        return view('contratacao_servicos/contratacaoServicos_excluir', compact('contratacao_servicos', 'Unidades', 'sucesso', 'especialidades', 'especialidade_contratacao'));
     }
     //Excluir contratação
-    public function excluirContratacao($id){
+    public function excluirContratacao($id)
+    {
         especialidade_contratacao::where('contratacao_servicos_id', $id)->delete();
         contratacao_servicos::find($id)->delete();
         $unidades = Unidade::all();
@@ -156,25 +149,26 @@ class contratacaoServicosController extends Controller
         $especialidades = especialidades::all();
         $unidades = Unidade::all();
         $validator = "Contratação de serviço exluida com sucesso";
-        return redirect()->route('paginaContratacaoServicos', compact('contratacao_servicos','especialidades','unidades'));
+        return redirect()->route('paginaContratacaoServicos', compact('contratacao_servicos', 'especialidades', 'unidades'));
     }
     //Excluir especialidade do contrato
-    public function exclEspeContr($idContr,$idEsp){
+    public function exclEspeContr($idContr, $idEsp)
+    {
         especialidade_contratacao::where('contratacao_servicos_id', $idContr)->where('especialidades_id', $idEsp)->delete();
         $sucesso = "";
-        $contratacao_servicos  = contratacao_servicos::where('id',$idContr)->get();
+        $contratacao_servicos  = contratacao_servicos::where('id', $idContr)->get();
         $unidade_id = $contratacao_servicos[0]->unidade_id;
         $Unidades = Unidade::where('id', $unidade_id)->get();
         $especialidades = especialidades::all();
         $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $idContr)->get('especialidades_id');
-        return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos','Unidades','sucesso','especialidades','especialidade_contratacao', 'unidade_id'));
-    
+        return  redirect()->route('pagAlteraContratacao', [$idContr]);
     }
 
     //Excluir arquivo contratação
 
-    public function exclArqContr($id, Request $request){
-        
+    public function exclArqContr($id, Request $request)
+    {
+
         $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
         $pasta = $contratacao_servicos[0]->arquivo;
         Storage::delete($pasta);
@@ -190,26 +184,27 @@ class contratacaoServicosController extends Controller
         $especialidades = especialidades::all();
         $validator = "Arquivo excluido com sucesso !";
         $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
-        return  redirect()->route('pagAlteraContratacao',[$id])
+        return  redirect()->route('pagAlteraContratacao', [$id])
             ->withErrors($validator);
     }
 
 
     //Pagina Alterar Contratacao
 
-    public function pagAlteraContratacao($id){
+    public function pagAlteraContratacao($id)
+    {
         $sucesso = "";
         $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
         $unidade_id = $contratacao_servicos[0]->unidade_id;
         $Unidades = Unidade::all();
         $especialidades = especialidades::all();
         $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
-        
-        return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos','Unidades','sucesso','especialidades','especialidade_contratacao','unidade_id'));
+
+        return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'sucesso', 'especialidades', 'especialidade_contratacao', 'unidade_id'));
     }
     //Alterar dados contratacao
-    public function alteraContratacao($id,Request $request){
-        
+    public function alteraContratacao($id, Request $request)
+    {
         $input = $request->all();
         $sucesso = "";
         $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
@@ -220,9 +215,9 @@ class contratacaoServicosController extends Controller
         $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
         $dtPrazoIni = $input['prazoInicial'];
         $dtPrazoFim = $input['prazoFinal'];
-        
+
         $isTouch = isset($input['nome_arq']);
-        if($isTouch == true){
+        if ($isTouch == true) {
             $nome = $_FILES['nome_arq']['name'];
             $extensao = pathinfo($nome, PATHINFO_EXTENSION);
         }
@@ -232,136 +227,139 @@ class contratacaoServicosController extends Controller
             'prazoInicial' => 'required',
             'prazoFinal' => 'required'
         ]);
-            if ($validator->fails()) {
-                $sucesso = "no";
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos','Unidades','sucesso','especialidades','especialidade_contratacao','unidade_id'))
-                    ->withErrors($validator)
-                    ->withInput(session()->flashInput($request->input()));
-            }elseif ($dtPrazoIni >= $dtPrazoFim) {
-                $sucesso = "no";
-                $validator = 'A data inicial do prazo não pode ser maior ou igual que a data final !';
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','especialidade_contratacao','unidade_id'))
-                    ->withErrors($validator)
-                    ->withInput(session()->flashInput($request->input()));              
-            }elseif($nome_arq != ""){
-                $contratacao_servicos= contratacao_servicos::find($id);
-                $contratacao_servicos->update($input);
-                $count = sizeof($especialidades);
-                $id_contratacao_servico = DB::table('contratacao_servicos')->max('id');
-                     
-                for ($i = 0; $i <= $count; $i++) {
-                    if (!empty($input['especialidade_' . $i])) {
-                        $especialidade_id = $input['especialidade_' . $i];
-                        $espContr = especialidade_contratacao::where('contratacao_servicos_id',$id)
-                        ->where('especialidades_id',$especialidade_id)
-                        ->get();
-                        $espContr = sizeof($espContr);
-                        if($espContr == 0)
-                            if ($especialidade_id == $i) {
-                                $input['contratacao_servicos_id'] =  $id_contratacao_servico;
-                                $input['especialidades_id'] = $especialidade_id;
-                                $especialidade_contratacao = especialidade_contratacao::all();          
-                                $especialidade_contratacao = especialidade_contratacao::create($input);
-                            }
-                        }
-                }
-                $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
-                $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get();
-                $sucesso = "ok";
-                $validator = 'Contratação de serviço alterada com sucesso!';
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','validator','unidade_id','especialidade_contratacao'))
-                    ->withInput(session()
-                    ->flashInput($request->input()));
+        if ($validator->fails()) {
+            $sucesso = "no";
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'sucesso', 'especialidades', 'especialidade_contratacao', 'unidade_id'))
+                ->withErrors($validator)
+                ->withInput(session()->flashInput($request->input()));
+        } elseif ($dtPrazoIni >= $dtPrazoFim) {
+            $sucesso = "no";
+            $validator = 'A data inicial do prazo não pode ser maior ou igual que a data final !';
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'especialidade_contratacao', 'unidade_id'))
+                ->withErrors($validator)
+                ->withInput(session()->flashInput($request->input()));
+        } elseif ($nome_arq != "") {
+            $contratacao_servicos = contratacao_servicos::find($id);
+            $contratacao_servicos->update($input);
+            $count = sizeof($especialidades);
+            $id_contratacao_servico = DB::table('contratacao_servicos')->max('id');
 
-            }elseif ($request->file('nome_arq') === NULL) {
-                $sucesso = "no";
-                $validator = 'Você esqueceu de anexar o arquivo!';
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','unidade_id','especialidade_contratacao'))
-                    ->withErrors($validator)
-                    ->withInput(session()->flashInput($request->input()));
-            }elseif ($extensao === 'pdf') {
-                $nome = $_FILES['nome_arq']['name'];
-                $request->file('nome_arq')->move('../public/storage/contratacao_servicos/', $nome);
-                $input['arquivo'] = 'contratacao_servicos/' . $nome;
-                $input['nome_arq'] = $nome;
-                $input['titulo'] = 'Proposta de contratação' . '-' . $input['unidade_id'] . '-' . now();
-                $contratacao_servicos= contratacao_servicos::find($id);
-                $contratacao_servicos->update($input);
-                $count = sizeof($especialidades);
-                $id_contratacao_servico = DB::table('contratacao_servicos')->max('id');  
-                for ($i = 0; $i <= $count; $i++) {
-                    if (!empty($input['especialidade_' . $i])){
-                        $especialidade_id = $input['especialidade_' . $i];
-                        $espContr = especialidade_contratacao::where('contratacao_servicos_id',$id)
-                        ->where('especialidades_id',$especialidade_id)
+            $isTouch = isset($input['especialidade']);
+            if ($isTouch) {
+                $qtdEspSelec = $input['especialidade'];
+
+                foreach ($qtdEspSelec as $qtdEsp) {
+                    $espContr = especialidade_contratacao::where('contratacao_servicos_id', $id)
+                        ->where('especialidades_id', $qtdEsp)
                         ->get();
-                        $espContr = sizeof($espContr);
-                        if($espContr == 0)
-                        if ($especialidade_id == $i) {
-                            $input['contratacao_servicos_id'] =  $id_contratacao_servico;
-                            $input['especialidades_id'] = $especialidade_id;
-                            $especialidade_contratacao = especialidade_contratacao::all();    
-                            $especialidade_contratacao = especialidade_contratacao::create($input);
-                        }
+                    $espContr = sizeof($espContr);
+                    if ($espContr == 0) {
+                        $input['contratacao_servicos_id'] =  $id_contratacao_servico;
+                        $input['especialidades_id'] = $qtdEsp;
+                        $especialidade_contratacao = especialidade_contratacao::all();
+                        $especialidade_contratacao = especialidade_contratacao::create($input);
                     }
                 }
-                $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
-                $especialidade_contratacao = especialidade_contratacao::all(); 
-                $sucesso = "ok";
-                $validator = 'Contratação de serviço alterada com sucesso!';
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','validator','unidade_id','especialidade_contratacao'))
-                    ->withInput(session()
-                    ->flashInput($request->input()));
-            }else {
-                $sucesso = "no";
-                $validator = 'Só são permitidos os arquivos do tipo: PDF';
-                return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades','sucesso','unidade_id','especialidade_contratacao'))
-                    ->withErrors($validator)
-                    ->withInput(session()->flashInput($request->input()));
             }
-        
+            
+            $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
+            $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get();
+            $sucesso = "ok";
+            $validator = 'Contratação de serviço alterada com sucesso!';
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'validator', 'unidade_id', 'especialidade_contratacao'))
+                ->withInput(session()
+                    ->flashInput($request->input()));
+        } elseif ($request->file('nome_arq') === NULL) {
+            $sucesso = "no";
+            $validator = 'Você esqueceu de anexar o arquivo!';
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'unidade_id', 'especialidade_contratacao'))
+                ->withErrors($validator)
+                ->withInput(session()->flashInput($request->input()));
+        } elseif ($extensao === 'pdf') {
+            $nome = $_FILES['nome_arq']['name'];
+            $request->file('nome_arq')->move('../public/storage/contratacao_servicos/', $nome);
+            $input['arquivo'] = 'contratacao_servicos/' . $nome;
+            $input['nome_arq'] = $nome;
+            $input['titulo'] = 'Proposta de contratação' . '-' . $input['unidade_id'] . '-' . now();
+            $contratacao_servicos = contratacao_servicos::find($id);
+            $contratacao_servicos->update($input);
+            $count = sizeof($especialidades);
+            $id_contratacao_servico = DB::table('contratacao_servicos')->max('id');
+
+            $isTouch = isset($input['especialidade']);
+            if ($isTouch) {
+                $qtdEspSelec = $input['especialidade'];
+
+                foreach ($qtdEspSelec as $qtdEsp) {
+                    $espContr = especialidade_contratacao::where('contratacao_servicos_id', $id)
+                        ->where('especialidades_id', $qtdEsp)
+                        ->get();
+                    $espContr = sizeof($espContr);
+                    if ($espContr == 0) {
+                        $input['contratacao_servicos_id'] =  $id_contratacao_servico;
+                        $input['especialidades_id'] = $qtdEsp;
+                        $especialidade_contratacao = especialidade_contratacao::all();
+                        $especialidade_contratacao = especialidade_contratacao::create($input);
+                    }
+                }
+            }
+
+            $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
+            $especialidade_contratacao = especialidade_contratacao::all();
+            $sucesso = "ok";
+            $validator = 'Contratação de serviço alterada com sucesso!';
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'validator', 'unidade_id', 'especialidade_contratacao'))
+                ->withInput(session()
+                    ->flashInput($request->input()));
+        } else {
+            $sucesso = "no";
+            $validator = 'Só são permitidos os arquivos do tipo: PDF';
+            return view('contratacao_servicos/contratacaoServicos_alterar', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso', 'unidade_id', 'especialidade_contratacao'))
+                ->withErrors($validator)
+                ->withInput(session()->flashInput($request->input()));
+        }
     }
     //Pagina prorroga contrato
 
     public function pagProrrContr($id)
     {
         $sucesso = "";
-        $contratacao_servicos  = contratacao_servicos::where('id',$id)->get();
-        return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos','sucesso'));
+        $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
+        return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'));
     }
 
     //Prorrogação de contrato
-    public function prorrContr($id,Request $request)
+    public function prorrContr($id, Request $request)
     {
         $input = $request->all();
-        $contratacao_servicos  = contratacao_servicos::where('id',$id)->get();
+        $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
         $dtPrazoFim = $contratacao_servicos[0]->prazoFinal;
         $PrazProAtual = $contratacao_servicos[0]->prazoProrroga;
         $dtProrrgac = $input['prazoProrroga'];
-        
-        if($dtProrrgac == ""){
+
+        if ($dtProrrgac == "") {
             $sucesso = "no";
             $validator = "Você não digitou a nova data.";
-            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos','sucesso'))
-            ->withErrors($validator);
-        }elseif($dtProrrgac <= $PrazProAtual){
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);
+        } elseif ($dtProrrgac <= $PrazProAtual) {
             $sucesso = "no";
             $validator = "Data prorroga menor ou igual a data de prorrogação Atual";
-            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos','sucesso'))
-            ->withErrors($validator);
-        }elseif($dtProrrgac <= $dtPrazoFim){
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);
+        } elseif ($dtProrrgac <= $dtPrazoFim) {
             $sucesso = "no";
             $validator = "Data prorroga menor ou igual a data final";
-            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos','sucesso'))
-            ->withErrors($validator);
-        }else{
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);
+        } else {
             $sucesso = "ok";
-            $contratacao_servicos= contratacao_servicos::find($id);
+            $contratacao_servicos = contratacao_servicos::find($id);
             $contratacao_servicos->update($input);
-            $contratacao_servicos  = contratacao_servicos::where('id',$id)->get();
+            $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
             $validator = 'Prorrogação efetuada com sucesso';
-            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos','sucesso'))
-            ->withErrors($validator);
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);
         }
     }
 
@@ -404,7 +402,7 @@ class contratacaoServicosController extends Controller
     //Pesquisar especialidade
     public function pesquisarEspecialidade(Request $request)
     {
-        $sucesso = ""; 
+        $sucesso = "";
         $input = $request->all();
         $pesq = $input['nomePesq'];
         if (!$pesq == "") {
@@ -412,7 +410,7 @@ class contratacaoServicosController extends Controller
         } else {
             $Especialidades = especialidades::all();
         }
-        return view('contratacao_servicos/especialidades_listagem', compact('Especialidades','sucesso'));
+        return view('contratacao_servicos/especialidades_listagem', compact('Especialidades', 'sucesso'));
     }
 
     //Pagina excluir especialidade
@@ -440,7 +438,7 @@ class contratacaoServicosController extends Controller
         return view('contratacao_servicos/especialidades_alterar', compact('Especialidades', 'sucesso'));
     }
 
-    public function AlteraEspeciali($id,Request $request)
+    public function AlteraEspeciali($id, Request $request)
     {
         $input = $request->all();
         $nome = $input['nome'];
@@ -454,7 +452,7 @@ class contratacaoServicosController extends Controller
             return view('contratacao_servicos/especialidades_alterar', compact('Especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
-        }elseif($EspecialiCad == '[]'){
+        } elseif ($EspecialiCad == '[]') {
             $sucesso = "ok";
             $validator = 'Nome alterado com sucesso !';
             $Especialidades = especialidades::find($id);

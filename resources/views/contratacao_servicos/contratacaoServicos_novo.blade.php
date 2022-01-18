@@ -68,7 +68,7 @@
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Unidade:</label>
                                 <select style="width:500px; height: 40px;margin-top:15px;margin-left:20px" name="unidade_id" id="unidade_id">
                                     @foreach($Unidades as $unidade)
-                                    <option value="{{$unidade->id}}">{{$unidade->name}}</option>
+                                    <option value="{{$unidade->id}}">{{$unidade->sigla}} - {{$unidade->name}}</option>
                                     @endforeach
                                 </select>
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:10px">Arquivo:</label>
@@ -86,7 +86,7 @@
                                         <?php $m = 8; ?>
                                         @foreach($especialidades as $especialidade)
                                         <td>
-                                            <input type="checkbox" id="especialidade_<?php echo $i; ?>" class="especialidade" name="especialidade_<?php echo $i; ?>" value="<?php echo $especialidade->id; ?>">&nbsp{{$especialidade->nome}}</input>
+                                            <input type="checkbox" id="especialidade[]" class="especialidade" name="especialidade[]" value="<?php echo $especialidade->id;?>">&nbsp{{$especialidade->nome}}</input>
                                             @if($i == $m )
                                             <?php $m += 8; ?>
                                         </td>

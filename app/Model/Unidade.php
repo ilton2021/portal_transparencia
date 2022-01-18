@@ -14,6 +14,7 @@ class Unidade extends Model
 		'owner',
 		'cnpj',
 		'name',
+		'sigla',
 		'address',
 		'numero',
 		'further_info',
