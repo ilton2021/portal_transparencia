@@ -260,7 +260,7 @@ class contratacaoServicosController extends Controller
                         $especialidade_contratacao = especialidade_contratacao::create($input);
                     }
                 }
-            }
+            }       
             
             $contratacao_servicos  = contratacao_servicos::where('id', $id)->get();
             $especialidade_contratacao = especialidade_contratacao::where('contratacao_servicos_id', $id)->get();
