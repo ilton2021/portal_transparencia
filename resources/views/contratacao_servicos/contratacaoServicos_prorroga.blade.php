@@ -61,6 +61,22 @@
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Data prazo prorrogação:</label>
                                 <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id="prazoProrroga" name="prazoProrroga" rows="4" cols="50" value="{{$CS->prazoProrroga}}" ></input>
                             </div>
+                            <table>
+                            <th>
+                             @if($CS->arquivo_errat != "")
+                                    <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Arquivo:</label>
+                                    <td>
+                                        <a href="{{asset('storage/')}}/{{$CS->arquivo_errat}}" target="_blank" title="<?php echo $CS->arquivo_errat; ?>" class="list-group-item list-group-item-action" style="width:350px;height:70px; font-family:arial black; font-size:15px;margin-left:10px"><?php echo explode('/', (substr($CS->arquivo_errat,0,80)))[1]; ?></a>
+                                    </td>
+                                    <td>
+                                        <a type="submit" class="btn btn-danger btn-sm" href="{{route('exclArqErratContr',$CS->id)}}" style="margin-left:10px;;margin-top:20px;height:25px">X<i class="fas fa-times-circle"></i></a>
+                                    </td>
+                                    @else
+                                    <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Arquivo:</label>
+                                    <input style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:10px" type="file" id="nome_arq_errat" name="nome_arq_errat"></input>
+                                    @endif
+                            </th>
+                            </table>
                             <div>
                                 <button type="submit" class="btn btn-info btn-sm" style="font-size:20px" value="salvar" id="salvar" name="salvar">Salvar</button>
                                 </div>

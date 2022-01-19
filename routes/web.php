@@ -104,6 +104,8 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('contracaoServicos/confirAlterar/{id}','ContratacaoServicosController@alteraContratacao')->name('alteraContratacao');
 	Route::get('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
 	Route::post('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
+	Route::get('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
+	Route::post('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
 	Route::get('contracaoServicos/pagProrrContr/{id}','ContratacaoServicosController@pagProrrContr')->name('pagProrrContr');
 	Route::post('contracaoServicos/prorrContr/{id}','ContratacaoServicosController@prorrContr')->name('prorrContr');
 

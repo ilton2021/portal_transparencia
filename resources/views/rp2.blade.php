@@ -10,7 +10,7 @@
 <div class="container-fluid">
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
-			<h5  style="font-size: 18px;">Termo de Referência <br><br> Proposta de Contratação: {{ $unidades[0]->name }}</h5>
+			<h5  style="font-size: 18px;">Proposta de Contratação: {{ $unidades[0]->name }}</h5>
 		</div>
 	</div>	
 	<div class="row" style="margin-top: 25px; margin-left: 230px;">
@@ -29,7 +29,7 @@
 					@endforeach
 					<br>Acesse o Processo de Contratação aqui: 
 					<a href="{{asset('storage/')}}/{{$CS->arquivo}}" width="100px" class="btn btn-sm btn-info" target="_blank"> Download</a>
-					</td>
+				</td>
 				</tr>
 			@endforeach
 		</table>	

@@ -55,7 +55,7 @@ class ContratacaoServicosController extends Controller
             'prazoFinal'   => 'required'
         ]);
         //Verificação de escolha de especialidade
-        if(isset($input['especialidade'])){
+        if (isset($input['especialidade'])) {
             $count       = sizeof($input['especialidade']);
             $qtdEspSelec = array();
             $qtdEspSelec = $input['especialidade'];
@@ -191,6 +191,29 @@ class ContratacaoServicosController extends Controller
             ->withErrors($validator);
     }
 
+    //Excluir arquivo errata contratação
+
+    public function exclArqErratContr($id, Request $request)
+    {
+
+        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
+        $pasta = $contratacao_servicos[0]->arquivo_errat;
+        Storage::delete($pasta);
+        $input['arquivo_errat'] = '';
+        $input['nome_arq_errat'] = '';
+        $contratacao_servicos  = ContratacaoServicos::find($id);
+        $contratacao_servicos->update($input);
+        $sucesso = "ok";
+        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
+        $unidade_id = $contratacao_servicos[0]->unidade_id;
+        $Unidades = Unidade::all();
+        $especialidades = Especialidades::all();
+        $validator = "Arquivo excluido com sucesso !";
+        $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
+        return  redirect()->route('pagProrrContr', [$id])
+            ->withErrors($validator);
+    }
+
 
     //Pagina Alterar Contratacao
 
@@ -263,8 +286,8 @@ class ContratacaoServicosController extends Controller
                         $especialidade_contratacao = EspecialidadeContratacao::create($input);
                     }
                 }
-            }       
-            
+            }
+
             $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
             $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id', $id)->get();
             $sucesso = "ok";
@@ -339,6 +362,14 @@ class ContratacaoServicosController extends Controller
         $dtPrazoFim = $contratacao_servicos[0]->prazoFinal;
         $PrazProAtual = $contratacao_servicos[0]->prazoProrroga;
         $dtProrrgac = $input['prazoProrroga'];
+        $nome_arq = $contratacao_servicos[0]->arquivo_errat;
+        $nome = "";
+
+        $isTouch = isset($input['nome_arq_errat']);
+        if ($isTouch == true) {
+            $nome = $_FILES['nome_arq_errat']['name'];
+            $extensao = pathinfo($nome, PATHINFO_EXTENSION);
+        }
 
         if ($dtProrrgac == "") {
             $sucesso = "no";
@@ -355,7 +386,12 @@ class ContratacaoServicosController extends Controller
             $validator = "Data prorroga menor ou igual a data final";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);
-        } else {
+        }elseif($nome_arq == "" && $nome == ""){
+            $sucesso = "no";
+            $validator = "Você precisar anexar o arquivo";
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);       
+        }else {
             $sucesso = "ok";
             $contratacao_servicos = ContratacaoServicos::find($id);
             $contratacao_servicos->update($input);
