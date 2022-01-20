@@ -106,7 +106,8 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
 	Route::get('contracaoServicos/pagProrrContr/{id}','ContratacaoServicosController@pagProrrContr')->name('pagProrrContr');
 	Route::post('contracaoServicos/prorrContr/{id}','ContratacaoServicosController@prorrContr')->name('prorrContr');
-
+	Route::get('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
+	Route::post('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
 	Route::get('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
 	Route::post('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
 	Route::get('especialidade/nova','ContratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');

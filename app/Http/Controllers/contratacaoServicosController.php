@@ -339,6 +339,14 @@ class ContratacaoServicosController extends Controller
         $dtPrazoFim = $contratacao_servicos[0]->prazoFinal;
         $PrazProAtual = $contratacao_servicos[0]->prazoProrroga;
         $dtProrrgac = $input['prazoProrroga'];
+        $nome_arq = $contratacao_servicos[0]->arquivo_errat;
+        $nome = "";
+
+        $isTouch = isset($input['nome_arq_errat']);
+        if ($isTouch == true) {
+            $nome = $_FILES['nome_arq_errat']['name'];
+            $extensao = pathinfo($nome, PATHINFO_EXTENSION);
+        }
 
         if ($dtProrrgac == "") {
             $sucesso = "no";
@@ -355,7 +363,16 @@ class ContratacaoServicosController extends Controller
             $validator = "Data prorroga menor ou igual a data final";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);
-        } else {
+        }elseif($nome_arq == "" && $nome == ""){
+            $sucesso = "no";
+            $validator = "Você precisar anexar o arquivo";
+            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
+                ->withErrors($validator);       
+        }elseif ($extensao === 'pdf') {
+            $nome = $_FILES['nome_arq_errat']['name'];
+            $request->file('nome_arq_errat')->move('../public/storage/contratacao_servicos/', $nome);
+            $input['arquivo_errat'] = 'contratacao_servicos/' . $nome;
+            $input['nome_arq_errat'] = $nome;
             $sucesso = "ok";
             $contratacao_servicos = ContratacaoServicos::find($id);
             $contratacao_servicos->update($input);
