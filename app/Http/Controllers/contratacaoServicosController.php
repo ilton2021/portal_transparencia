@@ -391,7 +391,11 @@ class ContratacaoServicosController extends Controller
             $validator = "Você precisar anexar o arquivo";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);       
-        }else {
+        }elseif ($extensao === 'pdf') {
+            $nome = $_FILES['nome_arq_errat']['name'];
+            $request->file('nome_arq_errat')->move('../public/storage/contratacao_servicos/', $nome);
+            $input['arquivo_errat'] = 'contratacao_servicos/' . $nome;
+            $input['nome_arq_errat'] = $nome;
             $sucesso = "ok";
             $contratacao_servicos = ContratacaoServicos::find($id);
             $contratacao_servicos->update($input);

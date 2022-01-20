@@ -39,6 +39,7 @@ header{
 
 #rp-container .card{
     /*flex:1 1 0;*/
+    max-width: 300px;
     height: 290px;
     border-radius: 10px;
     border:1px solid;
@@ -47,6 +48,7 @@ header{
     margin: 10px;
     margin-bottom: 5px;
     font-size: 12px;
+    
 }
 
 #rp-container img{
