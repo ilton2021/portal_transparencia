@@ -383,6 +383,28 @@ class ContratacaoServicosController extends Controller
         }
     }
 
+    //Excluir arquivo errata contrataÃ§Ã£o
+
+    public function exclArqErratContr($id, Request $request)
+    {
+        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
+        $pasta = $contratacao_servicos[0]->arquivo_errat;
+        Storage::delete($pasta);
+        $input['arquivo_errat'] = '';
+        $input['nome_arq_errat'] = '';
+        $contratacao_servicos  = ContratacaoServicos::find($id);
+        $contratacao_servicos->update($input);
+        $sucesso = "ok";
+        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
+        $unidade_id = $contratacao_servicos[0]->unidade_id;
+        $Unidades = Unidade::all();
+        $especialidades = Especialidades::all();
+        $validator = "Arquivo excluido com sucesso !";
+        $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
+        return  redirect()->route('pagProrrContr', [$id])
+            ->withErrors($validator);
+    }
+
     //Pagina Especialidade
     public function paginaEspecialidade()
     {
