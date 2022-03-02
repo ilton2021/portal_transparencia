@@ -294,7 +294,11 @@ class HomeController extends Controller
                     $input['title'] = $input['title'.$i];
                     ProcessoArquivos::create($input);	
                     $a += 1;
+<<<<<<< HEAD
+                }else{
+=======
                 } else {
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
                     $validator = 'Só suporta arquivos do tipo PDF!';
                     return view('ordem_compra/ordem_compras_arquivos_novo', compact('unidade','processos','processo_arquivos'))
                         ->withErrors($validator)

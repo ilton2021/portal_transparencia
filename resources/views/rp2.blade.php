@@ -51,7 +51,11 @@
 			@endforeach
 		</table>
 	</div><br>
+<<<<<<< HEAD
+	<center><b>Envie sua proposta para: juliana.silva@hcpgestao.org.br , franklin.rodrigues@hcpgestao.org.br</b></center>
+=======
 	<center><b>Envie sua proposta para: contratacaodeservicos@hcpgestao.org.br</b></center>
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
 </div>
 </div>
 @endsection

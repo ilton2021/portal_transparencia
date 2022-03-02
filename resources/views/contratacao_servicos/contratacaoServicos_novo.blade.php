@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{Asset('css/app.css')}}">
     <title>Nova Contratação de serviços</title>
+<<<<<<< HEAD
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+=======
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
     <script language="JavaScript">
         //Marcar ou desmarcar todas a especialidades
         function toggle(source) {
@@ -15,7 +21,20 @@
                 checkboxes[i].checked = source.checked;
             }
         }
+<<<<<<< HEAD
+
+        function desabilitarTipos(valor) {
+            var a = document.getElementById('tipoPrazo').checked;
+
+            if (a == true) {
+                document.getElementById('prazoFinal').disabled = false;
+            } else {
+                document.getElementById('prazoFinal').disabled = true;
+            }
+        }
+=======
         //Verificando se pelo um checkbox especialidade foi marcado
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
     </script>
 </head>
 
@@ -59,10 +78,24 @@
                                 <textarea style="width:1000px;height: 40px;margin-top:15px;margin-left:20px" type="textarea" id=texto name="texto" rows="4" cols="50"></textarea>
                             </div>
                             <div class="input-group mb-3">
+<<<<<<< HEAD
+                                <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Com Prazo limite ?</label>
+                                <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:10px">Sim</label>
+                                <input style="font-family:arial black;font-size:15px;margin-top:25px;margin-left:20px" type="checkbox" id="tipoPrazo" name="tipoPrazo" value="1" onclick="desabilitarTipos('sim')" />
+                                <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Data prazo inicial:</label>
+                                <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id=prazoInicial name="prazoInicial" rows="4" cols="50"></input>
+                                <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:20px">Data prazo final:</label>
+                                @if(old('tipo_mov1') == "on")
+                                <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id=prazoFinal name="prazoFinal" rows="4" cols="50"></input>
+                                @else
+                                <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id=prazoFinal name="prazoFinal" rows="4" cols="50" disabled></input>
+                                @endif
+=======
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Data prazo inicial:</label>
                                 <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id=prazoInicial name="prazoInicial" rows="4" cols="50"></input>
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:20px">Data prazo final:</label>
                                 <input style=" height: 40px;margin-top:15px;margin-left:20px" type="date" id=prazoFinal name="prazoFinal" rows="4" cols="50"></input>
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
                             </div>
                             <div class="input-group mb-3">
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Unidade:</label>
@@ -75,7 +108,11 @@
                                 <input style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:10px" type="file" id="nome_arq" name="nome_arq"></input>
                             </div>
                             <div class="input-group mb-3">
+<<<<<<< HEAD
+                                <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:60px">Especialidade:</label>
+=======
                                 <label style="font-family:arial black;font-size:15px;margin-top:20px;margin-left:20px">Especialidade:</label>
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
                             </div>
                             <div class="input-group mb-3">
                                 <table class="table table-hover">
@@ -86,7 +123,11 @@
                                         <?php $m = 8; ?>
                                         @foreach($especialidades as $especialidade)
                                         <td>
+<<<<<<< HEAD
+                                            <input type="checkbox" id="especialidade[]" class="especialidade" name="especialidade[]" value="<?php echo $especialidade->id; ?>">&nbsp{{$especialidade->nome}}</input>
+=======
                                             <input type="checkbox" id="especialidade[]" class="especialidade" name="especialidade[]" value="<?php echo $especialidade->id;?>">&nbsp{{$especialidade->nome}}</input>
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
                                             @if($i == $m )
                                             <?php $m += 8; ?>
                                         </td>
