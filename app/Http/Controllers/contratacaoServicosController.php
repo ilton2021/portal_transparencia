@@ -41,39 +41,36 @@ class ContratacaoServicosController extends Controller
         $especialidades            = Especialidades::all();
         $especialidade_contratacao = EspecialidadeContratacao::all();
         $input      = $request->all();
-<<<<<<< HEAD
         //Veriicando tipo de prazo.
         if ((isset($input['tipoPrazo']))) {
-            $input['tipoPrazo'] = 0;
-            $input['prazoFinal'] = "";
+            $input['tipoPrazo']  = 0;
+            $dtPrazoFim = $input['prazoFinal'];
+        } else {
+            $input['prazoFinal'] = date('Y-m-d', strtotime('2025-03-02'));
+            $input['tipoPrazo']  = 1;
         }
-=======
-        $unidade_id = $input['unidade_id'];
-        $nome       = $_FILES['nome_arq']['name'];
-        $dtPrazoIni = $input['prazoInicial'];
-        $dtPrazoFim = $input['prazoFinal'];
-        $extensao = pathinfo($nome, PATHINFO_EXTENSION);
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
         //Vericação de inputs
         $validator = Validator::make($request->all(), [
             'texto'        => 'required|max:255',
             'nome_arq'     => 'required|max:2000',
             'unidade_id'   => 'required|max:255',
-            'prazoInicial' => 'required',
-            'prazoFinal'   => 'required'
-        ]);
-<<<<<<< HEAD
+            'prazoInicial' => 'required'
+        ]); 
         $unidade_id = $input['unidade_id'];
         $nome       = $_FILES['nome_arq']['name'];
         $dtPrazoIni = $input['prazoInicial'];
-        $dtPrazoFim = $input['prazoFinal'];
         $extensao = pathinfo($nome, PATHINFO_EXTENSION);
+        if ((isset($dtPrazoFim))) {
+            if ($dtPrazoIni >= $dtPrazoFim) {
+                $sucesso = "no";
+                $validator = 'A data inicial do prazo não pode ser maior ou igual que a data final ! ';
+                return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
+                    ->withErrors($validator)
+                    ->withInput(session()->flashInput($request->input()));
+            }
+        }
         //Verificação de escolha de especialidade
         if (isset($input['especialidade'])) {
-=======
-        //Verificação de escolha de especialidade
-        if(isset($input['especialidade'])){
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
             $count       = sizeof($input['especialidade']);
             $qtdEspSelec = array();
             $qtdEspSelec = $input['especialidade'];
@@ -83,17 +80,7 @@ class ContratacaoServicosController extends Controller
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
         if ($validator->fails()) {
-            return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
-                ->withErrors($validator)
-                ->withInput(session()->flashInput($request->input()));
-        } elseif ($dtPrazoIni >= $dtPrazoFim) {
-            $sucesso = "no";
-            $validator = 'A data inicial do prazo não pode ser maior ou igual que a data final ! ';
             return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
@@ -212,12 +199,10 @@ class ContratacaoServicosController extends Controller
             ->withErrors($validator);
     }
 
-<<<<<<< HEAD
     //Excluir arquivo errata contratação
 
     public function exclArqErratContr($id, Request $request)
     {
-
         $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
         $pasta = $contratacao_servicos[0]->arquivo_errat;
         Storage::delete($pasta);
@@ -236,8 +221,6 @@ class ContratacaoServicosController extends Controller
             ->withErrors($validator);
     }
 
-=======
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
 
     //Pagina Alterar Contratacao
 
@@ -310,13 +293,8 @@ class ContratacaoServicosController extends Controller
                         $especialidade_contratacao = EspecialidadeContratacao::create($input);
                     }
                 }
-<<<<<<< HEAD
             }
 
-=======
-            }       
-            
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
             $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
             $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id', $id)->get();
             $sucesso = "ok";
@@ -415,21 +393,12 @@ class ContratacaoServicosController extends Controller
             $validator = "Data prorroga menor ou igual a data final";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);
-<<<<<<< HEAD
         } elseif ($nome_arq == "" && $nome == "") {
             $sucesso = "no";
             $validator = "Você precisar anexar o arquivo";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);
         } elseif ($extensao === 'pdf') {
-=======
-        }elseif($nome_arq == "" && $nome == ""){
-            $sucesso = "no";
-            $validator = "Você precisar anexar o arquivo";
-            return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
-                ->withErrors($validator);       
-        }elseif ($extensao === 'pdf') {
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
             $nome = $_FILES['nome_arq_errat']['name'];
             $request->file('nome_arq_errat')->move('../public/storage/contratacao_servicos/', $nome);
             $input['arquivo_errat'] = 'contratacao_servicos/' . $nome;
@@ -444,31 +413,6 @@ class ContratacaoServicosController extends Controller
         }
     }
 
-<<<<<<< HEAD
-=======
-    //Excluir arquivo errata contrataÃ§Ã£o
-
-    public function exclArqErratContr($id, Request $request)
-    {
-        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
-        $pasta = $contratacao_servicos[0]->arquivo_errat;
-        Storage::delete($pasta);
-        $input['arquivo_errat'] = '';
-        $input['nome_arq_errat'] = '';
-        $contratacao_servicos  = ContratacaoServicos::find($id);
-        $contratacao_servicos->update($input);
-        $sucesso = "ok";
-        $contratacao_servicos  = ContratacaoServicos::where('id', $id)->get();
-        $unidade_id = $contratacao_servicos[0]->unidade_id;
-        $Unidades = Unidade::all();
-        $especialidades = Especialidades::all();
-        $validator = "Arquivo excluido com sucesso !";
-        $especialidade_contratacao = EspecialidadeContratacao::where('contratacao_servicos_id', $id)->get('especialidades_id');
-        return  redirect()->route('pagProrrContr', [$id])
-            ->withErrors($validator);
-    }
-
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
     //Pagina Especialidade
     public function paginaEspecialidade()
     {
