@@ -15,7 +15,7 @@ class ContratacaoServicos extends Model
         'prazoInicial',
         'prazoFinal',
         'prazoProrroga',
-        'prazo',
+        'tipoPrazo',
         'nome_arq',
         'nome_arq_errat',
         'arquivo_errat',

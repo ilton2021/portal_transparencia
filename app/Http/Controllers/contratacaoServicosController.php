@@ -41,11 +41,11 @@ class ContratacaoServicosController extends Controller
         $especialidades            = Especialidades::all();
         $especialidade_contratacao = EspecialidadeContratacao::all();
         $input      = $request->all();
-        $unidade_id = $input['unidade_id'];
-        $nome       = $_FILES['nome_arq']['name'];
-        $dtPrazoIni = $input['prazoInicial'];
-        $dtPrazoFim = $input['prazoFinal'];
-        $extensao = pathinfo($nome, PATHINFO_EXTENSION);
+        //Veriicando tipo de prazo.
+        if ((isset($input['tipoPrazo']))) {
+            $input['tipoPrazo'] = 0;
+            $input['prazoFinal'] = "";
+        }
         //Vericação de inputs
         $validator = Validator::make($request->all(), [
             'texto'        => 'required|max:255',
@@ -54,6 +54,11 @@ class ContratacaoServicosController extends Controller
             'prazoInicial' => 'required',
             'prazoFinal'   => 'required'
         ]);
+        $unidade_id = $input['unidade_id'];
+        $nome       = $_FILES['nome_arq']['name'];
+        $dtPrazoIni = $input['prazoInicial'];
+        $dtPrazoFim = $input['prazoFinal'];
+        $extensao = pathinfo($nome, PATHINFO_EXTENSION);
         //Verificação de escolha de especialidade
         if (isset($input['especialidade'])) {
             $count       = sizeof($input['especialidade']);
@@ -65,7 +70,6 @@ class ContratacaoServicosController extends Controller
                 ->withErrors($validator)
                 ->withInput(session()->flashInput($request->input()));
         }
-
         if ($validator->fails()) {
             return view('contratacao_servicos/contratacaoServicos_novo', compact('contratacao_servicos', 'Unidades', 'especialidades', 'sucesso'))
                 ->withErrors($validator)
@@ -386,12 +390,12 @@ class ContratacaoServicosController extends Controller
             $validator = "Data prorroga menor ou igual a data final";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
                 ->withErrors($validator);
-        }elseif($nome_arq == "" && $nome == ""){
+        } elseif ($nome_arq == "" && $nome == "") {
             $sucesso = "no";
             $validator = "Você precisar anexar o arquivo";
             return view('contratacao_servicos/contratacaoServicos_prorroga', compact('contratacao_servicos', 'sucesso'))
-                ->withErrors($validator);       
-        }elseif ($extensao === 'pdf') {
+                ->withErrors($validator);
+        } elseif ($extensao === 'pdf') {
             $nome = $_FILES['nome_arq_errat']['name'];
             $request->file('nome_arq_errat')->move('../public/storage/contratacao_servicos/', $nome);
             $input['arquivo_errat'] = 'contratacao_servicos/' . $nome;

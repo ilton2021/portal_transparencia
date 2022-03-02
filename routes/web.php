@@ -55,8 +55,6 @@ Auth::routes();
 
 Route::get('auth/login','UserController@telaLogin')->name('telaLogin');
 Route::get('auth/login/reset','UserController@telaEmail')->name('telaEmail');
-Route::get('auth/register', 'UserController@telaRegistro')->name('telaRegistro');
-Route::post('auth/register', 'UserController@store')->name('store');
 Route::get('auth/passwords/email', 'UserController@telaEmail')->name('telaEmail');
 Route::post('auth/login', 'UserController@Login')->name('Login');
 Route::get('auth/login/emailreset', 'UserController@emailReset')->name('emailReset');

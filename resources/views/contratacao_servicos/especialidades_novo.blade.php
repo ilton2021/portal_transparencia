@@ -9,7 +9,7 @@
     <title>Nova especialidade</title>
 </head>
 
-<body>
+<body> 
     <div class="row" style="margin-top: 25px;">
         <div class="col-md-12 col-sm-12 text-center">
             <div class="accordion" id="accordionExample">
