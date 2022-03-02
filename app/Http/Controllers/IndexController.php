@@ -470,6 +470,7 @@ class IndexController extends Controller
         $contratacao_servicos = ContratacaoServicos::all();
         $count = sizeof($contratacao_servicos);
         $unidades = Unidade::all();
+<<<<<<< HEAD
         $hoje = date('Y-m-d', strtotime('now'));
         $contCS = 0;
         $contCS2 = 0;
@@ -485,6 +486,8 @@ class IndexController extends Controller
         var_dump($contCS);
         var_dump($contCS2);
         exit();
+=======
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
         return view('rp', compact('unidades','contratacao_servicos'));
     }
 

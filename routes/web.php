@@ -55,6 +55,11 @@ Auth::routes();
 
 Route::get('auth/login','UserController@telaLogin')->name('telaLogin');
 Route::get('auth/login/reset','UserController@telaEmail')->name('telaEmail');
+<<<<<<< HEAD
+=======
+Route::get('auth/register', 'UserController@telaRegistro')->name('telaRegistro');
+Route::post('auth/register', 'UserController@store')->name('store');
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
 Route::get('auth/passwords/email', 'UserController@telaEmail')->name('telaEmail');
 Route::post('auth/login', 'UserController@Login')->name('Login');
 Route::get('auth/login/emailreset', 'UserController@emailReset')->name('emailReset');
@@ -102,11 +107,18 @@ Route::middleware(['auth'])->group( function() {
 	Route::post('contracaoServicos/confirAlterar/{id}','ContratacaoServicosController@alteraContratacao')->name('alteraContratacao');
 	Route::get('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
 	Route::post('contracaoServicos/exclArqContr/{id}','ContratacaoServicosController@exclArqContr')->name('exclArqContr');
+<<<<<<< HEAD
 	Route::get('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
 	Route::post('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
 	Route::get('contracaoServicos/pagProrrContr/{id}','ContratacaoServicosController@pagProrrContr')->name('pagProrrContr');
 	Route::post('contracaoServicos/prorrContr/{id}','ContratacaoServicosController@prorrContr')->name('prorrContr');
 
+=======
+	Route::get('contracaoServicos/pagProrrContr/{id}','ContratacaoServicosController@pagProrrContr')->name('pagProrrContr');
+	Route::post('contracaoServicos/prorrContr/{id}','ContratacaoServicosController@prorrContr')->name('prorrContr');
+	Route::get('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
+	Route::post('contracaoServicos/exclArqErratContr/{id}','ContratacaoServicosController@exclArqErratContr')->name('exclArqErratContr');
+>>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
 	Route::get('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
 	Route::post('especialidade/cadastro','ContratacaoServicosController@paginaEspecialidade')->name('paginaEspecialidade');
 	Route::get('especialidade/nova','ContratacaoServicosController@novaEspecialidade')->name('novaEspecialidade');
