@@ -466,28 +466,9 @@ class IndexController extends Controller
 
     public function rp()
     {   
-        $dtHoje = date('Y/m/d',strtotime('now'));
         $contratacao_servicos = ContratacaoServicos::all();
         $count = sizeof($contratacao_servicos);
-        $unidades = Unidade::all();
-<<<<<<< HEAD
-        $hoje = date('Y-m-d', strtotime('now'));
-        $contCS = 0;
-        $contCS2 = 0;
-        for ($i=0; $i < $count; $i++) { 
-            if ($hoje >= $contratacao_servicos[$i]->prazoInicial && $hoje <= $contratacao_servicos[$i]->prazoFinal) {
-                $contCS++;
-            }elseif($contratacao_servicos[$i]->prazoProrroga != ""){
-                if($contratacao_servicos[$i]->prazoProrroga >= $hoje){
-                    $contCS2++;
-                }
-            }
-        }
-        var_dump($contCS);
-        var_dump($contCS2);
-        exit();
-=======
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
+        $unidades = Unidade::all(); 
         return view('rp', compact('unidades','contratacao_servicos'));
     }
 

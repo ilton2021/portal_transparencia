@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 @extends('layouts.app2')
-=======
-@extends('layouts.app')
->>>>>>> c2b9c8598cba56d118c909d292282c02ebe42549
 @section('title','Termo de Referência')
 @section('content')
 
@@ -29,7 +25,11 @@
 					<img src="{{asset('img')}}/{{$und->path_img}}" alt="">
 					<div class="card-body">
 						<center><p style="margin-top: -10px;font-family:arial black">{{$und->sigla}}</p></center>
+						@if($CS->tipoPrazo == 0)
 						<center><p style="margin-top: -10px; margin-left -10px;" class="card-date">As Propostas devem ser enviadas a partir do dia: <?php echo date('d/m/Y', strtotime($CS->prazoInicial)); ?> até o dia: <?php echo date('d/m/Y', strtotime($CS->prazoFinal)); ?>.</p></center>
+						@else
+						<center><p style="margin-top: -10px; margin-left -10px;" class="card-date">As propostas devem ser enviadas a partir do dia: <?php echo date('d/m/Y', strtotime($CS->prazoInicial)); ?>, faça o seu credenciamento. </p></center>
+						@endif
 						<center><a href="{{ route('rp2', $CS->id) }}" class="btn btn-primary">Clique Aqui</a></center>
 					</div>
 				</div>
