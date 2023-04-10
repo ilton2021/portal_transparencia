@@ -7,15 +7,15 @@
 			<h3 style="font-size: 18px;">REPASSES RECEBIDOS</h3>
 		</div>
 	</div>
-		@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
+	@if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 		<p>
 			@foreach ($anoRepasses as $ano)
 			<a class="btn btn-success btn-sm" data-toggle="collapse" href="#{{$ano}}" role="button" aria-expanded="false" aria-controls="{{$ano}}">
@@ -63,7 +63,6 @@
 									<td><strong>{{"R$ ".number_format($repasses->where('ano', $ano)->pluck('desconto')->sum(), 2,',','.') }}</strong></td>
 									<td><strong>{{"R$ ".number_format(($repasses->where('ano', $ano)->pluck('contratado')->sum()-$repasses->where('ano', $ano)->pluck('recebido')->sum()), 2,',','.') }}</strong></td>
 								</tr>
-							
 							</tbody>
 						</table>
 					</div>
@@ -71,6 +70,5 @@
 			</div>
 		</div>			  
 		  @endforeach
-
 </div>
 @endsection

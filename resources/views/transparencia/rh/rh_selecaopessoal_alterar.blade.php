@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -25,7 +25,7 @@
 						SELEÇÃO DE PESSOAL <i class="fas fa-check-circle"></i>
 					</a>				
 				</div>
-				<form action="{{\Request::route('updateSelecao'), $unidade->id}}" method="post">
+				<form action="{{\Request::route('updateSP'), $unidade->id}}" method="post">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<table class="table table-sm">
 							<tr hidden>
@@ -42,7 +42,7 @@
 						    </tr>
 							<tr>
 							  <td> Quantidade: </td>
-							  <td> <input class="form-control" style="width: 100px;" type="number" required id="quantidade" name="quantidade" value="<?php echo $selecaoPessoal[0]->quantidade; ?>" /> </td>
+							  <td> <input class="form-control" style="width: 100px;" type="text" required id="quantidade" name="quantidade" value="<?php echo $selecaoPessoal[0]->quantidade; ?>" /> </td>
 							</tr>
 							<tr>
 							  <td> Ano: </td>
@@ -61,7 +61,7 @@
 							
 						  <table>	
 							<tr>
-							  <td align="left"> <br /><br /> <a href="{{route('selecaoPCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+							  <td align="left"> <br /><br /> <a href="{{route('cadastroSP', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 							  <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> </td>
 							</tr>
 							<input hidden type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>"

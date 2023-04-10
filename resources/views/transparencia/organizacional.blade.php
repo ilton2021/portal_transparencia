@@ -13,9 +13,13 @@
 			<h3 style="font-size: 12px;"></h3>
 			<ul class="list-inline">
 				@if(empty($reg[0]))
-				<li class="list-inline-item"><h5 style="font-size: 12px;">Regimento Interno:</h5></li>
+				<li class="list-inline-item">
+					<h5 style="font-size: 12px;">Regimento Interno:</h5>
+				</li>
 				@else
-				<li class="list-inline-item"><h5 style="font-size: 12px;">{{ $reg[0]->title }}</h5></li>	
+				<li class="list-inline-item">
+					<h5 style="font-size: 12px;">{{ $reg[0]->title }}</h5>
+				</li>
 				@endif
 				@if($qtd > 0)
 				<li class="list-inline-item"><a href="{{asset('storage')}}/{{$reg[0]->file_path}}" target="_blank" class="btn btn-success btn-sm"><i class="fas fa-file-download" style="margin-right: 5px;"></i>Download</a></li>
@@ -24,7 +28,7 @@
 				 @foreach ($permissao_users as $permissao)
 				  @if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
 				   @if ($permissao->unidade_id == $unidade->id)
-				    <li class="list-inline-item"><a href="{{route('regimentoCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
+				    <li class="list-inline-item"><a href="{{route('cadastroRE', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="bi bi-paperclip"></i> </a></li>
 				   @endif
 				  @endif
 				 @endforeach 
@@ -34,25 +38,45 @@
 	</div>
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12">
-			<h3 style="font-size: 15px;"><strong>ORGANOGRAMA</strong></h3>
-			<h5 style="font-size: 12px;">Estrutura Organizacional {{ stristr($unidade->name, 'Unidade') == true || stristr($unidade->name, 'Sociedade') == true ? 'da' : 'do'}} {{$unidade->name}}</h5>
+		   	
+			<div class="mt-3>
+				<h3 style=" font-size: 15px;"><strong>ORGANOGRAMA</strong></h3>
+			</div>
+			<div class="mt-3>
+				<h5 style=" font-size: 12px;">Estrutura Organizacional {{ stristr($unidade->name, 'Unidade') == true || stristr($unidade->name, 'Sociedade') == true ? 'da' : 'do'}} {{$unidade->name}}</h5>
 
-			<ul class="list-inline">
-				<li class="list-inline-item"><h5 style="font-size: 12px;">Organograma do HCP Gestão (Clique no botão para abrir)</h5></li>
-				<li class="list-inline-item"><a href="{{asset('storage/organograma.pdf')}}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-file-download" style="margin-right: 5px;"></i>Download</a></li>
+			</div>
+            <li class="list-inline-item">
+			    <h5 style="font-size: 12px;"> (Clique no botão para abrir)</h5>
+			</li>
+			@if(sizeof($arqOrgano) > 0)
+			<li class="list-inline-item"><a href="{{asset('storage')}}/{{$arqOrgano[0]->file_path}}" class="btn btn-success btn-sm" target="_blank"><i class="fas fa-file-download" style="margin-right: 5px;"></i>Download</a></li>
+			@endif
 				@if(Auth::check())
 				 @foreach ($permissao_users as $permissao)
 				  @if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
 				   @if ($permissao->unidade_id == $unidade->id)
-    				<li class="list-inline-item"><a href="{{route('organizacionalCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
+    				<li class="list-inline-item"><a href="{{route('organograma', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="bi bi-paperclip"></i> </a></li>
     			   @endif
     			  @endif
     			 @endforeach 
 				@endif
 			</ul>
-
+			
+			@if(Auth::check())
+    			@foreach ($permissao_users as $permissao)
+        			@if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
+            			@if ($permissao->unidade_id == $unidade->id)
+            			<div class="mt-4">
+				            <h3 style="font-size: 15px;"><strong>ESTRUTURA ORGANIZACIONAL</strong></h3>
+			            </div>
+            			@endif
+        			@endif
+    			@endforeach
+			@endif
 			@if($unidade->id > 1)
-			<table class="table table-sm ">
+			<div class="row mt-4" style="overflow: auto;">
+			<table class="table table-sm" >
 				<thead class="bg-success">
 					<tr>
 						<th scope="col">Cargo</th>
@@ -72,6 +96,18 @@
 					@endforeach
 				</tbody>
 			</table>
+			</div>
+			@if(Auth::check())
+    			@foreach ($permissao_users as $permissao)
+        			@if(($permissao->permissao_id == 2) && ($permissao->user_id == Auth::user()->id))
+            			@if ($permissao->unidade_id == $unidade->id)
+            			<div class="d-flex justify-content-end">
+            				<li class="list-inline-item"><a href="{{route('cadastroOR', $unidade->id)}}" class="btn btn-info btn-sm" style="color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></li>
+            			</div>
+            			@endif
+        			@endif
+    			@endforeach
+			@endif
 			@endif
 		</div>
 	</div>

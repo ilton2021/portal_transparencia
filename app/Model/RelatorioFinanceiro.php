@@ -12,7 +12,9 @@ class RelatorioFinanceiro extends Model
 		'title',
 		'ano',
 		'file_path',
+		'nome_arq',
 		'unidade_id',
+		'status_financeiro',
 		'created_at',
 		'updated_at'
 	];

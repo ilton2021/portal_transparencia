@@ -1,45 +1,9 @@
 @extends('navbar.default-navbar')
 @section('content')
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
-  <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
-  <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-
-<script>
-document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-		var i = document.getElementById("telefone").value.length; //aqui pega o tamanho do input
-		if (i === 0)
-		  document.getElementById("telefone").value = document.getElementById("telefone").value + "(";
-		if (i === 3)
-		  document.getElementById("telefone").value = document.getElementById("telefone").value + ")";
-		if (i === 8) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-		  document.getElementById("telefone").value = document.getElementById("telefone").value + "-";
-	  }
-      document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-	  if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-		var i = document.getElementById("cnpj").value.length; //aqui pega o tamanho do input
-		if (i === 2)
-		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
-		if (i === 6)
-		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + ".";
-		if (i === 11) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "/";
-	  
-		if (i === 15) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-		  document.getElementById("cnpj").value = document.getElementById("cnpj").value + "-";
-	 
-	  } 
-	});
-</script>
-
-</head>
-
-
 <meta name="csrf-token" content="{{ csrf_token() }}">
-	@if ($errors->any())
-      <div class="alert alert-success">
+    @if ($errors->any())
+      <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -47,99 +11,113 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
         </ul>
       </div>
 	@endif 
+
 <div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
 <div class="container-fluid">
-    <div class="row" style="margin-top: 25px;">
-        <div class="col-md-12 text-center">
-            <h3 style="font-size: 18px;">INSTITUCIONAL</h3>
-				@if(Auth::check())
-				 @foreach ($permissao_users as $permissao)
-					@if(($permissao->permissao_id == 1) && ($permissao->user_id == Auth::user()->id))
-					  @if ($permissao->unidade_id == $unidade->id)
-			             <p style="margin-right: -930px"><a class="btn btn-dark btn-sm" style="margin-top: 10px;" href="{{route('institucionalNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
-			          @endif
-			        @endif
-			     @endforeach   
-				@endif
+	<div class="row" style="margin-top: 25px;">
+		<div class="col-md-12 text-center">
+			<h3 style="font-size: 18px;">INSTITUCIONAL</h3>
 		</div>
-    </div>
+	</div>
+	<div class="row p-4">
+		<div class="col-md-12 text-center">
+			@if(Auth::check())
+			@foreach ($permissao_users as $permissao)
+			@if(($permissao->permissao_id == 1) && ($permissao->user_id == Auth::user()->id))
+			@if ($permissao->unidade_id == $unidade->id)
+			<a class="btn btn-dark btn-sm m-2" href="{{route('institucionalNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a>
+			<a class="btn btn-info btn-sm m-2" href="{{route('institucionalCadastro', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
+			<a class="btn btn-success btn-sm m-2" href="{{route('transparenciaInstitucionalPdf', $unidade->id)}}" target="__blank">Download <i class="fas fa-file-pdf"></i></a>
+			@endif
+			@endif
+			@endforeach
+			@endif
+		</div>
+	</div>
 	<form action="{{\Request::route('update',$unidade->id)}}" method="post">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
     <div class="row">
-        <div class="col-md-7" style="font-size: 13px;">  
-            <table class="table-sm" style="line-height: 1.5;">
-                <tbody>
-	                 <tr>
-                        <td style="border-top: none;"><strong>Perfil: </strong></td>
-                        <td style="border-top: none;" id="txtPerfil">{{$unidade->owner}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>CNPJ: </strong></td>
-                        <td style="border-top: none;" id="txtCnpj">{{ preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})/", "\$1.\$2.\$3/\$4\$5-", $unidade->cnpj)}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>Nome Unidade: </strong></td>
-                        <td style="border-top: none;" id="txtNome">{{$unidade->name}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>Logradouro: </strong></td>
-                        <td style="border-top: none;" id="txtLogradouro">{{$unidade->address}} , {{$unidade->numero == null ? ' s/n' : $unidade->numero}}</td>
-				    </tr>
-                    @if(isset($unidade->further_info) || $unidade->further_info !== null)
-                    <tr>
-                        <td style="border-top: none;"><strong>Complemento: </strong></td>
-                        <td style="border-top: none;" id="txtComplemento">{{$unidade->further_info}}</td>
-				    </tr>
-                    @endif
-                    <tr>
-                        <td style="border-top: none;"><strong>Bairro: </strong></td>
-                        <td style="border-top: none;" id="txtBairro">{{$unidade->district}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>Cidade: </strong></td>
-                        <td style="border-top: none;" id="txtCity">{{$unidade->city}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>UF: </strong></td>
-                        <td style="border-top: none;" id="txtUf">{{$unidade->uf}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>CEP: </strong></td>
-                        <td style="border-top: none;" id="txtCep">{{preg_replace("/(\d{2})(\d{3})/", "\$1.\$2-", $unidade->cep)}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>Telefone: </strong></td>
-                        <td style="border-top: none;" id="txtTelefone">{{preg_replace("/(\d{4})(\d{4})/", "\$1-\$2", $unidade->telefone)}}</td>
-				    </tr>
-                    <tr>
-                        <td style="border-top: none;"><strong>Horário: </strong></td>
-                        <td style="border-top: none;" id="txtHorario">{{$unidade->time}}</td>
-				    </tr>
-                    @if(isset($unidade->cnes) || $unidade->cnes !== null)
-                    <tr>
-                        <td style="border-top: none;"><strong>CNES: </strong></td>
-                        <td style="border-top: none;" id="txtCnes">{{$unidade->cnes}}</td>
-				    </tr>
-                    @endif
+  			<div class="col-md-6" style="font-size: 13px;">
+				<table class="table-sm" style="line-height: 1.5;">
+					<tbody>
+						<tr>
+							<td style="border-top: none;"><strong>Perfil: </strong></td>
+							<td style="border-top: none;" id="txtPerfil">{{$unidade->owner}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>CNPJ: </strong></td>
+							<td style="border-top: none;" id="txtCnpj">{{ preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})/", "\$1.\$2.\$3/\$4\$5-", $unidade->cnpj)}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>Nome Unidade: </strong></td>
+							<td style="border-top: none;" id="txtNome">{{$unidade->name}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>Logradouro: </strong></td>
+							<td style="border-top: none;" id="txtLogradouro">{{$unidade->address}} , {{$unidade->numero == null ? ' s/n' : $unidade->numero}}</td>
+						</tr>
+						@if(isset($unidade->further_info) || $unidade->further_info !== null)
+						<tr>
+							<td style="border-top: none;"><strong>Complemento: </strong></td>
+							<td style="border-top: none;" id="txtComplemento">{{$unidade->further_info}}</td>
+						</tr>
+						@endif
+						<tr>
+							<td style="border-top: none;"><strong>Bairro: </strong></td>
+							<td style="border-top: none;" id="txtBairro">{{$unidade->district}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>Cidade: </strong></td>
+							<td style="border-top: none;" id="txtCity">{{$unidade->city}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>UF: </strong></td>
+							<td style="border-top: none;" id="txtUf">{{$unidade->uf}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>CEP: </strong></td>
+							<td style="border-top: none;" id="txtCep">{{preg_replace("/(\d{2})(\d{3})/", "\$1.\$2-", $unidade->cep)}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>Telefone: </strong></td>
+							<td style="border-top: none;" id="txtTelefone">{{preg_replace("/(\d{4})(\d{4})/", "\$1-\$2", $unidade->telefone)}}</td>
+						</tr>
+						<tr>
+							<td style="border-top: none;"><strong>Horário: </strong></td>
+							<td style="border-top: none;" id="txtHorario">{{$unidade->time}}</td>
+						</tr>
+						@if(isset($unidade->cnes) || $unidade->cnes !== null)
+						<tr>
+							<td style="border-top: none;"><strong>CNES: </strong></td>
+							<td style="border-top: none;" id="txtCnes">{{$unidade->cnes}}</td>
+						</tr>
+						@endif
 
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-4">
-            <div style="height: 30px;">
-                <div class="h-25 d-inline-block" style="width: 120px;"></div>
-            </div>
-            @if($unidade->id == 8)
-			 <div class="mapouter"><div class="gmap_canvas"><iframe width="400" height="250" frameborder="0" style="border:0;" allowfullscreen="" id="gmap_canvas" src="https://maps.google.com/maps?q=hospital%20provisorio%20do%20recife%201&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe><a href="https://www.embedgooglemap.net/blog/divi-discount-code-elegant-themes-coupon/"></a></div><style></style></div>	
-			@else
-             <iframe src="{{$unidade->google_maps}}" width="400" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-			@endif
-        </div>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<div>
+					<div class="h-25 d-inline-block" style="width: 120px;"></div>
+				</div>
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe class="embed-responsive-item" src="{{$unidade->google_maps}}" allowfullscreen></iframe>
+				</div>
+			</div>
     </div>
     <div class="row">
         <div class="col-md-12"  style="font-size: 13px;">
             <table style="line-height: 1.5;">
                 <tbody>
+					@if(isset($unidade->resumo) || $unidade->resumo !== null)
+                    <tr>
+                        <td class="text-justify" style="border-top: none;" colspan="2" id="txtResumo"><strong>Resumo: </strong>{!! $unidade->resumo !!}<br><br></td>
+				    </tr>
+					<tr>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+					</tr>
+                    @endif
+					
                     @if(isset($unidade->capacity) || $unidade->capacity !== null)
                     <tr>
                         <td class="text-justify" style="border-top: none;" colspan="2" id="txtCapacity"><strong>Capacidade: </strong>{!! $unidade->capacity !!}</td>
@@ -236,17 +214,6 @@ document.addEventListener('keydown', function(event) { //pega o evento de precio
 		<tr>
 			<td>
 				<a href="{{route('transparenciaInstitucionalPdf', $unidade->id)}}" target="__blank" class="btn btn-success btn-sm" style="margin-top: 10px;">Download <i class="fas fa-file-pdf"></i></a>
-			</td>
-			<td> 
-				@if(Auth::check())
-				 @foreach ($permissao_users as $permissao)
-					@if(($permissao->permissao_id == 1) && ($permissao->user_id == Auth::user()->id))
-					  @if ($permissao->unidade_id == $unidade->id)
-			             <a class="btn btn-info btn-sm" style="margin-top: 10px;" href="{{route('institucionalCadastro', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
-			          @endif
-			        @endif
-			     @endforeach   
-				@endif
 			</td>
 		</tr>
 	</table>

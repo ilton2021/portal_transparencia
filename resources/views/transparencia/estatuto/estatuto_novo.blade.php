@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	@if ($errors->any())
-      <div class="alert alert-success">
+      <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -25,19 +25,30 @@
                         Estatuto Social e Atas do Estatuto Social <i class="fas fa-check-circle"></i>
                     </a>
                 </div>
-                    <form method="post" action="{{ \Request::route('store'), $unidade->id }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ \Request::route('storeES'), $unidade->id }}" enctype="multipart/form-data">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table border="0" class="table-sm" style="line-height: 1.5;">
-					  <tr>
-					    <td> Título: </td>
-						<td> <input class="form-control" style="width: 400px;" type="text" id="name" name="name" value="" required /> </td> 
-					  </tr>
-					  <tr>
-						<td> Arquivo: </td>
-						<td> <input class="form-control" style="width: 400px;" type="file" id="path_file" name="path_file" value="" required /> </td> 
-					  </tr>
-					  <td colspan="2"> <input type="hidden" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /> </td>
-					</table>
+					<div class="form-control mt-3" style="color:black">
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Título:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" style="max-width: 400px;" type="text" id="name" name="name" value="" required />
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Arquivo:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" style="max-width: 400px;" type="file" id="path_file" name="path_file" value="" required />
+								</div>
+							</div>
+						</div>
+					</div>
 					
 					<table>
 						 <tr>
@@ -48,15 +59,14 @@
 						 </tr>
 					</table>
 					
-					<br/>
-					<table>
-					 <tr>
-					   <td align="left">
-						 <a href="{{route('estatutoCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
-					   </td>
-					 </tr>
-					</table>
+					<div class="d-flex justify-content-between">
+						<div>
+							<a href="{{route('cadastroES', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						</div>
+						<div>
+							<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
+						</div>
+					</div>
                   </div>
             </div>
         </div>

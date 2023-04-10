@@ -1,32 +1,6 @@
 @extends('navbar.default-navbar')
 @section('content')
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>	
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-  <link href="{{ asset('js/utils.js') }}" rel="stylesheet">
-  <link href="{{ asset('js/bootstrap.js') }}" rel="stylesheet">
-
-  <script>
-
-		$("#cpf").keyup(function() {
-				$("#cpf").val(this.value.match(/[0-11]*/));
-			});
-
-			document.addEventListener('keydown', function(event) { //pega o evento de precionar uma tecla
-	 	if(event.keyCode != 46 && event.keyCode != 8){//verifica se a tecla precionada nao e um backspace e delete
-		var i = document.getElementById("cpf").value.length; //aqui pega o tamanho do input
-		if (i === 3)
-		  document.getElementById("cpf").value = document.getElementById("cpf").value + ".";
-		if (i === 7)
-		  document.getElementById("cpf").value = document.getElementById("cpf").value + ".";
-		if (i === 11) //aqui faz a divisoes colocando um ponto no terceiro e setimo indice
-		  document.getElementById("cpf").value = document.getElementById("cpf").value + "-";
-	 	 }
-	});
-
-	</script>
-</head>
-<div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
+<div class="container text-center" style="color: #28a745">Você está em: <strong>{{$undOss[0]->name}}</strong></div>
 <div class="container-fluid">
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
@@ -36,27 +10,30 @@
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 col-sm-12">
 
-
 			<div class="accordion" id="accordionExample">
 				<div class="card">
-					<div class="card-header d-flex justify-content-between" id="headingOne">
-						<h5 class="mb-0">
-							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-								ASSOCIADOS <i class="far fa-list-alt"></i>
-							</a>
-						</h5>
-						<h5 class="mb-0">
-							<a href="{{route('exportAssociados')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
-							@if(Auth::check())
-							 @foreach ($permissao_users as $permissao)
-							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
-							   @if ($permissao->unidade_id == $unidade->id)
-								 <a class="btn btn-info btn-sm" href="{{route('listarAssociado', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
-							   @endif	
-							  @endif 
-							 @endforeach 
-							@endif
-						</h5>
+				    <div class="card-header d-flex flex-wrap justify-content-center justify-content-md-between" id="headingOne">
+				        <div>
+    						<h5 class="mb-0">
+    							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+    								ASSOCIADOS <i class="far fa-list-alt"></i>
+    							</a>
+    						</h5>
+						</div>
+						<div>
+    						<h5 class="mb-0">
+    							<a href="{{route('exportAssociados')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
+    							@if(Auth::check())
+    							 @foreach ($permissao_users as $permissao)
+    							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
+    							   @if ($permissao->unidade_id == $unidade->id)
+    								 <a class="btn btn-info btn-sm" href="{{route('listarAS', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
+    							   @endif	
+    							  @endif 
+    							 @endforeach 
+    							@endif
+    						</h5>
+						</div>
 					</div>
 					
 					<div id="collapseOne" class="collapse {{$escolha == 'Associados'? 'show' : ''}}" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -70,7 +47,7 @@
 										<thead >
 											<tr class="text-center">
 												<th class="border-bottom" scope="col">Nome</th>
-												<th class="border-bottom" scope="col">CPF</th>
+										
 											</tr>
 										</thead>
 										<tbody class=""> 
@@ -78,7 +55,6 @@
 												@csrf
 												<tr>
 													<td style="font-size: 12px;" id="valorName">{{$associado->name}} </td>
-													<td class="text-center" style="font-size: 12px;" id="valorCpf">{{$associado->cpf}} </td>
 												</tr>
 											</form>
 											@endforeach
@@ -92,24 +68,28 @@
 					</div>
 				</div>
 				<div class="card">
-					<div class="card-header d-flex justify-content-between" id="headingOne">
-						<h5 class="mb-0">
-							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-								CONSELHO DE ADMINISTRAÇÃO <i class="far fa-list-alt"></i>
-							</a>
-						</h5>
-						<h5 class="mb-0">
-							<a href="{{route('exportConselhoAdm')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
-							@if(Auth::check())	
-							 @foreach ($permissao_users as $permissao)
-							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
-							   @if ($permissao->unidade_id == $unidade->id)
-								<a class="btn btn-info btn-sm" href="{{route('listarConselhoAdm', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
-							   @endif
-							  @endif 
-							 @endforeach 
-							@endif
-						</h5>
+				    <div class="card-header d-flex flex-wrap justify-content-center justify-content-md-between" id="headingOne">
+				        <div>
+    						<h5 class="mb-0">
+    							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+    								CONSELHO DE ADMINISTRAÇÃO <i class="far fa-list-alt"></i>
+    							</a>
+    						</h5>
+						</div>
+						<div>
+    						<h5 class="mb-0">
+    							<a href="{{route('exportConselhoAdm')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
+    							@if(Auth::check())	
+    							 @foreach ($permissao_users as $permissao)
+    							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
+    							   @if ($permissao->unidade_id == $unidade->id)
+    								<a class="btn btn-info btn-sm" href="{{route('listarCA', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
+    							   @endif
+    							  @endif 
+    							 @endforeach 
+    							@endif
+    						</h5>
+						</div>
 					</div>
 					<div id="collapseTwo" class="collapse {{$escolha == 'Conselho administrativo'? 'show' : ''}}" aria-labelledby="headingOne" data-parent="#accordionExample">
 						<div class="card-body">
@@ -140,24 +120,28 @@
 					</div>
 				</div>
 				<div class="card">
-					<div class="card-header d-flex justify-content-between" id="headingOne">
-						<h5 class="mb-0">
-							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-								CONSELHO FISCAL <i class="far fa-list-alt"></i>
-							</a>
-						</h5>
-						<h5 class="mb-0">
-							<a href="{{route('exportConselhoFisc')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
-							@if(Auth::check())	
-							 @foreach ($permissao_users as $permissao)
-							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
-							   @if ($permissao->unidade_id == $unidade->id)
-								<a class="btn btn-info btn-sm" href="{{route('listarConselhoFisc', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
-							   @endif
-							  @endif 
-							 @endforeach 
-							@endif
-						</h5>						
+				    <div class="card-header d-flex flex-wrap justify-content-center justify-content-md-between" id="headingOne">
+				        <div>
+    						<h5 class="mb-0">
+    							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+    								CONSELHO FISCAL <i class="far fa-list-alt"></i>
+    							</a>
+    						</h5>
+						</div>
+						<div>
+    						<h5 class="mb-0">
+    							<a href="{{route('exportConselhoFisc')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
+    							@if(Auth::check())	
+    							 @foreach ($permissao_users as $permissao)
+    							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
+    							   @if ($permissao->unidade_id == $unidade->id)
+    								<a class="btn btn-info btn-sm" href="{{route('listarCF', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
+    							   @endif
+    							  @endif 
+    							 @endforeach 
+    							@endif
+    						</h5>	
+						</div>
 					</div>
 					<div id="collapseThree" class="collapse {{$escolha == 'Conselho fiscal'? 'show' : ''}}" aria-labelledby="headingOne" data-parent="#accordionExample">
 						<div class="card-body">
@@ -199,24 +183,28 @@
 					</div>
 				</div>
 				<div class="card">
-					<div class="card-header d-flex justify-content-between" id="headingOne">
-						<h5 class="mb-0">
-							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-								SUPERINTENDENTES<i class="far fa-list-alt"></i>
-							</a>
-						</h5>
-						<h5 class="mb-0">
-							<a href="{{route('exportSuperintendente')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
-							@if(Auth::check())
-							 @foreach ($permissao_users as $permissao)
-							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
-							   @if ($permissao->unidade_id == 1)
-								<a class="btn btn-info btn-sm" href="{{route('listarSuper', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
-							   @endif
-							  @endif
-							 @endforeach		
-							@endif
-						</h5>
+				    <div class="card-header d-flex flex-wrap justify-content-center justify-content-md-between" id="headingOne">
+				        <div>
+    						<h5 class="mb-0">
+    							<a class="btn btn-link text-dark no-underline" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+    								SUPERINTENDENTES <i class="far fa-list-alt"></i>
+    							</a>
+    						</h5>
+						</div>
+						<div>
+    						<h5 class="mb-0">
+    							<a href="{{route('exportSuperintendente')}}" class="btn btn-success btn-sm"><i class="fas fa-file-csv" style="margin-right: 5px;"></i>Download</a>
+    							@if(Auth::check())
+    							 @foreach ($permissao_users as $permissao)
+    							  @if(($permissao->permissao_id == 13) && ($permissao->user_id == Auth::user()->id))
+    							   
+    								<a class="btn btn-info btn-sm" href="{{route('listarSP', $unidade->id)}}" >Alterar <i class="fas fa-edit"></i></a>
+    							  
+    							  @endif
+    							 @endforeach		
+    							@endif
+    						</h5>
+						</div>
 					</div>
 					<div id="collapseFour" class="collapse {{$escolha == 'Superintendentes'? 'show' : ''}}" aria-labelledby="headingOne" data-parent="#accordionExample">
 						<div class="card-body">

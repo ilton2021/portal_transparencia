@@ -135,9 +135,9 @@
                         <a class="badge badge-pill badge-outline-warning dropdown-toggle" type="button" href="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-cloud-download"></i>
                         <div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-                            @foreach($processos as $prc) 
-                                @if($prc->processo_id == $processos[0]->id)
-                                    <a id="div" class="dropdown-item" href="{{asset('../public/storage/')}}/{{$processoA->file_path}}" target="_blank">Arquivo</a>
+                            @foreach($processo_arq as $prc_arq) 
+                                @if($prc_arq->processo_id == $prc->id)
+                                    <a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$prc_arq->file_path}}" target="_blank">{{ $prc_arq->title }}</a>
                                 @endif
                             @endforeach
                         </div>	

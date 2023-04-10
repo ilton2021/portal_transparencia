@@ -8,7 +8,7 @@
 			<p style="margin-right: -520px;"><a href="{{route('transparenciaCovenio', array($unidade->id,1))}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>&nbsp;&nbsp;&nbsp;<a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('covenioNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
 		</div>
 	</div>
-	@if ($errors->any())
+    @if ($errors->any())
       <div class="alert alert-success">
         <ul>
             @foreach ($errors->all() as $error)

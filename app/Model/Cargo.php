@@ -10,6 +10,7 @@ class Cargo extends Model
 	
 	protected $fillable = [
 		'cargo_name',
+		'status_cargo',
 		'created_at',
 		'updated_at'
 	];

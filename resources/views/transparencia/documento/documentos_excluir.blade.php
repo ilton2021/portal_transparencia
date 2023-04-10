@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	@if ($errors->any())
-      <div class="alert alert-success">
+      <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -25,47 +25,69 @@
                         Documentação de Regularidade <i class="fas fa-check-circle"></i>
                     </a>
                 </div>
-                    <form method="post" action="{{ \Request::route('store'), $unidade->id }}">
+                    <form method="post" action="{{ \Request::route('storeDR'), $unidade->id }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">
-					  <tr>
-						<td> ID: </td>
-						<td> <input class="form-control" readonly="true" style="width: 100px" type="text" id="id" name="id" value="<?php echo $documents->id; ?>" /> </td>
-					  </tr>
-					  <tr>
-					    <td> Título: </td>
-						<td> <input class="form-control" readonly="true" style="width: 400px;" type="text" id="name" name="name" value="<?php echo $documents->name; ?>" /> </td> 
-					  </tr>
-					  <tr>
-						<td> Tipo de Documento: </td>
-						<td>	
-							@if ($documents->type_id === 1)
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CNPJ (OSS e Unidades Sob Gestão)" readonly="true" /> 
-							@elseif ($documents->type_id === 2) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Fazenda Pública" readonly="true" /> 
-							@elseif ($documents->type_id === 3) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Seguridade Social" readonly="true" /> 
-							@elseif ($documents->type_id === 4) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="FGTS" readonly="true" /> 
-							@elseif ($documents->type_id === 5) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Justiça do Trabalho" readonly="true" /> 
-							@elseif ($documents->type_id === 6) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CREMEPE" readonly="true" /> 
-							@elseif ($documents->type_id === 7) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Qualificação Técnica - OSS" readonly="true" /> 
-							@elseif ($documents->type_id === 8) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Experiência Anterior" readonly="true" /> 
-							@elseif ($documents->type_id === 9) 
-							 <input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CEBAS" readonly="true" /> 
-							@endif
-						</td> 
-					  </tr>
-					  <tr>
-						<td> Arquivo: </td>
-						<td> <input class="form-control" readonly="true" style="width: 400px;" type="text" id="path_file" name="path_file" value="<?php echo $documents->path_file; ?>" /> </td>
-					  </tr>
-					  <td colspan="2"> <input type="hidden" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /> </td>
-					</table>
+					<div class="form-control mt-1" style="color:black">
+						<div class="form-row mt-1">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>ID:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" readonly="true" style="width: 100px" type="text" id="id" name="id" value="<?php echo $documents->id; ?>" />
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Título:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" readonly="true" style="width: 400px;" type="text" id="name" name="name" value="<?php echo $documents->name; ?>" />
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Tipo de Documento:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									@if ($documents->type_id === 1)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CNPJ (OSS e Unidades Sob Gestão)" readonly="true" />
+									@elseif ($documents->type_id === 2)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Fazenda Pública" readonly="true" />
+									@elseif ($documents->type_id === 3)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Seguridade Social" readonly="true" />
+									@elseif ($documents->type_id === 4)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="FGTS" readonly="true" />
+									@elseif ($documents->type_id === 5)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Justiça do Trabalho" readonly="true" />
+									@elseif ($documents->type_id === 6)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CREMEPE" readonly="true" />
+									@elseif ($documents->type_id === 7)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Qualificação Técnica - OSS" readonly="true" />
+									@elseif ($documents->type_id === 8)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="Experiência Anterior" readonly="true" />
+									@elseif ($documents->type_id === 9)
+									<input class="form-control" style="width: 400px;" id="type_id" name="type_id" value="CEBAS" readonly="true" />
+									@endif
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Arquivo:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" readonly="true" style="width: 400px;" type="text" id="path_file" name="path_file" value="<?php echo $documents->path_file; ?>" />
+									<input type="hidden" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" />
+								</div>
+							</div>
+						</div>
+					</div>
 					
 					<table>
 						 <tr>
@@ -76,15 +98,23 @@
 						 </tr>
 					</table>
 					
-					<table>
-					 <tr>
-					   <td align="left">
-						 <h6 align="left"> Deseja realmente Excluir este Documento de Regularidade?? </h6>
-						 <a href="{{route('documentosCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
-					   </td>
-					 </tr>
-					</table>
+					<div class="form-control">
+						<div class="d-flex justify-content-between">
+							<div class="ml-2 mt-2" style="color:black">
+								
+								<h6> Deseja realmente Excluir este Documento de Regularidade?? </h6>
+								
+							</div>
+						</div>
+						<div class="d-flex justify-content-between">
+							<div class="p-1">
+								<a href="{{route('cadastroDR', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+							</div>
+							<div class="p-1">
+								<input type="submit" class="btn btn-danger btn-sm" style="margin-top: 10px;" value="Excluir" id="Salvar" name="Salvar" />
+							</div>
+						</div>
+					</div>
                   </div>
             </div>
         </div>

@@ -1,4 +1,1 @@
-<?php
-namespace App\Model;
-use Illuminate\Database\Eloquent\Model;
-class Ouvidoria extends Model{	protected $table = 'ouvidoria';		protected $fillable = [		'responsavel',		'email',		'telefone',		'unidade_id',		'created_at',		'updated_at'	];}
+<?phpnamespace App\Model;use Illuminate\Database\Eloquent\Model;class Ouvidoria extends Model{	protected $table = 'ouvidoria';		protected $fillable = [		'responsavel',		'email',		'telefone',		'atendpresen',		'hrfunciona',		'unidade_id',		'status_ouvidoria',		'created_at',		'updated_at'	];}

@@ -13,6 +13,7 @@ class Manual extends Model
 		'path_file',
 		'path_img',
 		'unidade_id',
+		'status_manuais',
 		'created_at',
 		'updated_at'
 	];

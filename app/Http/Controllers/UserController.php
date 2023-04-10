@@ -6,14 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Model\User;
-use App\Model\Auth;
-use App\Model\Unidade;
+use Illuminate\Support\Facades\Auth;
 use App\Model\AlterarSenha;
+use App\Model\Unidade;
+use App\Model\LoggerUsers;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
-use Validator;
-use Str;
 
 class UserController extends Controller
 {
@@ -54,6 +55,70 @@ class UserController extends Controller
 	{
 		$token = '';
 		return view('auth.passwords.reset', compact('token'));
+	}
+	
+	public function cadastroUsuarios(Request $request)
+	{
+		if(Auth::user()->funcao == 0) {
+			$usuarios = User::all();
+			$unidades = $this->unidade->all();
+			return view('transparencia/usuarios/usuarios_cadastro', compact('usuarios','unidades'));
+		} else {
+			$validator = 'Você não tem Permissão!';
+			$unidades = $this->unidade->all();
+			$unidadesMenu = $unidades;
+			$unidade = 2;
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
+	}
+	
+	public function cadastroNovoUsuario(Request $request)
+	{
+		if(Auth::user()->funcao == 0) {
+			return view('transparencia/usuarios/usuarios_novo');
+		} else {
+			$validator = 'Você não tem Permissão!';
+			$unidades = $this->unidade->all();
+			$unidadesMenu = $unidades;
+			$unidade = 2;
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
+	}
+
+	public function cadastroAlterarUsuario($id, Request $request)
+	{
+		if(Auth::user()->funcao == 0) {
+			$usuarios = User::where('id',$id)->get();
+			return view('transparencia/usuarios/usuarios_alterar', compact('usuarios'));
+		} else {
+			$validator = 'Você não tem Permissão!';
+			$unidades = $this->unidade->all();
+			$unidadesMenu = $unidades;
+			$unidade = 2;
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
+	}
+
+	public function cadastroExcluirUsuario($id, Request $request)
+	{
+		if(Auth::user()->funcao == 0) {
+			$usuarios = User::where('id',$id)->get();
+			return view('transparencia/usuarios/usuarios_excluir', compact('usuarios'));
+		} else {
+			$validator = 'Você não tem Permissão!';
+			$unidades = $this->unidade->all();
+			$unidadesMenu = $unidades;
+			$unidade = 2;
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
 	}
 	
 	public function Login(Request $request)
@@ -139,24 +204,39 @@ class UserController extends Controller
 		}
 	}
 	
-    public function store(Request $request)
+    public function storeUsuario(Request $request)
     {
-		$input = $request->all();
+		$input = $request->all(); 
 		$validator = Validator::make($request->all(), [
 			'name'     		   => 'required',
             'email'    		   => 'required|email|unique:users,email',
             'password' 		   => 'required|same:password_confirmation',
-			'password_confirmation' => 'required'
+			'password_confirmation' => 'required',
+			'funcao' 		   => 'required'
     	]);			 
 		if ($validator->fails()) {
-			return view('auth.register')
+			return view('transparencia/usuarios/usuarios_novo') 
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
+		    $senha 	   		   = $input['password'];
 			$input['password'] = Hash::make($input['password']);
 			$user = User::create($input);
-			$user->assignRole($request->input('roles'));				
-			return view('auth.login')
+			$validator = "Usuário cadastrado com sucesso!!";	
+			$usuarios  = User::all();
+			$unidades  = Unidade::all();	
+			$email 	   = $input['email']; 
+			Mail::send('email.emailUsuarioLS', ['login' => $email, 'senha' => $senha], function($m) use ($email) {
+				$m->from('portal@hcpgestao.org.br', 'PORTAL da Transparência');
+				$m->subject('Cadastro Portal da Transparência');
+				$m->to($email);
+			});
+			Mail::send('email.emailUsuario', [], function($m) use ($email) {
+				$m->from('portal@hcpgestao.org.br', 'PORTAL da Transparência');
+				$m->subject('Cadastro de Novo Usuário - PORTAL da Transparência');
+				$m->to($email);
+			});
+			return view('transparencia/usuarios/usuarios_cadastro', compact('unidades','usuarios'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		}
@@ -176,13 +256,12 @@ class UserController extends Controller
         return view('users.edit',compact('user','roles','userRole'));
     }
 
-    public function update(Request $request, $id)
+    public function updateUsuario(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'name' 	 => 'required',
+            'email'  => 'required|email',
+			'funcao' => 'required'
         ]);
         $input = $request->all();
         if(!empty($input['password'])){ 
@@ -192,19 +271,71 @@ class UserController extends Controller
         }
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-        $user->assignRole($request->input('roles'));
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        $validator = "Usuário alterado com sucesso!!";	
+		$usuarios = User::all();
+		$unidades = Unidade::all();		
+        return view('transparencia/usuarios/usuarios_cadastro', compact('unidades','usuarios'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
     }
 
-	public function destroy($id)
-    {
-        User::find($id)->delete();
-        return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
-    }
+    public function destroyUsuario($id, Request $request)
+	{
+		$input = $request->all();
+		$user = User::find($id);
+		if ($user->status_users == 1) {
+			$input['status_users'] = 0;
+			$user->update($input);
+			$input['tela'] = "usuarios";
+			$input['acao'] = "inativacaoUsuario";
+			$input['registro_id'] = $id;
+			$input['user_id'] = Auth::user()->id;;
+			$input['unidade_id'] = 1;
+			$log = LoggerUsers::create($input);
+			$validator = "Usuário Inativado com sucesso!!";
+		} else {
+			$input['status_users'] = 1;
+			$user->update($input);
+			$input['tela'] = "usuarios";
+			$input['acao'] = "inativacaoUsuario";
+			$input['registro_id'] = $id;
+			$input['user_id'] = Auth::user()->id;;
+			$input['unidade_id'] = 1;
+			$log = LoggerUsers::create($input);
+			$validator = "Usuário Ativado com sucesso!!";
+		}
+		$usuarios = User::all();
+		$unidades = Unidade::all();
+		return view('transparencia/usuarios/usuarios_cadastro', compact('unidades', 'usuarios'))
+			->withErrors($validator)
+			->withInput(session()->flashInput($request->input()));
+	}
 
+    
+    public function pesquisarUsuario(Request $request)
+	{
+		$input = $request->all(); 
+		if(empty($input['pesq'])) { $input['pesq'] = ""; }
+		if(empty($input['pesq2'])) { $input['pesq2'] = ""; }
+		$pesq  = $input['pesq'];
+		$pesq2 = $input['pesq2'];
+		$unidades = Unidade::all();	
+		if($pesq == 0){
+			if($pesq2 != ""){
+				$usuarios = User::where('name','like','%'.$pesq2.'%')->get();
+			} else {
+				$usuarios = User::all();
+			}
+		} else if($pesq == 1){
+			if($pesq2 != ""){
+				$usuarios = User::where('email','like','%'.$pesq2.'%')->get();
+			} else {
+				$usuarios = User::all();
+			}
+		} 
+		return view('transparencia/usuarios/usuarios_cadastro', compact('usuarios','unidades','pesq','pesq2'));
+	}
+    
 	public function emailReset(Request $request)
 	{
 		$input = $request->all(); 
@@ -236,8 +367,8 @@ class UserController extends Controller
 						DB::statement('DELETE FROM alterar_senha WHERE user_id = '.$input['user_id']);
 					}
 					$alt_senha = AlterarSenha::create($input);
-					$token = DB::table('alterar_senha')->max('token');
-					$email2 = 'ilton.albuquerque@hcpgestao.org.br';
+					$token  = DB::table('alterar_senha')->where('user_id',$input['user_id'])->max('token');
+					$email2 = 'portal@hcpgestao.org.br';
 					Mail::send('email.emailReset', ['token' => $token], function($m) use ($email,$email2,$token) {
 						$m->from('ilton.albuquerque@hcpgestao.org.br', 'PORTAL DA TRANSPARÊNCIA');
 						$m->subject('Solicitação de Alteração de Senha');

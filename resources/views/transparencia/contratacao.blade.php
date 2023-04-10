@@ -8,6 +8,15 @@
 			<h3 style="font-size: 18px;">CONTRATAÇÕES</h3>
 		</div>
 	</div>
+	@if ($errors->any())
+	<div class="alert alert-success">
+		<ul>
+			@foreach ($errors->all() as $error)
+			<li>{{ $error }}</li>
+			@endforeach
+		</ul>
+	</div>
+	@endif
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 col-sm-12 text-center">
 			<div class="accordion" id="accordionExample">
@@ -52,22 +61,22 @@
 								<strong>Cotações</strong>
 							</a>
 							@if(Auth::check())
-							@foreach ($permissao_users as $permissao)
-							@if(($permissao->permissao_id == 10) && ($permissao->user_id == Auth::user()->id))
-							@if ($permissao->unidade_id == $unidade->id)
-							<a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('cadastroCotacoes', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
-							@endif
-							@endif
-							@endforeach
+							 @foreach ($permissao_users as $permissao)
+							  @if(($permissao->permissao_id == 10) && ($permissao->user_id == Auth::user()->id))
+						 	   @if ($permissao->unidade_id == $unidade->id)
+							    <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('cadastroCotacoes', $unidade->id)}}"> Alterar <i class="fas fa-edit"></i></a>
+							   @endif
+							  @endif
+							 @endforeach
 							@endif
 						</h2>
 					</div>
 
-					@if(($unidade->id > 1) && ($unidade->id < 8)) <div id="collapseTwo" class="collapse multi-collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+					@if(($unidade->id > 1) && ($unidade->id <= 10)) <div id="collapseTwo" class="collapse multi-collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
 						<div class="card-body">
 							<p>
 								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Processos de Compra</a>
-								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Termos de Referência</a>
+								<a class="btn btn-success" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Processos de Contratação de Terceiros</a>
 							</p>
 							<div class="collapse border-0" id="multiCollapseExample1">
 								<div class="card card-body border-0">
@@ -93,6 +102,11 @@
 													</table>
 													@endif
 													@endforeach
+													<table class="table table-sm">
+														<tr>
+															<th> <a target="_blank" href="{{asset('storage/Passo a Passo Mapa de Cotação.pdf')}}" class="list-group-item list-group-item-action" style="font-size: 12px; padding: 0px; margin-left: 00px">Passo a Passo para Visualizar Mapa de Cotações <img src="{{asset('img/pdf.png')}}" width="40px" height="40px" /></a> </th>
+														</tr>
+													</table>
 												</div>
 											</div>
 										</div>
@@ -102,32 +116,70 @@
 
 							<div class="collapse border-0" id="multiCollapseExample2">
 								<div class="card card-body border-0">
-									<div class="container">
-										@foreach ($cotacoes->pluck('proccess_name')->unique() as $key => $cotacao)
-										@if ($cotacao !== 'MAPA DE COTAÇÕES')
-										<table class="table table-sm">
+								<div class="table-responsive">
+										<table class="table table-sm table-bordered">
 											<thead>
-												<tr>
-													<th style="width: 400px">Título</th>
-													<th style="width: 200px">Download</th>
+												<tr align="center">
+													<th width="200px">Processo</th>
+													<th width="80px">Mês/Ano</th>
+													<th width="250px">Arquivos</th>
 												</tr>
 											</thead>
 											<tbody>
-												<th> <a style="font-size: 15px; color: #28a745" class="btn" data-toggle="collapse" role="button" aria-expanded="false">
-														<strong>{{$cotacao}}</strong>
-													</a>
-												</th>
-												<th>
-													@foreach ($cotacoes as $cotacaoFiles)
-													@if ($cotacaoFiles->proccess_name == $cotacao)
-													<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 10px; position: relative; padding: 5px;">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="fas fa-download"></i></a>
-													@endif
-													@endforeach
-												</th>
+												<?php $marcador = ''; ?>
+												@foreach ($cotacoes as $cotacao)
+												@if ($cotacao->proccess_name !== 'MAPA DE COTAÇÕES')
+												@if ($cotacao->proccess_name !== $marcador)
+												<tr>
+													<td style="vertical-align: middle; font-size:14px">
+
+														<strong>{{ $cotacao->proccess_name }}</strong>
+
+													</td>
+													<td align="center" style="vertical-align: middle; font-size:14px">
+														<div class="d-flex flex-column">
+															<strong><?php
+																	echo $cotacao->mes == 1 ? "Janeiro" : ($cotacao->mes == 2 ? "Fevereiro" : ($cotacao->mes == 3 ? "Março" : ($cotacao->mes == 4 ? "Abril" : ($cotacao->mes == 5 ? "Maio" : ($cotacao->mes == 6 ? "Junho" : ($cotacao->mes == 7 ? "Julho" : ($cotacao->mes == 8 ? "Agosto" : ($cotacao->mes == 9 ? "Setembro" : ($cotacao->mes == 10 ? "Outubro" : ($cotacao->mes == 11 ? "Novembro" : ($cotacao->mes == 12 ? "Dezembro" : "")))))))))));
+																	?></strong>
+															<strong>
+															    @if($cotacao->ano !== 0)
+																{{ $cotacao->ano }}
+																@endif
+															</strong>
+														</div>
+													</td>
+													<td>
+														<div class="d-flex flex-column" style="text-align: left;" >
+															@foreach ($cotacoes as $cotacaoArqs)
+															@if ($cotacao->proccess_name == $cotacaoArqs->proccess_name)
+															<div class="d-inline-flex m-1">
+																<a target="_blank" href="<?php if (stripos($cotacaoArqs->file_path,'http') === false) {
+                                                                                    echo asset('storage/') . '/' . $cotacaoArqs->file_path;
+                                                                                } else {
+                                                                                    echo $cotacaoArqs->file_path;
+                                                                                }
+                                                                                ?>" class="list-group-item list-group-item-action" style="font-size: 12px; padding: 0px; margin-left: 00px">
+                                                                                <?php if($cotacaoArqs->id >= 168){
+                                                                                echo substr($cotacaoArqs->file_name, 6 ,300);
+                                                                                }
+                                                                                else{
+                                                                                echo $cotacaoArqs->file_name;
+                                                                                } ?>
+                                                                                
+                                                                <i style="color:#28a745" class="fas fa-download"></i>
+                                                            </a>
+															</div>
+															@endif
+															@endforeach
+														</div>
+													</td>
+												</tr>
+												@endif
+												<?php $marcador = $cotacao->proccess_name; ?>
+												@endif
+												@endforeach
 											</tbody>
 										</table>
-										@endif
-										@endforeach
 									</div>
 								</div>
 							</div>
@@ -261,6 +313,16 @@
 					@endif
 					@endforeach
 					@endif
+					
+					@if(Auth::check())
+					@foreach ($permissao_users as $permissao)
+					@if(($permissao->permissao_id == 25) && ($permissao->user_id == Auth::user()->id))
+					@if ($permissao->unidade_id == $unidade->id)
+					<a class="btn btn-success btn-sm" style="color: white;" href="{{route('paginaContratacaoServicos',$unidade->id)}}"> Processos <i class="bi bi-megaphone"></i></a>
+					@endif
+					@endif
+					@endforeach
+					@endif
 				</h2>
 			</div>
 			<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
@@ -271,6 +333,20 @@
 						</a>
 					</p>
 					<div class="collapse border-0" id="obras">
+					    @if(isset($ultimaAtualizaObras))
+						
+						<label>
+						    @if(isset($m))
+						        Não há serviços de obras contratados pela unidade.
+						    @endif
+						</label>
+						
+						<p class="card-text"><small class="text-muted">Última atualização
+								{{ date('d/m/Y', strtotime($ultimaAtualizaObras)) }}</small></p>
+						@else 
+						<p class="card-text"><small class="text-muted">Última atualização
+								{{ date('d/m/Y', strtotime($contratos->max('updated_at'))) }}</small></p>
+						@endif
 						<div class="card card-body border-0">
 							<p>
 								<a style="width:200px;" class="btn btn-success" data-toggle="collapse" href="#obrasPessoaFisica" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -295,6 +371,7 @@
 											<tbody>
 												@foreach ($contratos as $contrato)
 												@if ($contrato->tipo_contrato === 'OBRAS' && $contrato->tipo_pessoa === 'PESSOA FÍSICA')
+												@if ($contrato->inativa == 0)
 												<tr>
 													<td class="text-truncate" style="max-width: 100px;" title="{{$contrato->cnpj_cpf}}">{{$contrato->cnpj_cpf}}</td>
 													<td class="text-truncate" style="max-width: 100px;" title="{{$contrato->prestador}}">{{$contrato->prestador}}</td>
@@ -304,27 +381,37 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<?php if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
+																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } ?> <?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
 															@foreach($aditivos as $aditivo)
 															@if($aditivo->contrato_id == $contrato->ID)
 															@if($aditivo->opcao == 1)
-															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
+															<?php $id += 1;
+															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) {
+																$id = 1;
+															}
+															?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 															@endif
+															<?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
 															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
 															@endif
-															@else
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
+															@else <?php $idC += 1; ?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
 															@endif
 															@endif
 															@endif
@@ -332,6 +419,7 @@
 														</div>
 													</td>
 												</tr>
+												@endif
 												@endif
 												@endforeach
 											</tbody>
@@ -363,30 +451,40 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<?php if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
+																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } ?> 
+															<?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
 															@foreach($aditivos as $aditivo)
-															@if($aditivo->contrato_id == $contrato->ID)
-															@if($aditivo->opcao == 1)
-															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@endif
-															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@endif
-															@else
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@endif
-															@endif
-															@endif
+															    @if($aditivo->contrato_id == $contrato->ID)
+															        @if($aditivo->opcao == 1)
+															            <?php $id += 1;
+            															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) { $id = 1;} ?>
+        															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+            															<strong>
+            															    <a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a>
+            															</strong>
+        															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+        															    <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
+        															@endif
+        															    <?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
+        															@elseif($aditivo->opcao == 2)
+            															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+            														    	<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+            															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+            															    <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+            															@endif
+															        @else <?php $idC += 1; ?>
+            															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+            															    <strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+            															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+            															    <strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+            															@endif
+															        @endif
+															    @endif
 															@endforeach
 														</div>
 													</td>
@@ -439,27 +537,37 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<?php if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
+																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } ?> <?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
 															@foreach($aditivos as $aditivo)
 															@if($aditivo->contrato_id == $contrato->ID)
 															@if($aditivo->opcao == 1)
-															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
+															<?php $id += 1;
+															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) {
+																$id = 1;
+															}
+															?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 															@endif
+															<?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
 															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
 															@endif
-															@else
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
+															@else 
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
 															@endif
 															@endif
 															@endif
@@ -491,6 +599,22 @@
 											<tbody>
 												@foreach ($contratos as $contrato)
 												@if ($contrato->tipo_contrato == 'SERVIÇOS' && $contrato->tipo_pessoa == 'PESSOA JURÍDICA')
+							                    
+												<?php
+												$contratoStatus = false;
+												if($contrato->inativa == 0){
+												    $contratoStatus = true;
+												}
+												$aditivoStatus = false;
+												foreach($aditivos as $aditivo){
+													if($aditivo->contrato_id == $contrato->ID){
+													    if($aditivo->inativa == 0){
+													        $aditivoStatus = true;
+													    }
+													}
+												}
+												?>
+												@if($contratoStatus == true || $aditivoStatus == true)
 												<tr>
 													<td class="text-truncate" style="max-width: 100px;" title="{{$contrato->cnpj_cpf}}">{{$contrato->cnpj_cpf}}</td>
 													<td class="text-truncate" style="max-width: 100px;" title="{{$contrato->prestador}}">{{$contrato->prestador}}</td>
@@ -500,38 +624,58 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<?php if ($contrato->cadastro == 0) {  ?>
+															<?php 
+															if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
 																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
-															<?php } else { ?>
-																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
-															<?php } ?> <?php $idC = 1; ?>
+															<?php 
+															}elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato </a>
+															<?php }else{ ?>
+															    <a id="div" class="dropdown-item" href="" target="_blank"></a>
+															<?php } ?> 
+															
+															<?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
+															
 															@foreach($aditivos as $aditivo)
 															@if($aditivo->contrato_id == $contrato->ID)
 															@if($aditivo->opcao == 1)
+															<?php 
+															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) {
+																$id = 0;
+															}
+															?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
 															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
 															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
-															@else
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<?php $id += 1; ?>
 															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 															@endif
+															<?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
 															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
 															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
-															@else
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
 															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
 															@endif
-															@else <?php $idC += 1; ?>
-															@if($aditivo->ativa == 1)
+															@else 
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<?php $idC = $idC + 1; ?>
 															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
-															@else
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<?php $idC = $idC + 1; ?>
 															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
 															@endif
 															@endif
 															@endif
+															
 															@endforeach
 														</div>
+														
 													</td>
 												</tr>
+												@endif
 												@endif
 												@endforeach
 											</tbody>
@@ -548,6 +692,15 @@
 					</p>
 					<div class="collapse border-0" id="aquisicao">
 						<div class="card card-body border-0">
+                            	@foreach ($cotacoes->pluck('proccess_name')->unique() as $key => $cotacao)
+										@if ($cotacao == 'MAPA DE COTAÇÕES')
+										@foreach ($cotacoes as $cotacaoFiles)
+										@if ($cotacaoFiles->proccess_name == $cotacao)
+										<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action m-3" style="font-size: 15px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="bi bi-globe2"></i> </a>
+										@endif
+										@endforeach
+										@endif
+										@endforeach
 							<p>
 								<a style="width:200px;" class="btn btn-success" data-toggle="collapse" href="#aquisicaoPessoaFisica" role="button" aria-expanded="false" aria-controls="collapseExample">
 									PESSOA FÍSICA <i class="fas fa-user-alt"></i>
@@ -557,6 +710,36 @@
 								</a>
 							</p>
 							<div class="collapse border-0" id="aquisicaoPessoaFisica">
+								<div class="card card-body border-0">
+									<div class="container">
+										@foreach ($cotacoes->pluck('proccess_name')->unique() as $key => $cotacao)
+										@if ($cotacao == 'MAPA DE COTAÇÕES')
+										@foreach ($cotacoes as $cotacaoFiles)
+										@if ($cotacaoFiles->proccess_name == $cotacao)
+										<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 15px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="bi bi-globe2"></i> </a>
+										@endif
+										@endforeach
+										@endif
+										@endforeach
+									</div>
+								</div>
+							</div>
+							<div class="collapse border-0" id="aquisicaoPessoaJuridica">
+								<div class="card card-body border-0">
+									<div class="container">
+										@foreach ($cotacoes->pluck('proccess_name')->unique() as $key => $cotacao)
+										@if ($cotacao == 'MAPA DE COTAÇÕES')
+										@foreach ($cotacoes as $cotacaoFiles)
+										@if ($cotacaoFiles->proccess_name == $cotacao)
+										<a target="_blank" href="{{$cotacaoFiles->file_path}}" alt="{{$cotacaoFiles->file_path}}" class="list-group-item list-group-item-action" style="font-size: 15px; padding: 0px; margin-left: 00px">{{$cotacaoFiles->file_name}} <i style="color:#28a745" class="bi bi-globe2"></i> </a>
+										@endif
+										@endforeach
+										@endif
+										@endforeach
+									</div>
+								</div>
+							</div>
+							<!--div class="collapse border-0" id="aquisicaoPessoaFisica">
 								<div class="card card-body border-0">
 									<div class="container">
 										<table class="table table-sm">
@@ -580,27 +763,37 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<?php if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
+																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } ?> <?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
 															@foreach($aditivos as $aditivo)
 															@if($aditivo->contrato_id == $contrato->ID)
 															@if($aditivo->opcao == 1)
-															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
+															<?php $id += 1;
+															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) {
+																$id = 1;
+															}
+															?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 															@endif
+															<?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
 															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
 															@endif
-															@else
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
+															@else <?php $idC += 1; ?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
 															@endif
 															@endif
 															@endif
@@ -614,7 +807,7 @@
 										</table>
 									</div>
 								</div>
-							</div>
+							</div-->
 							<div class="collapse border-0" id="aquisicaoPessoaJuridica">
 								<div class="card card-body border-0">
 									<div class="container">
@@ -639,27 +832,37 @@
 															Visualizar
 														</a> <?php $id = 0; ?>
 														<div id="div" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="font-size: 12px;">
-															<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">Contrato</a>
+															<?php if ($contrato->cadastro == 0 && $contrato->inativa == 0) {  ?>
+																<a id="div" class="dropdown-item" href="{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } elseif ($contrato->cadastro == 1 && $contrato->inativa == 0) { ?>
+																<a id="div" class="dropdown-item" href="{{asset('storage/')}}/{{$contrato->file_path}}" target="_blank">1º Contrato</a>
+															<?php } ?> <?php $idC = 1; ?>
+															<?php $aditivoVincula = 1; ?>
 															@foreach($aditivos as $aditivo)
 															@if($aditivo->contrato_id == $contrato->ID)
 															@if($aditivo->opcao == 1)
-															<?php $id += 1; ?>
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo</a></strong>
+															<?php $id += 1;
+															if (substr($aditivo->vinculado, 0, 1) != $aditivoVincula) {
+																$id = 1;
+															}
+															?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{$id}}º Aditivo ({{ $aditivo->vinculado }})</a></strong>
 															@endif
+															<?php $aditivoVincula = substr($aditivo->vinculado, 0, 1) ?>
 															@elseif($aditivo->opcao == 2)
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato</a></strong>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Distrato ({{ $aditivo->vinculado }})</a></strong>
 															@endif
-															@else
-															@if($aditivo->ativa == 1)
-															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
-															@else
-															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">Contrato</a></strong>
+															@else <?php $idC += 1; ?>
+															@if($aditivo->ativa == 1 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
+															@elseif($aditivo->ativa == 0 && $aditivo->inativa == 0)
+															<strong><a id="div" class="dropdown-item" href="{{asset('storage')}}/{{$aditivo->file_path}}" target="_blank">{{ $idC }}º Contrato</a></strong>
 															@endif
 															@endif
 															@endif

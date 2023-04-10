@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-		<div class="alert alert-danger">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>
 		<div class="col-md-12 col-sm-12 text-center">
@@ -25,7 +25,7 @@
                         Regulamento Próprios <i class="fas fa-check-circle"></i>
                     </a>
                 </div>
-                    <form method="post" action="{{ \Request::route('store'), $unidade->id }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ \Request::route('storeRG'), $unidade->id }}" enctype="multipart/form-data">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">
 					  <tr>
@@ -54,7 +54,7 @@
 					<table>
 					 <tr>
 					   <td align="left">
-						 <a href="{{route('regulamentoCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						 <a href="{{route('cadastroRG', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
 					   </td>
 					 </tr>

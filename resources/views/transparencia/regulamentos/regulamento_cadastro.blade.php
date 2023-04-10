@@ -6,18 +6,18 @@
 		<div class="col-md-12 text-center">
 			<h5  style="font-size: 18px;">REGULAMENTOS PRÓPRIOS</h5>
 			<p align="right"><a href="{{route('transparenciaRegulamento', $unidade->id)}}" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-			<a href="{{route('regulamentoNovo', $unidade->id)}}" class="btn btn-dark btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
+			<a href="{{route('novoRG', $unidade->id)}}" class="btn btn-dark btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
 		</div>
 	</div>	
 	@if ($errors->any())
-		<div class="alert alert-success">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row justify-content-around" style="margin-top: 25px;">
 		@foreach($manuais as $manual)
 		<div class="col-md-2 col-sm-12">
@@ -27,7 +27,12 @@
 						<img class="card-img-top border border-secondary" src="{{asset('img')}}/{{$manual->path_img}}" alt="Card image cap">
 					</a>
 					<p style="font-size: 11px; color: black;"><small>{{$manual->title}}</small></p>
-					<p style="font-size: 11px;"><a href="{{ route('regulamentoExcluir', array($unidade->id, $manual->id))}}" class="btn btn-danger btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Excluir <i class="fas fa-times-circle"></i> </a></p></p>
+					@if($manual->status_manuais == 0)
+					<p style="font-size: 11px;"><a href="{{ route('telaInativarRG', array($unidade->id, $manual->id))}}" class="btn btn-success btn-sm" style="margin-top: 10px; color: #000000;"> Ativar <i class="fas fa-times-circle"></i> </a></p>
+					@else
+					<p style="font-size: 11px;"><a href="{{ route('telaInativarRG', array($unidade->id, $manual->id))}}" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #000000;"> Inativar <i class="fas fa-times-circle"></i> </a></p>
+					@endif
+					<!--p style="font-size: 11px;"><a href="{{ route('excluirRG', array($unidade->id, $manual->id))}}" class="btn btn-danger btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Excluir <i class="bi bi-trash"></i> </a></p-->
 				</div>
 			</div>
 		</div>

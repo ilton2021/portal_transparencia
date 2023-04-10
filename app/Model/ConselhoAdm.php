@@ -13,6 +13,7 @@ class ConselhoAdm extends Model
 		'cargo',
 		'tipo_membro',
 		'unidade_id',
+		'status_conselho_adms',
 		'create_at',
 		'updated_at'
 	];

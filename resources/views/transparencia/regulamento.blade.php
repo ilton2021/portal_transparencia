@@ -1,6 +1,6 @@
 @extends('navbar.default-navbar')
 @section('content')
-<div class="container text-center" style="color: #28a745">Você está em: <strong>{{$unidade->name}}</strong></div>
+<div class="container text-center" style="color: #28a745">Você está em: <strong>{{$undOss[0]->name}}</strong></div>
 <div class="container-fluid" >
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
@@ -9,7 +9,7 @@
 			 @foreach ($permissao_users as $permissao)
 			  @if(($permissao->permissao_id == 16) && ($permissao->user_id == Auth::user()->id))
 			   @if ($permissao->unidade_id == $unidade->id)	
-				 <p align="right"><a href="{{route('regulamentoCadastro', $unidade->id)}}" class="btn btn-info btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></p>
+				 <p align="right"><a href="{{route('cadastroRG', $idund)}}" class="btn btn-info btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Alterar <i class="fas fa-edit"></i> </a></p>
 			   @endif
 			  @endif 
 			 @endforeach 

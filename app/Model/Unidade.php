@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unidade extends Model
 {
-	
 	protected $table = 'unidades';
 
 	protected $fillable = [
@@ -14,18 +13,19 @@ class Unidade extends Model
 		'owner',
 		'cnpj',
 		'name',
-		'sigla',
 		'address',
 		'numero',
 		'further_info',
 		'district',
+		'sigla',
 		'city',
 		'uf',
 		'cep',
 		'time',
+		'resumo',
 		'telefone',
 		'capacity',
-		'speciality',
+		'specialty',
 		'cnes',
 		'path_img',
 		'icon_img',

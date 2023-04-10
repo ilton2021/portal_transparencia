@@ -24,7 +24,7 @@ class CoveniosController extends Controller
 		return view('transparencia.covenio', compact('unidades'));
     }
 	
-	public function covenioNovo($id_unidade)
+	public function covenioNovo($id_unidade, Request $request)
 	{
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
@@ -34,7 +34,7 @@ class CoveniosController extends Controller
 			->withInput(session()->flashInput($request->input()));	
 	}
 	
-	public function covenioCadastro($id_unidade, Covenio $covenio)
+	public function covenioCadastro($id_unidade, Covenio $covenio, Request $request)
 	{
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);
@@ -46,7 +46,7 @@ class CoveniosController extends Controller
 			->withInput(session()->flashInput($request->input()));	
 	}
 	
-	public function covenioExcluir($id_unidade, $escolha)
+	public function covenioExcluir($id_unidade, $escolha, Request $request)
 	{
 		$unidades = $unidadesMenu = $this->unidade->all();
 		$unidade = $this->unidade->find($id_unidade);

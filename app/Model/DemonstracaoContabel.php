@@ -11,8 +11,10 @@ class DemonstracaoContabel extends Model
 	protected $fillable = [
 		'title',
 		'ano',
+		'name_arq',
 		'file_path',
 		'unidade_id',
+		'status_contabel',
 		'created_at',
 		'updated_at'
 	];

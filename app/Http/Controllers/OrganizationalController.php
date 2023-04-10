@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Model\Organizational;
+use App\Model\Organograma;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Model\Unidade;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Facades\Schema;
 use App\Model\LoggerUsers;
 use Illuminate\Support\Facades\Auth;
 use App\Model\PermissaoUsers;
-use App\Http\Controllers\PermissaoUsersContrller;
+use App\Http\Controllers\PermissaoUsersController;
 use Validator;
+use DB;
+use Storage;
 
 class OrganizationalController extends Controller
 {
@@ -32,12 +34,12 @@ class OrganizationalController extends Controller
         return view('transparencia.organizacional', compact('unidades'));
     }
 	
-	public function organizacionalNovo($id)
+	public function novoOR($id, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);		
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);		
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organizacional_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
@@ -47,11 +49,11 @@ class OrganizationalController extends Controller
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
-	
-    public function store($id, Request $request, LoggerUsers $logger_users, Auth $auth)
+    public function storeOR($id, Request $request, LoggerUsers $logger_users, Auth $auth)
     {
-		$unidade = $this->unidade->find($id);
-		$unidadesMenu = $this->unidade->all();
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);
 		$estruturaOrganizacional = Organizational::where('unidade_id', $id)->get();
         if($unidade->id === 1){
             $lastUpdated = '2020-01-01 00:00:00';
@@ -62,7 +64,7 @@ class OrganizationalController extends Controller
 		$validator = Validator::make($request->all(), [
 				'name'  	 => 'required|min:10',
 				'cargo' 	 => 'required|min:3',
-				'email' 	 => 'required|email|unique:organizationals',
+				'email' 	 => 'required|email',
 				'telefone' 	 => 'required|min:8'
 		]);
 		if ($validator->fails()) {
@@ -71,7 +73,10 @@ class OrganizationalController extends Controller
 				->withInput(session()->flashInput($request->input()));
 		}else {
 			$input = $request->all(); 
-			$organizacional = Organizational::create($input); 			
+			$input['status_organizacional'] = 1;
+			$organizacional = Organizational::create($input); 	
+			$id_registro    = DB::table('organizationals')->max('id');
+			$input['registro_id'] = $id_registro;		
 			$log = LoggerUsers::create($input);
 			$lastUpdated = $log->max('updated_at');
 			$estruturaOrganizacional = Organizational::where('unidade_id', $id)->get();
@@ -81,20 +86,21 @@ class OrganizationalController extends Controller
 				$ultimaData = Organizational::where('unidade_id', $id)->where('updated_at','<=', Carbon::now() )->orderBy('updated_at', 'DESC')->first();
 				$lastUpdated = '2020-01-01 00:00:00';;
 			}
-			$validator = 'Estrutura organiazcional cadastrada com sucesso!';
-			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidadesMenu','lastUpdated','estruturaOrganizacional'))
+			$validator = 'Estrutura organizacional cadastrada com sucesso!';
+			return  redirect()->route('cadastroOR', [$id])
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));
+				->with('unidade', 'unidadesMenu', 'lastUpdated', 'estruturaOrganizacional');
 		}
     }
 
-	public function organizacionalCadastro($id, Organizational $organizational)
+	public function cadastroOR($id, Organizational $organizational, Request $request)
 	{ 
 		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);
 		$estruturaOrganizacional = Organizational::where('unidade_id', $id)->get();
+		$arqOrgano = Organograma::where('unidade_id', $id)->get();
             if($unidade->id === 1){
                 $lastUpdated = '2020-01-01 00:00:00';
             }else{
@@ -102,7 +108,7 @@ class OrganizationalController extends Controller
                 $lastUpdated = '2020-01-01 00:00:00';
             }
 		if($validacao == 'ok') {
-			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','estruturaOrganizacional'));
+			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','estruturaOrganizacional','arqOrgano'));
 		} else {
 			$validator ='Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
@@ -111,12 +117,12 @@ class OrganizationalController extends Controller
 		}
 	}
 	
-	public function organizacionalAlterar($id_item, $id_unidade)
+	public function alterarOR($id_item, $id_unidade, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id_unidade);				
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id_unidade);			
 		$organizacionals = Organizational::where('id', $id_item)->get();
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organizacional_alterar', compact('unidade','unidades','unidadesMenu','organizacionals'));
@@ -128,11 +134,11 @@ class OrganizationalController extends Controller
 		}
 	}
 	
-	public function update($id_item, $id_unidade, Request $request)
+	public function updateOR($id_item, $id_unidade, Request $request)
     {	
-		$unidadesMenu = $this->unidade->all();
-		$unidades     = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id_unidade);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id_unidade);
 		$validator = Validator::make($request->all(), [
 				'name'  	 => 'required|min:10',
 				'cargo' 	 => 'required|min:3',
@@ -140,32 +146,34 @@ class OrganizationalController extends Controller
 				'telefone' 	 => 'required|min:8'
 		]);		
 		if ($validator->fails()) {
-			$organizacionals = Organizational::where('id', $id_item)->get();
+			$organizacionals = Organizational::where('id',$id_item)->get();
 			return view('transparencia/organizacional/organizacional_novo', compact('unidade','unidadesMenu','organizacionals'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
 			$input = $request->all();
 			$organizacional = Organizational::find($id_item);
-			$organizacional->update($input);			
-			$log = LoggerUsers::create($input);
+			$organizacional->update($input);	
+			$input['registro_id'] = $id_item;		
+			$log   = LoggerUsers::create($input);
 		    $lastUpdated = $log->max('updated_at');
 			$estruturaOrganizacional = Organizational::where('unidade_id', $id_unidade)->get();
-			$validator = 'Estreutura Organizacional Alterada com Sucesso!';
-			return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estruturaOrganizacional'))
+			$validator   = 'Estrutura Organizacional Alterada com Sucesso!';
+            return  redirect()->route('cadastroOR', [$id_unidade])
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+				->with('unidade', 'unidades', 'unidadesMenu', 'lastUpdated', 'estruturaOrganizacional');
 		}
     }
 	
-	public function organograma($id)
+	public function organograma($id, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);		
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);
+		$arqOrgano    = Organograma::where('unidade_id', $id)->get();
 		if($validacao == 'ok') {
-			return view('transparencia/organizacional/organograma_cadastro', compact('unidade','unidades','unidadesMenu'));
+			return view('transparencia/organizacional/organograma_cadastro', compact('unidade','unidades','unidadesMenu','arqOrgano'));
 		} else {
 			$validator = 'Você não tem permissão!';
 			return view('home', compact('unidades','unidade','unidadesMenu'))
@@ -174,12 +182,12 @@ class OrganizationalController extends Controller
 		}
 	}
 	
-	public function organogramaNovo($id)
+	public function novoOG($id, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);		
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);		
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organograma_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
@@ -190,51 +198,85 @@ class OrganizationalController extends Controller
 		}
 	}
 	
-	public function storeOrganograma($id, Request $request)
+	public function storeOG($id, Request $request)
     {
-        $unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu;
-		$unidade = $this->unidade->find($id);
-		$input = $request->all();	
-		if ( $request->file('file_path') === NULL ) {
-			$validator = 'Informe o arquivo do cronograma!';
-			return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
+        $unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);
+		$undAtual	  = Unidade::where('id', $id)->get();
+		$input    	  = $request->all();
+		$nome     	  = $_FILES['file_path']['name'];
+		$extensao	  = pathinfo($nome, PATHINFO_EXTENSION);
+		if ($request->file('file_path') === NULL) {
+			$validator = 'Informe o arquivo do Organograma!';
+			return view('transparencia/organizacional/organograma_novo', compact('unidades', 'unidade', 'unidadesMenu'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));
 		} else {
-			if($request->file_path->extension() == 'pdf') {
+			if ($extensao === 'pdf') {
 				$validator = Validator::make($request->all(), [
 					'title'    => 'required|max:255',
 				]);
 				if ($validator->fails()) {
-					return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
+					return view('transparencia/organizacional/organograma_novo', compact('unidades', 'unidade', 'unidadesMenu'))
 						->withErrors($validator)
 						->withInput(session()->flashInput($request->input()));
 				} else {
-					$nome = $_FILES['file_path']['name']; 
-					$request->file('file_path')->move('../public/storage/', $nome);
-					$log = LoggerUsers::create($input);
-					$lastUpdated = $log->max('updated_at');
-					$valdiator = 'Organograma cadastrado com sucesso!';
-					return view('transparencia/organizacional/organograma_cadastro', compact('unidades','unidade','unidadesMenu','lastUpdated'))
-						->withErrors($validator)
-						->withInput(session()->flashInput($request->input()));
+                    /* if ($input['replica'] == 1) {
+						$unds = Unidade::all();
+						$_FILES['file_path']['name'] = $input['title'] . ".pdf";
+						$request->file('file_path')->move('../public/storage/organograma/todas/', $_FILES['file_path']['name']);
+						foreach ($unds as $UNDS) {
+							$input['file']       = $_FILES['file_path']['name'];
+							$input['file_path']  = "organograma/todas/" . $_FILES['file_path']['name'];
+							$input['unidade_id'] =  $UNDS->id;
+							Organograma::where('unidade_id', $UNDS->id)->delete();
+							$input['status_organograma'] = 1;
+							$organograma = Organograma::create($input);
+							$id_registro = DB::table('organograma')->max('id');
+							$input['registro_id'] = $id_registro;	
+							$log 		 = LoggerUsers::create($input);
+						}
+						$arqOrgano = Organograma::where('unidade_id', $id)->get();
+						$validator = 'Organograma cadastrado com sucesso!';
+						return  redirect()->route('organograma', [$id])
+							->withErrors($validator)
+							->with('unidades', 'unidade', 'unidadesMenu', 'lastUpdated', 'arqOrgano', 'success', 'validator');
+					} else {*/
+						$_FILES['file_path']['name'] = $input['title'] . ".pdf";
+						$request->file('file_path')->move('../public/storage/organograma/' . $undAtual[0]->sigla . "/", $_FILES['file_path']['name']);
+						$input['file']       = $_FILES['file_path']['name'];
+						$input['file_path']  = "organograma/" . $undAtual[0]->sigla . "/" . $_FILES['file_path']['name'];
+						$input['unidade_id'] =  $undAtual[0]->id;
+						Organograma::where('unidade_id', $id)->delete();
+						$input['status_organograma'] = 1;
+						$organograma = Organograma::create($input);
+						$id_registro = DB::table('organograma')->max('id');
+						$input['registro_id'] = $id_registro;
+						$log 	     = LoggerUsers::create($input);
+						$lastUpdated = $log->max('updated_at');
+						$arqOrgano   = Organograma::where('unidade_id', $id)->get();
+						$validator   = 'Organograma cadastrado com Sucesso!';
+						return redirect()->route('organograma', [$id])
+							->withErrors($validator)
+							->with('unidades', 'unidade', 'unidadesMenu', 'lastUpdated', 'arqOrgano', 'success');
+					//}
 				}
 			} else {
 				$validator = 'Só são permitidos arquivos do tipo: PDF!';
-				return view('transparencia/organizacional/organograma_novo', compact('unidades','unidade','unidadesMenu'))
+				return view('transparencia/organizacional/organograma_novo', compact('unidades', 'unidade', 'unidadesMenu'))
 					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));				
+					->withInput(session()->flashInput($request->input()));
 			}
 		}
-    }
+	}
 	
-	public function organogramaExcluir($id)
+	public function excluirOG($id, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id);		
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);		
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organograma_excluir', compact('unidade','unidades','unidadesMenu'));
 		} else {
@@ -244,31 +286,99 @@ class OrganizationalController extends Controller
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
+
+	public function telaInativarOG($id, Request $request)
+	{  
+		$validacao 	  = permissaoUsersController::Permissao($id);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);		
+		if($validacao == 'ok') {
+			$organograma = Organograma::where('unidade_id',$id)->get();
+			return view('transparencia/organizacional/organograma_inativar', compact('unidade','unidades','unidadesMenu','organograma'));
+		} else {
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
+	}
 	
-	public function destroyOrganograma($id, Request $request)
-    {
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu;
-		$unidade = $this->unidade->find($id);
+	public function destroyOG($id, Request $request)
+	{
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id);
 		$input = $request->all();
-		$nome = 'organograma.pdf';
-		$pasta = 'public/'.$nome;  
-		Storage::delete($pasta);
-		$log = LoggerUsers::create($input);
-		$lastUpdated = $log->max('updated_at');
-		$validator = 'Organograma Excluído com sucesso!';
-		return view('transparencia/organizacional/organograma_cadastro', compact('unidades','unidade','unidadesMenu','lastUpdated'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));				
+		$organograma = Organograma::where('unidade_id',$id)->get();
+		/*if ($input['replica'] == 1) {
+			$unds = Unidade::all();
+			$image_path = 'storage/'.$organograma[0]->file_path;
+        	unlink($image_path);
+			foreach ($unds as $UNDS) {
+				Organograma::where('unidade_id', $UNDS->id)->delete();
+				$input['registro_id'] = $organograma[0]->id;
+			}
+			$log = LoggerUsers::create($input);
+			$arqOrgano = Organograma::where('unidade_id', $id)->get();
+			$validator = 'Organograma excluido de todas as unidades com sucesso!';
+			return  redirect()->route('organograma', [$id])
+				->withErrors($validator)
+				->with('unidades', 'unidade', 'unidadesMenu', 'lastUpdated', 'arqOrgano', 'success', 'validator');
+		} else {*/
+			$image_path = 'storage/'.$organograma[0]->file_path;
+        	unlink($image_path);
+			Organograma::where('unidade_id', $id)->delete();
+			$input['registro_id'] = $organograma[0]->id;
+			$log = LoggerUsers::create($input);
+			$lastUpdated = $log->max('updated_at');
+			$undatual  = Unidade::where('id', $id)->get();
+			$arqOrgano = Organograma::where('unidade_id', $id)->get();
+			$validator = 'Organograma da unidade ' . $undatual[0]->sigla . ' foi excluído com sucesso!';
+			return  redirect()->route('organograma', [$id])
+				->withErrors($validator)
+				->with('unidades', 'unidade', 'unidadesMenu', 'lastUpdated', 'arqOrgano', 'success', 'validator');
+		//}
+	}
+
+	public function inativarOG($id, Request $request)
+    {
+		$input = $request->all();
+		$arqOrgano = Organograma::where('unidade_id',$id)->get();
+		if($arqOrgano[0]->status_organograma == 1) {
+			$nome = "old_". $arqOrgano[0]->file;
+			DB::statement("UPDATE organograma SET `status_organograma` = 0, `file` = '$nome' WHERE `unidade_id` = $id");
+			$nomeArq    = explode($arqOrgano[0]->file, $arqOrgano[0]->file_path);
+			$nomeArq    = "storage/".$nomeArq[0].$nome; 
+			$image_path = 'storage/'.$arqOrgano[0]->file_path;
+			rename($image_path, $nomeArq);
+		} else {
+			$nomeAntigo = $arqOrgano[0]->file;
+			$nome = explode("old_", $arqOrgano[0]->file);
+			DB::statement("UPDATE organograma SET `status_organograma` = 1, `file` = '$nome[1]' WHERE `unidade_id` = $id");
+			$nomeArq_   = explode($nome[1], $arqOrgano[0]->file_path);
+			$nomeArq_   = "storage/".$nomeArq_[0].$nomeAntigo;
+			$image_pathNovo = 'storage/'.$arqOrgano[0]->file_path;
+			rename($nomeArq_, $image_pathNovo);		
+		}
+		$input['registro_id'] = $arqOrgano[0]->id;
+		$log          = LoggerUsers::create($input);
+		$lastUpdated  = $log->max('updated_at');
+        $unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);
+		$arqOrgano    = Organograma::where('unidade_id',$id)->get();
+		$validator    = 'Organograma inativado com sucesso!';
+		return redirect()->route('organograma', [$id])
+				->withErrors($validator);
     }
 
-	public function organizacionalExcluir($id_item, $id_unidade)
+	public function excluirOR($id_item, $id_unidade, Request $request)
 	{  
 		$validacao = permissaoUsersController::Permissao($id_unidade);
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id_unidade);		
-		$organizacionals = new Organizational();
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id_unidade);		
 		$organizacionals = Organizational::where('id', $id_item)->get();		
 		if($validacao == 'ok') {
 			return view('transparencia/organizacional/organizacional_excluir', compact('unidade','unidades','unidadesMenu','organizacionals'));
@@ -279,20 +389,59 @@ class OrganizationalController extends Controller
 				->withInput(session()->flashInput($request->input())); 		
 		}
 	}
+
+	public function telaInativarOR($id_item, $id_unidade, Request $request)
+	{  
+		$validacao = permissaoUsersController::Permissao($id_unidade);
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id_unidade);		
+		$organizacionals = Organizational::where('id', $id_item)->get();		
+		if($validacao == 'ok') {
+			return view('transparencia/organizacional/organizacional_inativar', compact('unidade','unidades','unidadesMenu','organizacionals'));
+		} else {
+			$validator = 'Você não tem permissão!';
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input())); 		
+		}
+	}
 	
-    public function destroy($id_item, $id_unidade, Organizational $organizational, Request $request)
+    public function destroyOR($id_item, $id_unidade, Organizational $organizational, Request $request)
     {
         Organizational::find($id_item)->delete();
 		$input = $request->all();
-		$log = LoggerUsers::create($input);
-		$lastUpdated = $log->max('updated_at');
-		$unidadesMenu = $this->unidade->all(); 
-		$unidades = $this->unidade->all();
-		$unidade = $unidadesMenu->find($id_unidade);
+		$input['registro_id'] = $id_item;	
+		$log   = LoggerUsers::create($input);
+		$lastUpdated  = $log->max('updated_at');
+		$unidadesMenu = $this->unidade->where('status_unidades', 1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades', 1)->find($id_unidade);
 		$estruturaOrganizacional = Organizational::where('unidade_id', $id_unidade)->get();
-		$validator  = 'Estrutura Organizacional Exclupido com Sucesso!';
-		return view('transparencia/organizacional/organizacional_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estruturaOrganizacional'))
+		$validator    = 'Estrutura Organizacional Excluído com Sucesso!';
+		return  redirect()->route('cadastroOR', [$id_unidade])
 			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));		
+			->with('unidade', 'unidades', 'unidadesMenu', 'lastUpdated', 'estruturaOrganizacional');
+    }
+
+	public function inativarOR($id_item, $id, Request $request)
+    {
+		$input = $request->all();
+		$estruturaOrganizacional = Organizational::where('id',$id_item)->get();
+		if($estruturaOrganizacional[0]->status_organizacional == 1) {
+			DB::statement('UPDATE organizationals SET status_organizacional = 0 WHERE id = '.$id_item.';');
+		} else {
+			DB::statement('UPDATE organizationals SET status_organizacional = 1 WHERE id = '.$id_item.';');
+		}
+		$input['registro_id'] = $id_item;
+		$log          = LoggerUsers::create($input);
+		$lastUpdated  = $log->max('updated_at');
+        $unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);
+		$estruturaOrganizacional = Organizational::where('unidade_id',$id)->get();
+		$validator = 'Organizacional inativado com sucesso!';
+		return redirect()->route('cadastroOR', [$id])
+				->withErrors($validator);
     }
 }

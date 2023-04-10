@@ -15,6 +15,7 @@ class Repasse extends Model
 		'recebido',
 		'desconto',
 		'unidade_id',
+		'status_repasse',
 		'created_at',
 		'updated_at'
 	];

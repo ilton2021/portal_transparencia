@@ -6,18 +6,18 @@
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
 			<h3 style="font-size: 18px;">REPASSES RECEBIDOS</h3>
-			<p align="right"><a href="{{route('transparenciaRepasses', array($unidade->id,1))}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>&nbsp;&nbsp;&nbsp;<a href="{{route('repasseNovo', $unidade->id)}}" class="btn btn-dark btn-sm" style="color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
+			<p align="right"><a href="{{route('transparenciaRepasses', array($unidade->id,1))}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>&nbsp;&nbsp;&nbsp;<a href="{{route('novoRP', $unidade->id)}}" class="btn btn-dark btn-sm" style="color: #FFFFFF;"> Novo <i class="fas fa-check"></i> </a></p>
 		</div>
 	</div>
-		@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
+	@if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 		  <p>
 			@foreach ($anoRepasses as $ano)
 			<a class="btn btn-success btn-sm" data-toggle="collapse" href="#{{$ano}}" role="button" aria-expanded="false" aria-controls="{{$ano}}">
@@ -49,12 +49,42 @@
 								<th scope="col">Desconto</th>
 								<th scope="col">Saldo a receber</th>
 								<th scope="col">Alterar</th>
-								<th scope="col">Excluir</th>
+								<th scope="col">Inativar</th>
+								<!--th scope="col">Excluir</th-->
       						</tr>
 							</thead>
-							<tbody>		
+							<tbody>
+							    <?php
+						        $mesAtual = "";
+						        for ($i = 1; $i <= 12; $i++) { ?>	
 								@foreach ($repasses as $repasse)
 									@if($repasse->ano === $ano && $unidade->id == $repasse->unidade_id)
+									<?php if ($i == 1) {
+									$mesAtual = "janeiro";
+							    	} elseif ($i == 2) {
+									$mesAtual = "fevereiro";
+							    	} elseif ($i == 3) {
+									$mesAtual = "marco";
+							    	} elseif ($i == 4) {
+									$mesAtual = "abril";
+							    	} elseif ($i == 5) {
+									$mesAtual = "maio";
+							    	} elseif ($i == 6) {
+									$mesAtual = "junho";
+							    	} elseif ($i == 7) {
+									$mesAtual = "julho";
+							    	} elseif ($i == 8) {
+									$mesAtual = "agosto";
+							    	} elseif ($i == 9) {
+									$mesAtual = "setembro";
+							    	} elseif ($i == 10) {
+									$mesAtual = "outubro";
+							    	} elseif ($i == 11) {
+									$mesAtual = "novembro";
+							    	} else {
+									$mesAtual = "dezembro";
+								    } ?>
+								    @if($repasse->mes == $mesAtual)
 									<tr>
 									    <td>{{$repasse->mes}}</td>
 										<td>{{$ano}}</td>
@@ -62,11 +92,18 @@
 										<td>{{ $ano === $repasse->ano ? "R$ ".number_format($repasse->recebido, 2,',','.'): '' }}</td>
 										<td>{{ $ano === $repasse->ano ? "R$ ".number_format($repasse->desconto, 2,',','.'): '' }}</td>
 									    <td>{{ $ano === $repasse->ano ? "R$ ".number_format($repasse->contratado-$repasse->recebido, 2,',','.'): '' }}</td>
-										<td><center> <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('repasseAlterar', array($unidade->id, $repasse->id))}}" ><i class="fas fa-edit"></i></a> </center> </td>
-										<td><center> <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('repasseExcluir', array($unidade->id, $repasse->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+										<td><center> <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('alterarRP', array($unidade->id, $repasse->id))}}" ><i class="fas fa-edit"></i></a> </center> </td>
+										@if($repasse->status_repasse == 0)
+										 <td><center> <a title="Ativar" class="btn btn-success btn-sm" style="color: #000000;" href="{{route('telaInativarRP', array($unidade->id, $repasse->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+										@else
+										 <td><center> <a title="Inativar" class="btn btn-warning btn-sm" style="color: #000000;" href="{{route('telaInativarRP', array($unidade->id, $repasse->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+										@endif
+										<!--td><center> <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('excluirRP', array($unidade->id, $repasse->id))}}" ><i class="bi bi-trash"></i></a> </center> </td-->
 									</tr>
 									@endif
+									@endif
 								@endforeach
+								<?php } ?>
 								<tr class="table-success">
 									<td colspan="2"><strong>Total</strong></td>
 									<td><strong>{{"R$ ".number_format($repasses->where('ano', $ano)->pluck('contratado')->sum(), 2,',','.') }}</strong></td>

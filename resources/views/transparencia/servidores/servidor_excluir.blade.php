@@ -10,14 +10,14 @@
 		</div>
 	</div>	
 	@if ($errors->any())
-		<div class="alert alert-danger">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -27,7 +27,7 @@
 						SERVIDORES CEDIDOS: <i class="fas fa-check-circle"></i>
 					</a>
 				</div>
-					<form action="{{\Request::route('destroyServidores'), $unidade->id}}" method="post">
+					<form action="{{\Request::route('destroySE'), $unidade->id}}" method="post">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						 <table>
 						  <tr>
@@ -78,7 +78,7 @@
 						<table>
 							<tr>
 								<td> <br /> 
-									<a href="{{route('servidoresCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+									<a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 									<input type="submit" class="btn btn-danger btn-sm" style="margin-top: 10px;" value="Excluir" id="Salvar" name="Salvar" />
 								</td>
 							</tr>

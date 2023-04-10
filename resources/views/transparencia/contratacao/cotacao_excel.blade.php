@@ -17,7 +17,7 @@
             @endforeach
         </ul>
       </div>
-	@endif 
+	@endif 	
    <div class="row" style="margin-top: 25px;">		
       <div class="col-md-0 col-sm-0"></div>			
 	      <div class="col-md-12 col-sm-12 text-center">			

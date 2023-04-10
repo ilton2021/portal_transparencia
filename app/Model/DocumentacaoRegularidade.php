@@ -13,6 +13,7 @@ class DocumentacaoRegularidade extends Model
 		'path_file',
 		'type_id',
 		'unidade_id',
+		'status_documentos',
 		'created_at',
 		'updated_at'	
 	];

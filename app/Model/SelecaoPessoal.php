@@ -13,6 +13,7 @@ class SelecaoPessoal extends Model
 		'ano',
 		'quantidade',
 		'unidade_id',
+		'status_selecao_pessoals',
 		'created_at',
 		'updated_at'
 	];

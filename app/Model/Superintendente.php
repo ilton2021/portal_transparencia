@@ -13,6 +13,7 @@ class Superintendente extends Model
 		'cargo',
 		'tipo_membro',
 		'unidade_id',
+		'status_superintendentes',
 		'created_at',
 		'updated_at'
 	];

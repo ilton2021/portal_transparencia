@@ -11,6 +11,7 @@ class Assistencial extends Model
 	protected $fillable = [
 		'descricao',
 		'indicador_id',
+		'tipolinha',
 		'meta',
 		'janeiro',
 		'fevereiro',
@@ -26,6 +27,7 @@ class Assistencial extends Model
 		'dezembro',
 		'unidade_id',
 		'ano_ref',
+		'status_assistencials',
 		'created_at',
 		'updated_at'
 	];

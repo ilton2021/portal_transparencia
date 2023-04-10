@@ -18,14 +18,14 @@
 	</div>	
   </div>		
   @if ($errors->any())
-	<div class="alert alert-danger">
-		<ul>
-			@foreach ($errors->all() as $error)
-				<li>{{ $error }}</li>
-			@endforeach
-		</ul>
-	</div>
-  @endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+  @endif 
   <div class="row" style="margin-top: 25px;">		
     <div class="col-md-0 col-sm-0"></div>			
 	  <div class="col-md-12 col-sm-12 text-center">			
@@ -39,7 +39,8 @@
 		    <input type="hidden" name="_token" value="{{ csrf_token() }}">					  
 			  <table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">						
 			    <tr>						 
-				  <td> Processo de Cotações: </td>						 
+				  <td> Processo de Cotações: </td>	
+				  <!--td> Nome do processo: </td-->	
 				  <td> 		
 				  <select style="width: 500px" class="form-control" id="proccess_name" name="proccess_name" onchange="mudar('sim')">							 
 					<option value="PROCESSO 001/2020 - PROJETO GERADOR A DIESEL">PROCESSO 001/2020 - PROJETO GERADOR A DIESEL</option>							 
@@ -48,12 +49,13 @@
 					<option value="MAPA DE COTAÇÕES">MAPA DE COTAÇÕES</option>
 					<option value="COVID">COVID</option>
 				  </select>	
-				  </td>						
+				  </td>			
+				  <!--td><input class="form-control" style="width:400px" type="text" id="proccess_name" name="proccess_name" /></td-->
 				</tr>
 				<tr>						 
 				  <td> Mês/Ano: </td>						 
 				  <td> 		
-				  <select style="width: 300px" class="form-control" id="proccess_name2" name="proccess_name2" disabled="true">							 
+				  <select style="width: 300px" class="form-control" id="proccess_name2" name="proccess_name2" >							 
 					<option id="proccess_name2" name="proccess_name2" value="Janeiro2021">Janeiro/2021</option>							 
 					<option id="proccess_name2" name="proccess_name2" value="Fevereiro2021">Fevereiro/2021</option>							 
 					<option id="proccess_name2" name="proccess_name2" value="Março2021">Março/2021</option>							 

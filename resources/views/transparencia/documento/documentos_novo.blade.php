@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	@if ($errors->any())
-      <div class="alert alert-success">
+      <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -25,30 +25,46 @@
                         Documentação de Regularidade <i class="fas fa-check-circle"></i>
                     </a>
                 </div>
-                    <form method="post" action="{{ \Request::route('store'), $unidade->id }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ \Request::route('storeDR'), $unidade->id }}" enctype="multipart/form-data">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">
-					  <tr>
-					    <td> Título: </td>
-						<td> <input class="form-control" style="width: 400px;" type="text" id="name" name="name" value="" required /> </td> 
-					  </tr>
-					  <tr>
-						<td> Tipo de Documento: </td>
-						<td> 
-							<select class="form-control" style="width: 400px;" id="type_id" name="type_id" value="" required />
-								<?php $qtd = sizeof($types); for ( $i = 0; $i < $qtd; $i++ ) { ?>
-									<option value="<?php echo $types[$i]->id; ?>"><?php echo $types[$i]->type_name; ?></option>
-								<?php } ?>
-							</select>
-						</td> 
-					  </tr>
-					  <tr>
-						<td> Arquivo: </td>
-						<td> <input class="form-control" style="width: 400px;" type="file" id="path_file" name="path_file" value="" required /> </td>
-					  </tr>
-					  <td colspan="2"> <input type="hidden" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /> </td>
-					</table>
-					
+					<div class="form-control mt-3" style="color:black">
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Título:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" style="max-width: 400px;" type="text" id="name" name="name" value="" required />
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Tipo de Documento:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<select class="form-control" style="max-width: 400px;" id="type_id" name="type_id" value="" required />
+									<?php $qtd = sizeof($types);
+									for ($i = 0; $i < $qtd; $i++) { ?>
+										<option value="<?php echo $types[$i]->id; ?>"><?php echo $types[$i]->type_name; ?></option>
+									<?php } ?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<label><strong>Arquivo:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" style="max-width: 400px;" type="file" id="path_file" name="path_file" value="" required />
+									<input type="hidden" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" />
+								</div>
+							</div>
+						</div>
+					</div>
 					<table>
 						 <tr>
 						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
@@ -58,14 +74,14 @@
 						 </tr>
 					</table>
 					
-					<table>
-					 <tr>
-					   <td align="left">
-						 <a href="{{route('documentosCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
-					   </td>
-					 </tr>
-					</table>
+					<div class="d-flex justify-content-between">
+						<div>
+							<a href="{{route('cadastroDR', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						</div>
+						<div>
+							<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
+						</div>
+					</div>
                   </div>
             </div>
         </div>

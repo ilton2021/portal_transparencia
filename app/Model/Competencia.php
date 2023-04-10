@@ -13,6 +13,7 @@ class Competencia extends Model
 	    'cargo' ,
 		'descricao' ,
 		'unidade_id' ,
+		'status_competencias',
 		'created_at',
 		'updated_at'
 	];

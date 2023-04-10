@@ -14,6 +14,8 @@ use DB;
 
 class processoImport implements ToModel, WithHeadingRow
 {	
+    protected $id;
+    
 	public function __construct(int $id)
     {
         $this->id = $id;

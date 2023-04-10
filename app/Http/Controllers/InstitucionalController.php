@@ -65,7 +65,7 @@ class InstitucionalController extends Controller
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
 		$unidade = $unidadesMenu->find($id);
-		$input = $request->all();		
+		$input = $request->all();	
 		$nome = $_FILES['path_img']['name']; 		
 		$extensao = pathinfo($nome, PATHINFO_EXTENSION);		
 		$nomeI = $_FILES['icon_img']['name']; 		
@@ -94,7 +94,7 @@ class InstitucionalController extends Controller
 					$nomeI = $_FILES['icon_img']['name'];
 					$input['icon_img'] = $nomeI;
 					$request->file('path_img')->move('../public/img', $nome);	
-					$request->file('icon_img')->move('../public/img', $nomeI);		
+					$request->file('icon_img')->move('../public/img', $nomeI);	
 					$unidade = Unidade::create($input);
 					$log = LoggerUsers::create($input);	
 					$lastUpdated = $log->max('updated_at');	
@@ -147,6 +147,7 @@ class InstitucionalController extends Controller
 					->withInput(session()->flashInput($request->input()));
 			} 
 			if(!empty($input['path_img']) && !empty($input['icon_img'])){
+			    $input['registro_id'] = $id;
 				$unidade = Unidade::find($id);
 				$unidade->update($input);
 				$log = LoggerUsers::create($input);

@@ -10,10 +10,13 @@ class Cotacao extends Model
 	
 	protected $fillable = [
 		'proccess_name',
+		'mes',
+		'ano',
 		'file_name',
 		'file_path',
 		'ordering',
-		'unidade_id'
+		'unidade_id',
+		'status_cotacao',
 	];
 	
 	public $rules = [

@@ -11,9 +11,11 @@ class SelectiveProcess extends Model
 	protected $fillable = [
 		'title',
 		'file_path',
+		'name_arq',
 		'year',
 		'ordering',
 		'unidade_id',
+		'status_processos',
 		'created_at',
 		'updated_at'
 	];

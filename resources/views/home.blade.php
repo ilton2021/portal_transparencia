@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
-        <title>Portal da Transparencia - HCP</title>
+        <title>Portal da Transparencia - HCP Gest&atilde;o</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
         <link rel="stylesheet" href="{{asset('css/style.css')}}">
@@ -14,7 +14,6 @@
             width: 300px;
         }
         </style>
-
     </head>
 
 @section('content')
@@ -54,7 +53,7 @@
             <div class="card border-0 text-white" >
                 <img id="img-unity" src="{{asset('img')}}/{{$unidade->path_img}}" class="card-img" alt="...">
                 <div class="card-body text-center">
-                    <a href="{{route('transparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>
+                    <!--a href="{{route('transparenciaHome', $unidade->id)}}"  class="btn btn-outline-success">Saber mais +</a>-->
                 </div>
             </div>
             @endif

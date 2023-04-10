@@ -7,15 +7,15 @@
 			<h3 style="font-size: 18px;">ALTERAR REPASSES RECEBIDOS:</h3>
 		</div>
 	</div>
-		@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif
+	@if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 		<div class="row" style="margin-top: 25px;">
 		<div class="col-md-2 col-sm-0"></div>
 		<div class="col-md-8 col-sm-8 text-center">
@@ -26,7 +26,7 @@
                     </a>
                 </div>
 					<p>
-					<form action="{{\Request::route('update'), $unidade->id}}" method="post">
+					<form action="{{\Request::route('updateRP'), $unidade->id}}" method="post">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					 <table>
 					  <tr>
@@ -43,15 +43,15 @@
 					  </tr>
 					  <tr>
 					   <td> Contratado: </td>
-					   <td> <input class="form-control" type="number" id="contratado" name="contratado" value="<?php echo $repasses[0]->contratado; ?>" />  </td>
+					   <td> <input class="form-control" type="text" id="contratado" name="contratado" value="<?php echo $repasses[0]->contratado; ?>" onkeyup="formatarMoeda('contratado')"/>  </td>
 					  </tr>
 					  <tr>
 					   <td> Recebido: </td>
-					   <td> <input class="form-control" type="number" id="recebido" name="recebido" value="<?php echo $repasses[0]->recebido; ?>" />  </td>
+					   <td> <input class="form-control" type="text" id="recebido" name="recebido" value="<?php echo $repasses[0]->recebido; ?>" onkeyup="formatarMoeda('recebido')"/>  </td>
 					  </tr>
 					  <tr>
 					   <td> Desconto: </td>
-					   <td> <input class="form-control" type="number" id="desconto" name="desconto" value="<?php echo $repasses[0]->desconto; ?>" />  </td>
+					   <td> <input class="form-control" type="text" id="desconto" name="desconto" value="<?php echo $repasses[0]->desconto; ?>" onkeyup="formatarMoeda('desconto')"/>  </td>
 					  </tr>
 					 </table>
 					 
@@ -67,7 +67,7 @@
 					 <table>
 					  <tr>
 						<td> <br />
-							<a href="{{route('repasseCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+							<a href="{{route('cadastroRP', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 							<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
 						</td>
 					  </tr>
@@ -78,4 +78,21 @@
 		</div>
 	</div>
 </div>
+<script>
+	function formatarMoeda(input) {
+		var elemento = document.getElementById(input);
+		var valor = elemento.value;
+		valor = valor + '';
+		valor = parseInt(valor.replace(/[\D]+/g, ''));
+		valor = valor + '';
+		valor = valor.replace(/([0-9]{2})$/g, ".$1");
+
+		if (valor.length > 6) {
+			valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, "$1.$2");
+		}
+
+		elemento.value = valor;
+		if (valor == 'NaN') elemento.value = '';
+	}
+</script>
 @endsection

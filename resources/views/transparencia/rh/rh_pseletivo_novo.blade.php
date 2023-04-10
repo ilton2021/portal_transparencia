@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -37,14 +37,12 @@
 								</tr>
 								<tr>
 								  <td> Ano: </td>
-								  <td> 
-									<select id="year" name="year" class="form-control" style="width: 200px;">
-										<option id="year" name="year" value="2020">2020</option>  
-										<option id="year" name="year" value="2021">2021</option>
-										<option id="year" name="year" value="2022">2022</option>
-										<option id="year" name="year" value="2023">2023</option>
-										<option id="year" name="year" value="2024">2024</option>
-										<option id="year" name="year" value="2025">2025</option>
+								  <td>
+									<select id="year" name="year" class="form-control" style="width: 100px;">
+									<?php $anoAtual = date('Y', strtotime('now')); 
+									      for($ano = 2012; $ano <= $anoAtual; $ano++) { ?>
+										<option id="year" name="year" value="<?php echo $ano; ?>">{{ $ano }}</option> 
+									<?php	  } ?>
 									</select>
 								  </td>
 								</tr>
@@ -61,7 +59,7 @@
 							
 							<table>
 								<tr>
-								  <td colspan="2" align="left"> <br /><br /> <a href="{{route('processoSCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+								  <td colspan="2" align="left"> <br /><br /> <a href="{{route('cadastroPS', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 								  <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> </td>
 								</tr>
 							</table>

@@ -13,6 +13,7 @@ class Estatuto extends Model
 		'kind',
 		'path_file',
 		'unidade_id',
+		'status_estatuto',
 		'created_at',
 		'updated_at'
 	];

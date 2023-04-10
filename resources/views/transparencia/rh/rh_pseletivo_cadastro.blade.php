@@ -7,15 +7,15 @@
 			<h3 style="font-size: 18px;">RECURSOS HUMANOS</h3>
 		</div>
 	</div>
-	@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
+    @if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -42,7 +42,12 @@
 												<td style="font-size: 10px;" class="text-left border-0" >{{$item->title}}</td>
 												<td class="border-0"><i class="fas fa-arrow-right"></i></td>
 												<td class="border-0"><a target="_blank" href="{{asset('storage/')}}/{{$item->file_path}}" class="badge badge-success">Visualizar</a></td>
-												<td><center> <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('processoSExcluir', array($unidade->id, $item->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+												@if($item->status_processos == 0)
+												<td><center> <a title="Ativar" class="btn btn-success btn-sm" style="color: #FFFFFF;" href="{{route('telaInativarPS', array($unidade->id, $item->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+												@else
+												<td><center> <a title="Inativar" class="btn btn-warning btn-sm" style="color: #FFFFFF;" href="{{route('telaInativarPS', array($unidade->id, $item->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+												@endif
+												<!--td><center> <a title="Excluir" class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('excluirPS', array($unidade->id, $item->id))}}" ><i class="bi bi-trash"></i></a> </center> </td-->
 											</tr>
 										@endif
 										@endforeach
@@ -52,7 +57,7 @@
 						</div>
 						@endforeach
 						<p><a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i></a>
-						   <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('processoSNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
+						   <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('novoPS', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a></p>
 						<p class="card-text"><small class="text-muted">Última atualização {{date("d/m/Y", strtotime($docSelectiveProcess->max('updated_at')))}}</small></p>
 					</div>
 				</div>

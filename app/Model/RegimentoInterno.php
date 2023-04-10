@@ -12,6 +12,7 @@ class RegimentoInterno extends Model
 		'title',
 		'file_path',
 		'unidade_id',
+		'status_regimento',
 		'created_at',
 		'updated_at'
 	];

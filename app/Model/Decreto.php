@@ -12,6 +12,9 @@ class Decreto extends Model
 		'title',
 		'decreto',
 		'kind',
-		'path_file'
+		'path_file',
+		'status_decreto',
+		'created_at',
+		'updated_at'
 	];
 }

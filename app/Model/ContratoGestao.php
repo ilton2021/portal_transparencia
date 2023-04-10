@@ -12,6 +12,7 @@ class ContratoGestao extends Model
 		'title',
 		'path_file',
 		'unidade_id',
+		'status_contratos',
 		'created_at',
 		'updated_at'
 	];

@@ -26,7 +26,7 @@
                     </a>
                 </div>
 					<p>
-					<form action="{{\Request::route('store'), $unidade->id}}" method="post">
+					<form action="{{\Request::route('storeRP'), $unidade->id}}" method="post">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					 <table>
 					  <tr>
@@ -35,7 +35,7 @@
 					   <td>
 						<select id="mes" name="mes" class="form-control">
 						 <option id="mes" name="mes" value="janeiro">Janeiro</option>
-						 <option id="mes" name="mes" value="feveiro">Fevereiro</option>
+						 <option id="mes" name="mes" value="fevereiro">Fevereiro</option>
 						 <option id="mes" name="mes" value="marco">Março</option>
 						 <option id="mes" name="mes" value="abril">Abril</option>
 						 <option id="mes" name="mes" value="maio">Maio</option>
@@ -69,17 +69,17 @@
 					  <tr>
 					   <td> Contratado: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="number" step="any" id="contratado" name="contratado" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="contratado" name="contratado" value="" required onkeyup="formatarMoeda('contratado')"/>  </td>
 					  </tr>
 					  <tr>
 					   <td> Recebido: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="number" step="any" id="recebido" name="recebido" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="recebido" name="recebido" value="" required onkeyup="formatarMoeda('recebido')"/>  </td>
 					  </tr>
 					  <tr>
 					   <td> Desconto: </td>
 					   <td> &nbsp; </td>
-					   <td> <input class="form-control" type="number" step="any" id="desconto" name="desconto" value="" required />  </td>
+					   <td> <input class="form-control" type="number" step="any" id="desconto" name="desconto" value="" required onkeyup="formatarMoeda('desconto')"/>  </td>
 					  </tr>
 					 </table>
 					 
@@ -95,7 +95,7 @@
 					 <table>
 					  <tr>
 						<td> 
-						  <br/><a href="{{route('repasseCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						  <br/><a href="{{route('cadastroRP', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
 						  <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
 						</td>
 					  </tr>
@@ -106,4 +106,21 @@
 		</div>
 	</div>
 </div>
+<script>
+	function formatarMoeda(input) {
+		var elemento = document.getElementById(input);
+		var valor = elemento.value;
+		valor = valor + '';
+		valor = parseInt(valor.replace(/[\D]+/g, ''));
+		valor = valor + '';
+		valor = valor.replace(/([0-9]{2})$/g, ".$1");
+
+		if (valor.length > 6) {
+			valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, "$1.$2");
+		}
+
+		elemento.value = valor;
+		if (valor == 'NaN') elemento.value = '';
+	}
+</script>
 @endsection

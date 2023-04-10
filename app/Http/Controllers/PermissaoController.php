@@ -38,15 +38,14 @@ class PermissaoController extends Controller
 		->where('unidade_id', $id)
 		->get();
 		$lastUpdated = $permissoes->max('updated_at');
-		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
-
-		/*if($validacao == 'ok') {
+		if($validacao == 'ok') {
+			return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','permissoes'));
 		} else {
 			$validator = 'Você não tem Permissão!!';		
 			return view('home', compact('unidades','unidade','unidadesMenu'))
 				->withErrors($validator)
 				->withInput(session()->flashInput($request->input()));		
-		}*/
+		}
 	}
 	
 	public function permissaoNovo($id, Request $request)
@@ -55,7 +54,6 @@ class PermissaoController extends Controller
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
-		$validacao = 'ok';
 		if($validacao == 'ok') {
 			return view('transparencia/permissao/permissao_novo', compact('unidade','unidades','unidadesMenu'));
 		} else {
@@ -74,7 +72,6 @@ class PermissaoController extends Controller
 		$unidades = $unidadesMenu;
 		$users = User::all();
 		$permissoes = Permissao::all();
-		$validacao = 'ok';
 		if($validacao == 'ok') {
 			return view('transparencia/permissao/permissao_usuario_novo', compact('unidade','unidades','unidadesMenu','users','permissoes'));
 		} else {
@@ -104,13 +101,13 @@ class PermissaoController extends Controller
 		}
 	}
 	
-	public function permissaoExcluir($id, $id_permissao, Request $request)
+	public function permissaoExcluir($id_permissao, $id, Request $request)
 	{
 		$validacao = permissaoUsersController::Permissao($id);
 		$unidade = $this->unidade->find($id);
 		$unidadesMenu = $this->unidade->all();
 		$unidades = $unidadesMenu;
-		$permissoes = Permissao::where('unidade_id', $id)->where('id', $id_permissao)->get();
+		$permissoes = Permissao::where('id', $id_permissao)->get();
 		$lastUpdated = $permissoes->max('updated_at');
 		$users = User::all();
 		if($validacao == 'ok') {
@@ -151,7 +148,7 @@ class PermissaoController extends Controller
 		$input = $request->all();
 		$unidade = $input['unidade'];
 		if($unidade == 0) {
-			for($i = 1; $i <= 8; $i++) {
+			for($i = 1; $i <= 9; $i++) {
 				$input['unidade_id'] = $i;
 				$permissao = PermissaoUsers::create($input);	
 			}
@@ -167,6 +164,7 @@ class PermissaoController extends Controller
 		->where('unidade_id', $id)
 		->get();
 		$unidade = $this->unidade->find($id);	
+		$validator = 'Permissão cadastrada com sucesso!';
 		return view('transparencia/permissao/permissao_cadastro', compact('unidade','unidadesMenu','unidades','permissoes','lastUpdated'))
 			->withErrors($validator)
 			->withInput(session()->flashInput($request->input()));

@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="{{asset('img/favico.png')}}">
     
 
-    <title>Portal da Transparencia - HCP</title>
+    <title>Portal da Transparencia - HCP Gest&atilde;o</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">

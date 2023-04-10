@@ -20,7 +20,7 @@ class RelatorioGerencialController extends Controller
 		$this->logger_users = $logger_users;
 	}
 	
-    public function cadastroRelGerencial($id_unidade)
+    public function cadastroRelGerencial($id_unidade, Request $request)
 	{ 	
 		$validacao = permissaoUsersController::Permissao($id_unidade);
 		$unidades = $unidadesMenu = $this->unidade->all();
@@ -32,11 +32,13 @@ class RelatorioGerencialController extends Controller
 			return view('transparencia/relatorioGerencial/relatorio_gerencial_cadastro', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated','permissao_users'));
 		} else {
 			$validator = 'Você não tem Permissão!!';		
-			return view('home', compact('unidades','unidade','unidadesMenu')); 		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+    			->withErrors($validator)
+    			->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
-	public function relatorioGerencialNovo($id_unidade)
+	public function relatorioGerencialNovo($id_unidade, Request $request)
 	{ 	
 		$validacao = permissaoUsersController::Permissao($id_unidade);
 		$unidades = $unidadesMenu = $this->unidade->all();
@@ -48,7 +50,9 @@ class RelatorioGerencialController extends Controller
 			return view('transparencia/relatorioGerencial/relatorio_gerencial_novo', compact('unidade','unidades','unidadesMenu','competenciasMatriz','lastUpdated','permissao_users'));
 		} else {
 			$validator = 'Você não tem Permissão!!';		
-			return view('home', compact('unidades','unidade','unidadesMenu')); 		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+    			->withErrors($validator)
+    			->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	
@@ -111,7 +115,7 @@ class RelatorioGerencialController extends Controller
 		}
 	}
 	
-	public function relatorioGerencialExcluir($id_unidade, $id_rel)
+	public function relatorioGerencialExcluir($id_unidade, $id_rel, Request $request)
 	{ 	
 		$validacao = permissaoUsersController::Permissao($id_unidade);
 		$unidades = $unidadesMenu = $this->unidade->all();
@@ -123,7 +127,9 @@ class RelatorioGerencialController extends Controller
 			return view('transparencia/relatorioGerencial/relatorio_gerencial_excluir', compact('unidade','unidades','unidadesMenu','demonstrativoContaveis','lastUpdated','permissao_users'));
 		} else {
 			$validator = 'Você não tem Permissão!!';
-			return view('home', compact('unidades','unidade','unidadesMenu')); 		
+			return view('home', compact('unidades','unidade','unidadesMenu'))
+    			->withErrors($validator)
+    			->withInput(session()->flashInput($request->input()));	
 		}
 	}
 	

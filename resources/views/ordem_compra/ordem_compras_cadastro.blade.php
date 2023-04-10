@@ -116,7 +116,7 @@
                     <td style = "padding-right: 10px; font-size: 13px;"><center> {{ $prc->cnpj }} </center></td>
                     <td style = "font-size: 13px;" title="<?php echo $prc->produto; ?>"> {{ (substr($prc->produto, 0, 25)) }} </td>
                     <td style = "font-size: 13px;"><center> {{ $prc->quantidadeRecebida }} </center></td>
-                    <td style = "font-size: 13px;"><center> {{ $prc->valorTotalRecebido }} </center></td>
+                    <td style = "font-size: 13px;"> {{ "R$ ".number_format($prc->valorTotalRecebido, 2,',','.') }} </td>
                     <td> 
                       <div class="dropdown">
                         <a class="btn btn-outline-info" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -14,6 +14,7 @@ class AssistencialCovid extends Model
         'file_path',
         'ano',
         'mes',
+        'status_assistencial_covid',
         'created_at',
         'updated_at'
     ];

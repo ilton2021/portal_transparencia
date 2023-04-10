@@ -11,6 +11,7 @@ use App\Model\PermissaoUsers;
 use App\Http\Controllers\PermissaoUsersController;
 use Auth;
 use Validator;
+use DB;
 
 class EstatutoController extends Controller
 {
@@ -21,124 +22,175 @@ class EstatutoController extends Controller
 		$this->logger_users = $logger_users;
 	}
 
-    public function index()
-    {
-        $unidades = $this->unidade->all();
-		return view('transparencia.estatuto', compact('unidades'));
-    }
-
-	public function estatutoCadastro($id)
+	public function index()
 	{
-		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		$estatutos = $this->estatuto->all();
-		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','estatutos'));
+		$unidades = $this->unidade->all();
+		return view('transparencia.estatuto', compact('unidades'));
+	}
+
+	public function cadastroES($id, Request $request)
+	{
+		$validacao 	  = permissaoUsersController::Permissao($id);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		$estatutos    = $this->estatuto->all();
+		if ($validacao == 'ok') {
+			return view('transparencia/estatuto/estatuto_cadastro', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'));
 		} else {
 			$validator = 'Você não tem Permissão!';
-			return view('home', compact('unidades','unidade','unidadesMenu'))
+			return view('home', compact('unidades', 'unidade', 'unidadesMenu'))
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	 		
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 
-	public function estatutoNovo($id)
+	public function novoES($id, Request $request)
 	{
-		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu'));
+		$validacao    = permissaoUsersController::Permissao($id);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		if ($validacao == 'ok') {
+			return view('transparencia/estatuto/estatuto_novo', compact('unidade', 'unidades', 'unidadesMenu'));
 		} else {
 			$validator = 'Você não tem permissão!';
-			return view('home', compact('unidades','unidade','unidadesMenu'))
+			return view('home', compact('unidades', 'unidade', 'unidadesMenu'))
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));		
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 
-	public function estatutoExcluir($id, $id_estatuto)
+	public function excluirES($id, $id_estatuto, Request $request)
 	{
-		$validacao = permissaoUsersController::Permissao($id);
-		$unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		$estatutos = $this->estatuto->find($id_estatuto);
-		if($validacao == 'ok') {
-			return view('transparencia/estatuto/estatuto_excluir', compact('unidade','unidades','unidadesMenu','estatutos'));
+		$validacao    = permissaoUsersController::Permissao($id);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		$estatutos    = $this->estatuto->find($id_estatuto);
+		if ($validacao == 'ok') {
+			return view('transparencia/estatuto/estatuto_excluir', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'));
 		} else {
 			$validator = 'Você não tem Permissão!';
-			return view('home', compact('unidades','unidade','unidadesMenu'))
+			return view('home', compact('unidades', 'unidade', 'unidadesMenu'))
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));		
+				->withInput(session()->flashInput($request->input()));
 		}
 	}
 
-    public function store($id, Request $request)
-    {
-        $unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		$estatutos = $this->estatuto->all();
-		$input = $request->all();
-		$nome = $_FILES['path_file']['name']; 
-		$extensao = pathinfo($nome, PATHINFO_EXTENSION);
+	public function telaInativarES($id, $id_estatuto, Request $request)
+	{
+		$validacao    = permissaoUsersController::Permissao($id);
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		$estatutos    = $this->estatuto->find($id_estatuto);
+		if ($validacao == 'ok') {
+			return view('transparencia/estatuto/estatuto_inativar', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'));
+		} else {
+			$validator = 'Você não tem Permissão!';
+			return view('home', compact('unidades', 'unidade', 'unidadesMenu'))
+				->withErrors($validator)
+				->withInput(session()->flashInput($request->input()));
+		}
+	}
+
+	public function storeES($id, Request $request)
+	{
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		$estatutos    = $this->estatuto->all();
+		$input        = $request->all();
+		$nome         = $_FILES['path_file']['name'];
+		$extensao     = pathinfo($nome, PATHINFO_EXTENSION);
 		$validator = Validator::make($request->all(), [
-			'name' => 'required|max:255'		
+			'name' => 'required|max:255'
 		]);
 		if ($validator->fails()) {
-			return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+			return view('transparencia/estatuto/estatuto_novo', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'))
 				->withErrors($validator)
-				->withInput(session()->flashInput($request->input()));	
+				->withInput(session()->flashInput($request->input()));
 		} else {
-			if($request->file('path_file') === NULL) {
+			if ($request->file('path_file') === NULL) {
 				$validator = 'Informe o arquivo do Estatuto / Ata!';
-				return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+				return view('transparencia/estatuto/estatuto_novo', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'))
 					->withErrors($validator)
-					->withInput(session()->flashInput($request->input()));	
+					->withInput(session()->flashInput($request->input()));
 			} else {
-				if($extensao === 'pdf') {
-					$nome = $_FILES['path_file']['name']; 
+				if ($extensao === 'pdf') {
+					$nome = $_FILES['path_file']['name'];
 					$request->file('path_file')->move('../public/storage/estatuto_ata/', $nome);
-					$input['path_file'] = 'estatuto_ata/'.$nome; 
-					$input['kind'] = 'ATA';
-					$estatuto = Estatuto::create($input);
-					$log = LoggerUsers::create($input);
-					$lastUpdated = $log->max('updated_at');
-					$estatutos = $this->estatuto->all();
-					$validator = 'Estatuto / Ata cadastrado com sucesso!';
-					return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos'))
-						->withErrors($validator)
-						->withInput(session()->flashInput($request->input()));	
+					$input['path_file'] = 'estatuto_ata/' . $nome;
+					$input['kind'] 		= 'ATA';
+					$input['status_estatuto'] = 1;	
+					$estatuto    = Estatuto::create($input);
+					$id_registro = DB::table('estatutos')->max('id');
+					$input['registro_id'] = $id_registro;
+					$log 				  = LoggerUsers::create($input);
+					$lastUpdated	      = $log->max('updated_at');
+					$estatutos 		      = $this->estatuto->all();
+					$validator 			  = 'Estatuto / Ata cadastrado com sucesso!';
+					return  redirect()->route('cadastroES', [$id])
+						->withErrors($validator);
 				} else {
 					$validator = 'Só são permitidos arquivos do tipo: PDF!';
-					return view('transparencia/estatuto/estatuto_novo', compact('unidade','unidades','unidadesMenu','estatutos'))
+					return view('transparencia/estatuto/estatuto_novo', compact('unidade', 'unidades', 'unidadesMenu', 'estatutos'))
 						->withErrors($validator)
-						->withInput(session()->flashInput($request->input()));	
+						->withInput(session()->flashInput($request->input()));
 				}
 			}
 		}
-    }
+	}
 
-    public function destroy($id, $id_estatuto, Estatuto $estatuto, Request $request)
-    {
+	public function destroyES($id, $id_estatuto, Request $request)
+	{
+		$input 		  = $request->all();
+		$estatuto     = Estatuto::where('id',$id_estatuto)->get();
+		$image_path   = 'storage/'.$estatuto[0]->path_file;
+        unlink($image_path);
 		Estatuto::find($id_estatuto)->delete();
-		$input = $request->all();
-		$log = LoggerUsers::create($input);
-		$nome = $input['path_file'];
-		$pasta = 'public/'.$nome; 
-		Storage::delete($pasta);
-		$lastUpdated = $log->max('updated_at');
-        $unidadesMenu = $this->unidade->all();
-		$unidades = $unidadesMenu; 
-		$unidade = $this->unidade->find($id);
-		$estatutos = $this->estatuto->all();
-		$validator = 'Estatuto/Ata Excluído com sucesso!';
-		return view('transparencia/estatuto/estatuto_cadastro', compact('unidade','unidades','unidadesMenu','lastUpdated','estatutos'))
-			->withErrors($validator)
-			->withInput(session()->flashInput($request->input()));	
-    }
+		$input['registro_id'] = $id_estatuto;
+		$log   		  = LoggerUsers::create($input);
+		$lastUpdated  = $log->max('updated_at');
+		$unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);	
+		$estatutos    = $this->estatuto->all();
+		$validator    = 'Estatuto/Ata Excluído com sucesso!';
+		return  redirect()->route('cadastroES', [$id])
+			->withErrors($validator);
+	}
+
+	public function inativarES($id, $id_estatuto, Request $request)
+	{
+		$input    = $request->all();
+		$estatuto = Estatuto::where('id',$id_estatuto)->get();
+		if($estatuto[0]->status_estatuto == 1) {
+			$nomeArq    = explode("estatuto_ata/", $estatuto[0]->path_file);
+			$nome       = "old_". $nomeArq[1];
+			$image_path = 'estatuto_ata/'.$nome;
+			DB::statement("UPDATE estatutos SET `status_estatuto` = 0, `path_file` = '$image_path' WHERE `id` = $id_estatuto");
+			$image_path = 'storage/estatuto_ata/'.$nome;
+			$caminho    = 'storage/'.$estatuto[0]->path_file;
+			rename($caminho, $image_path);
+		} else {
+			$nomeArq    = explode("estatuto_ata/old_", $estatuto[0]->path_file);
+			$image_path = 'estatuto_ata/'.$nomeArq[1];
+			DB::statement("UPDATE estatutos SET `status_estatuto` = 1, `path_file` = '$image_path' WHERE `id` = $id_estatuto");
+			$image_path = 'storage/estatuto_ata/'.$nomeArq[1];
+			$caminho    = 'storage/'.$estatuto[0]->path_file;
+			rename($caminho, $image_path);		
+		}
+		$input['registro_id'] = $estatuto[0]->id;
+		$log          = LoggerUsers::create($input);
+		$lastUpdated  = $log->max('updated_at');
+        $unidadesMenu = $this->unidade->where('status_unidades',1)->get();
+		$unidades 	  = $unidadesMenu;
+		$unidade      = $this->unidade->where('status_unidades',1)->find($id);
+		$estatuto     = Estatuto::where('unidade_id',$id)->get();
+		$validator    = 'Estatuto inativado com sucesso!';
+		return redirect()->route('cadastroES', [$id])
+				->withErrors($validator);
+	}
 }

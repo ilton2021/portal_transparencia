@@ -13,14 +13,14 @@
 			<div class="accordion" id="accordionExample">
 				<div class="card">
 					<a class="card-header bg-success text-decoration-none text-white bg-success" type="button" data-toggle="collapse" data-target="#PESSOAL" aria-expanded="true" aria-controls="PESSOAL">
-						SELEÇÃO DE PESSOAL <i class="fas fa-check-circle"></i>
+						SELEÇÃO DE PESSOAL  <i class="fas fa-check-circle"></i>
 					</a>
 					<div id="PESSOAL" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 					@if(Auth::check())
 					 @foreach ($permissao_users as $permissao)
 					  @if(($permissao->permissao_id == 12) && ($permissao->user_id == Auth::user()->id))
 					   @if ($permissao->unidade_id == $unidade->id)	
-						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('selecaoPCadastro', $unidade->id)}}" > Alterar <i class="fas fa-edit"></i></a>
+						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('cadastroSP', $unidade->id)}}" > Alterar <i class="fas fa-edit"></i></a>
 					   @endif	
 					  @endif	
                      @endforeach					  
@@ -48,11 +48,10 @@
 									<tbody>
 										@foreach ($selecaoPessoal as $selecao)
 										@if ($selecao->ano === $ano)
-											<tr>
-												<td>{{$selecao->nome}}</td>
-												<td>{{$selecao->quantidade}}</td>
-											</tr>
-
+										<tr>
+										    <td>{{$selecao->nome}}</td>
+										    <td>{{$selecao->quantidade}}</td>
+										</tr>
 										@endif
 										@endforeach
 										<tr>
@@ -63,8 +62,14 @@
 								</table>
 							</div>
 						  </div>
-						@endforeach												
-						<p class="card-text"><small class="text-muted">Última atualização {{date("d/m/Y", strtotime($selecaoPessoal->max('updated_at')))}}</small></p>
+						@endforeach
+                                @if (isset($ultimaAtualiza))
+                                    <p class="card-text"><small class="text-muted">Última atualização
+                                            {{ date('d/m/Y', strtotime($ultimaAtualiza)) }}</small></p>
+                                @else
+                                    <p class="card-text"><small class="text-muted">Última atualização
+                                            {{ date('d/m/Y', strtotime($selecaoPessoal->max('updated_at'))) }}</small></p>
+                                @endif
 					</div>
 					</div>
 				</div>
@@ -77,7 +82,7 @@
 					 @foreach ($permissao_users as $permissao)
 					  @if(($permissao->permissao_id == 12) && ($permissao->user_id == Auth::user()->id))
 					   @if ($permissao->unidade_id == $unidade->id)	
-						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('processoSCadastro', $unidade->id)}}" > Alterar <i class="fas fa-edit"></i></a>
+						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('cadastroPS', $unidade->id)}}" > Alterar <i class="fas fa-edit"></i></a>
 					   @endif
 					  @endif 
 					 @endforeach 
@@ -108,12 +113,12 @@
 							</div>
 						</div>
 						@endforeach						
-						@if($unidade->id != 8)
-						<h6 class=""><strong><a href="https://concursos.promunicipio.com/informacoes/264/" target="_blank"> Pró-Município - Processo Seletivo HCPGESTÃO 2019</a></strong></h6>						
+						@if($unidade->id != 1)
+						<h6 class=""><strong><a href="https://hcpgestao.org.br/processo_seletivo_hcpgestao/public/" target="_blank">Processo Seletivo HCPGESTÃO</a></strong></h6>						
 						@endif
 						@if($unidade->id == 2)
-						<h6 class=""><strong><a href="http://hcp.org.br/processoseletivo/" target="_blank"> Incrições Processo Seletivo 09.2017 (encerrado)</a></strong></h6>
-						<h6 class=""><strong><a href="http://hcp.org.br/hmr/" target="_blank"> Site de Acompanhamento do Processo Seletivo HMR</a></strong></h6>
+						<h6 class=""><strong><a href="https://hcpgestao.org.br/processo_seletivo_hcpgestao/public/" target="_blank"> Incrições Processo Seletivo 09.2017 (encerrado)</a></strong></h6>
+						<h6 class=""><strong><a href="https://hcpgestao.org.br/processo_seletivo_hcpgestao/public/" target="_blank"> Site de Acompanhamento do Processo Seletivo HMR</a></strong></h6>
 						@endif
 						<p class="card-text"><small class="text-muted">Última atualização {{date("d/m/Y", strtotime($docSelectiveProcess->max('updated_at')))}}</small></p>
 					</div>
@@ -142,9 +147,9 @@
 					<div id="CEDIDOS" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
 					@if(Auth::check())	
 					 @foreach ($permissao_users as $permissao)
-					  @if(($permissao->permissao_id == 17) && ($permissao->user_id == Auth::user()->id))
+					  @if(($permissao->permissao_id == 23) && ($permissao->user_id == Auth::user()->id))
 					   @if ($permissao->unidade_id == $unidade->id)	
-						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{ route('servidoresCadastro', $unidade->id) }}" > Alterar <i class="fas fa-edit"></i></a>
+						<br /><a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{ route('cadastroSE', $unidade->id) }}" > Alterar <i class="fas fa-edit"></i></a>
 					   @endif
 					  @endif
                      @endforeach 					  
@@ -152,7 +157,14 @@
 					<div class="card-body" style="background-color: #fafafa">
 					      @if($unidade->id !== 8) 
 						  <h6 class="text-success"><strong>Não há servidor cedido na unidade</strong></h6>
-						  <p class="card-text"><small class="text-muted">Última atualização {{date("d/m/Y", strtotime('2020-07-25 00:00:00'))}}</small></p>		
+						  <p class="card-text">
+						      <small class="text-muted">
+						      @if($unidade->id == 3 || $unidade->id == 4 || $unidade->id == 10)
+						      Última atualização {{date("d/m/Y")}}
+						      @else
+						      Última atualização {{date("d/m/Y", strtotime('2022-09-27 00:00:00'))}}
+						      @endif
+						      </small></p>		
 					      @else
 						   <table class="table table-sm" id="my_table">
 							<thead class="bg-success">

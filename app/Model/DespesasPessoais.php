@@ -12,6 +12,9 @@ class DespesasPessoais extends Model
 		'Quant',
 		'Valor',
 		'Mes',
-		'Ano'
+		'Ano',
+		'status_desp',
+		'created_at',
+		'updated_at'
 	];
 }

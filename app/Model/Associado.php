@@ -14,6 +14,7 @@ class Associado extends Model
 		'cpf',
 		'tipo_membro',
 		'unidade_id',
+		'status_associados',
 		'created_at',
 		'updated_at'
 	];

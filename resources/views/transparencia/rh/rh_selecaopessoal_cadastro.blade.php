@@ -7,15 +7,15 @@
 			<h3 style="font-size: 18px;">RECURSOS HUMANOS</h3>
 		</div>
 	</div>
-	@if ($errors->any())
-			<div class="alert alert-success">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
+    @if ($errors->any())
+      <div class="alert alert-success">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -51,8 +51,8 @@
 											<tr>
 												<td>{{$selecao->cargos->cargo_name}}</td>
 												<td>{{$selecao->quantidade}}</td>
-												<td><center> <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('selecaoPAlterar', array($unidade->id, $selecao->id))}}" ><i class="fas fa-edit"></i></a> </center> </td>
-												<td><center> <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('selecaoPExcluir', array($unidade->id, $selecao->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
+												<td><center> <a class="btn btn-info btn-sm" style="color: #FFFFFF;" href="{{route('alterarSP', array($unidade->id, $selecao->id))}}" ><i class="fas fa-edit"></i></a> </center> </td>
+												<td><center> <a class="btn btn-danger btn-sm" style="color: #FFFFFF;" href="{{route('excluirSP', array($unidade->id, $selecao->id))}}" ><i class="fas fa-times-circle"></i></a> </center> </td>
 											</tr>
 										@endif
 										@endforeach
@@ -61,12 +61,13 @@
 												<td><strong>{{$selecaoPessoal->where('ano', $ano)->pluck('quantidade')->sum()}}</strong></td>
 											</tr>
 									</tbody>
-								</table>					
+								</table>
+								
 							</div>
 						   </div>
 						@endforeach
 						<p><br /><a href="{{route('transparenciaRecursosHumanos', $unidade->id)}}" class="btn btn-warning btn-sm" style="color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i></a>
-								 <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('selecaoPNovo', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a> </p>
+								 <a class="btn btn-dark btn-sm" style="color: #FFFFFF;" href="{{route('novoSP', $unidade->id)}}"> Novo <i class="fas fa-check"></i> </a> </p>
 						<p class="card-text"><small class="text-muted">Última atualização {{date("d/m/Y", strtotime($selecaoPessoal->max('updated_at')))}}</small></p>
 				</div>
 			</div>

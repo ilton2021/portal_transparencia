@@ -5,18 +5,18 @@
 <div class="container-fluid">
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 text-center">
-			<h5  style="font-size: 18px;">ALTERAR MEMBROS DIRIGENTES:</h5>
+			<h5 style="font-size: 18px;">ALTERAR MEMBROS DIRIGENTES:</h5>
 		</div>
-	</div>	
-		@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-		@endif	
+	</div>
+	@if ($errors->any())
+	<div class="alert alert-danger">
+		<ul>
+			@foreach ($errors->all() as $error)
+			<li>{{ $error }}</li>
+			@endforeach
+		</ul>
+	</div>
+	@endif
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-12 col-sm-12 text-center">
 			<div class="accordion" id="accordionExample">
@@ -25,56 +25,78 @@
 						CONSELHO FISCAL <i class="fas fa-check-circle"></i>
 					</a>
 				</div>
-					<form action="{{\Request::route('update'), $unidade->id}}" method="post" />
+				<form action="{{\Request::route('updateCF'), $unidade->id}}" method="post" id="formid">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-						<table class="table table-sm">
-							<tr hidden>
-								<td hidden> ID: </td>
-								<td> <input class="form-control" hidden style="width: 80px;" type="text" id="id" name="id" value="<?php echo $conselhoFisc->id; ?>" disabled="true"  /> </td>
-							</tr>
-							<tr>
-								<td> Nome: </td>
-								<td> <input class="form-control" style="width: 450px;" type="text" id="name" name="name" value="<?php echo $conselhoFisc->name; ?>" required /> </td>
-							</tr>
-							<tr>
-								<td> Level: </td>
-								<td> 
-									<select name="level" id="level" style="width: 300px;" class="form-control">	
-										@if ( $conselhoFisc->level === 'Suplente' ) 
-											<option value="Suplente">{{$conselhoFisc->level}} </option>
-											<option value="Titular">Titular </option>
-										@else 
-											<option value="Titular">{{$conselhoFisc->level}} </option>
-											<option value="Suplente">Suplente </option>
-										@endif	
-									</select>	
-								</td>
-							</tr>
-							<tr>
-								<td> Tipo Membro: </td>
-								<td> <input class="form-control" readonly="true" style="width: 300px;" type="text" id="tipo_membro" name="tipo_membro" value="Conselho Fiscal" /> </td>
-							</tr>
-						</table>
-						
-						<table>
-							 <tr>
-							   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
-							   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="membrosConselhoFisc" /> </td>
-							   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="alterarMembrosConselhoFisc" /> </td>
-							   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
-							 </tr>
-						</table>
-						
-						<table>
-							<tr>
-								<td>
-									<a href="{{route('listarConselhoFisc', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-									<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
-								</td>
-							</tr>
-						</table>
-					</form>
+					<div class="form-control mt-3" style="color:black">
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<labe hidden><strong>ID:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" hidden style="max-width: 80px;" type="text" id="id" name="id" value="<?php echo $conselhoFisc->id; ?>" disabled="true" />
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<labe><strong>Nome:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" style="max-width: 450px;" type="text" id="name" name="name" value="<?php echo $conselhoFisc->name; ?>" required />
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<labe><strong>Level:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<select name="level" id="level" style="max-width: 300px;" class="form-control">
+										@if ( $conselhoFisc->level === 'Suplente' )
+										<option value="Suplente">{{$conselhoFisc->level}} </option>
+										<option value="Titular">Titular </option>
+										@else
+										<option value="Titular">{{$conselhoFisc->level}} </option>
+										<option value="Suplente">Suplente </option>
+										@endif
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-row mt-2">
+							<div class="form-group col-md-12 d-inline-flex align-items-center flex-wrap flex-md-nowrap">
+								<div class="col-md-2 mr-2">
+									<labe><strong>Tipo Membro:</strong></label>
+								</div>
+								<div class="col-md-10 mr-2">
+									<input class="form-control" readonly="true" style="max-width: 300px;" type="text" id="tipo_membro" name="tipo_membro" value="Conselho Fiscal" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<table>
+						<tr>
+							<td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
+							<td> <input hidden type="text" class="form-control" id="tela" name="tela" value="membrosConselhoFisc" /> </td>
+							<td> <input hidden type="text" class="form-control" id="acao" name="acao" value="alterarMembrosConselhoFisc" /> </td>
+							<td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
+						</tr>
+					</table>
+					<div class="d-flex justify-content-between">
+						<div>
+							<a href="{{route('listarCF', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+						</div>
+						<div id="containerEnviar">
+							<input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" />
+							<div id="blockEnviar"></div>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
-@endsection
+	@endsection

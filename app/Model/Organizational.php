@@ -14,6 +14,7 @@ class Organizational extends Model
 		'email',
 		'telefone',
 		'unidade_id',
+		'status_organizacional',
 		'created_at',
 		'updated_at'
 	];

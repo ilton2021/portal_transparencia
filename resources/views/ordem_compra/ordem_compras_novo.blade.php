@@ -62,7 +62,7 @@
 						    <td> Quantidade da O.C. </td>
 							<td> <input type="text" id="qtdOrdemCompra" name="qtdOrdemCompra" class="form-control" value="{{ old('qtdOrdemCompra') }}" required /> </td>
 							<td> Valor Total da O.C. </td>
-							<td> <input type="text" id="totalValorOC" name="totalValorOC" class="form-control" value="{{ old('totalValorOC') }}" required /> </td>
+							<td> <input type="number" step="00.01" id="totalValorOC" name="totalValorOC" class="form-control" value="{{ old('totalValorOC') }}" required /> </td>
 							<td> Produto </td>
 							<td> <input type="text" id="produto" name="produto" class="form-control" value="{{ old('produto') }}" required /> </td>
 						</tr>
@@ -96,7 +96,7 @@
 							<td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>
 						 </tr>
 					</table>			
-					<table class="table table-sm">
+					<!--table class="table table-sm">
 					<tr>
 					  <td><center> ID OC </center></td>
 					  <td><center> Número da Solicitação </center></td>
@@ -114,12 +114,44 @@
 					</tr>
 					@endforeach
 					<tr><td colspan="5"><b><center>Ordens de Compras cadastradas neste Mês!</center></b></td></tr>
-					</table>
+					</table-->
                   </div>
             </div>
         </div>
 		<div class="col-md-0 col-sm-0"></div>
     </div>
+    
+         <!--form action="{{\Request::route('storeExcelCotacao'), $unidade[0]->id}}" method="post" enctype="multipart/form-data">					
+				   <input type="hidden" name="_token" value="{{ csrf_token() }}">					  
+ 					  <table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">						
+					     <tr>					     
+						   <td> Arquivo: </td>						 
+						   <td> <input style="width: 450px" class="form-control" type="file" id="file_path" name="file_path" value="" required enctype="multipart/form-data" /> </td>						
+						 </tr>					  
+					  </table>													
+					  <table>						   
+					    <tr>						     
+						   <td> <input type="hidden" id="ordering" name="ordering" value="0" /> </td>							 
+						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade[0]->id; ?>" /></td>							 
+						   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="excelCotacoes" /> </td>							 
+						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="salvarExcelCotacoes" /> </td>							 
+						   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>						   
+						</tr>						
+					  </table>											  
+					  <table>							
+					    <tr>					     
+						   <td align="left">						 
+						   	 <a href="{{route('transparenciaOrdemCompra', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+
+						   <!--  <br /><a href="{{route('cadastroCotacoes', $unidade[0]->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>					           
+							 <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 	-->				     
+						   </td>					    
+						</tr>					  
+					   </table>				  
+					  </form-->	
+        
+    
+    
 </div>
 </section>    
 @endsection

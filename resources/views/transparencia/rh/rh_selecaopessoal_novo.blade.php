@@ -8,14 +8,14 @@
 		</div>
 	</div>
 	@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-	@endif
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-1 col-sm-0"></div>
 		<div class="col-md-10 col-sm-12 text-center">
@@ -25,7 +25,7 @@
 						SELEÇÃO DE PESSOAL <i class="fas fa-check-circle"></i>
 					</a>				
 				</div>
-					<form action="{{\Request::route('storeSelecao'), $unidade->id}}" method="post">	
+					<form action="{{\Request::route('storeSP'), $unidade->id}}" method="post">	
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<table class="table table-sm">
 							<tr>
@@ -43,17 +43,19 @@
 							  <td> <input class="form-control" style="width: 100px;" type="number" id="quantidade" name="quantidade" value="" required /> </td>
 							</tr>
 							<tr>
-							<td> Ano: </td>
-							 	 <td> 
-								  <select id="ano" name="ano" class="form-control" style="width: 100px">
-									<option value="2021" id="ano" name="ano">2021</option>
-									<option value="2022" id="ano" name="ano">2022</option>
-									<option value="2023" id="ano" name="ano">2023</option>
-									<option value="2024" id="ano" name="ano">2024</option>
-									<option value="2025" id="ano" name="ano">2025</option>
-								  </select>	
-							  </td>						
-						    </tr>
+							  <td> Ano: </td>
+							  <td> <?php $ano = date('Y', strtotime('now')); ?>
+							    <select class="form-control" id="ano" name="ano" style="width: 100px;">
+							      <?php for($a = 2018; $a <= 2025; $a++) { ?>
+							        @if($ano == $a)
+							         <option id="ano" name="ano" value="<?php echo $a; ?>" selected>{{ $a }}</option>
+							        @else
+							         <option id="ano" name="ano" value="<?php echo $a; ?>">{{ $a }}</option>
+							        @endif
+							      <?php } ?>
+							    </select>        
+							  </td>
+							</tr>
 							<input hidden type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" />
 						</table>
 						
@@ -68,9 +70,10 @@
 						
 						<table>
 							<tr>
-							  <td colspan="2" align="left"> <br /><br /> <a href="{{route('selecaoPCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-							  <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> </td>
-							  <td> <br /><br /> <a href="{{route('selecaoPCargos', $unidade->id)}}" class="btn btn-dark btn-sm" style="margin-top: 10px; margin-left: 580px; color: #FFFFFF;"> Novo Cargo <i class="fas fa-check"></i> </a> </td>
+							  <td align="left"> 
+								<a href="{{route('cadastroSP', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+							    <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Salvar" id="Salvar" name="Salvar" /> 
+							    <a href="{{route('cargosSP', $unidade->id)}}" class="btn btn-dark btn-sm" style="margin-top: 10px; margin-left: 500px; color: #FFFFFF;"> Novo Cargo <i class="fas fa-check"></i> </a> </td>
 							</tr>
 						</table>
 					</form>

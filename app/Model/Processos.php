@@ -25,7 +25,7 @@ class Processos extends Model
 		'quantidadeRecebida',
 		'valorTotalRecebido',
 		'chaveAcesso',
-		'codigoIBGE',
+		'codigoIbge',
 		'unidade_id',
 		'updated_at',
 		'created_at'

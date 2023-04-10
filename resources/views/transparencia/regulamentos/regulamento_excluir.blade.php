@@ -7,15 +7,15 @@
 			<h3 style="font-size: 18px;">EXCLUIR REGULAMENTOS PRÓPRIOS:</h3>
 		</div>
 	</div>
-	@if ($errors->any())
-		<div class="alert alert-danger">
-			<ul>
-				@foreach ($errors->all() as $error)
-					<li>{{ $error }}</li>
-				@endforeach
-			</ul>
-		</div>
-	@endif
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div>
+	@endif 
 	<div class="row" style="margin-top: 25px;">
 		<div class="col-md-0 col-sm-0"></div>
 		<div class="col-md-12 col-sm-12 text-center">
@@ -25,7 +25,7 @@
                         Regulamento Próprios <i class="fas fa-check-circle"></i>
                     </a>
                 </div>
-                    <form method="post" action="{{ \Request::route('store'), $unidade->id }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ \Request::route('destroyRG'), $unidade->id }}" enctype="multipart/form-data">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<table border="0" class="table-sm" style="line-height: 1.5;" WIDTH="1020">
 					  <tr>
@@ -46,7 +46,7 @@
 						 <tr>
 						   <td> <input hidden style="width: 100px;" type="text" id="unidade_id" name="unidade_id" value="<?php echo $unidade->id; ?>" /></td>
 						   <td> <input hidden type="text" class="form-control" id="tela" name="tela" value="regulamento" /> </td>
-						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="excluirRegulamento" /> </td>
+						   <td> <input hidden type="text" class="form-control" id="acao" name="acao" value="InativarRegulamento" /> </td>
 						   <td> <input hidden type="text" class="form-control" id="user_id" name="user_id" value="{{ Auth::user()->id }}" /> </td>
 						 </tr>
 					</table>
@@ -55,8 +55,8 @@
 					 <tr>
 					   <td align="left">
 					     <br /><br /> <p><h6 align="left"> Deseja realmente Excluir este Regulamento Próprio?? </h6></p>
-						 <a href="{{route('regulamentoCadastro', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
-					     <input type="submit" class="btn btn-success btn-sm" style="margin-top: 10px;" value="Excluir" id="Excluir" name="Excluir" /> 
+						 <a href="{{route('cadastroRG', $unidade->id)}}" id="Voltar" name="Voltar" type="button" class="btn btn-warning btn-sm" style="margin-top: 10px; color: #FFFFFF;"> Voltar <i class="fas fa-undo-alt"></i> </a>
+					     <input type="submit" class="btn btn-danger btn-sm" style="margin-top: 10px;" value="Excluir" id="Excluir" name="Excluir" /> 
 					   </td>
 					 </tr>
 					</table>

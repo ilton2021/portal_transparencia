@@ -10,10 +10,15 @@ class DemonstrativoFinanceiro extends Model
 	
 	protected $fillable = [
 		'title',
+		'tipodoc',
 		'mes',
 		'ano',
+		'tipoarq',
 		'file_path',
+		'file_link',
+		'name_arq',
 		'unidade_id',
+		'status_financeiro',
 		'created_at',
 		'updated_at'
 	];

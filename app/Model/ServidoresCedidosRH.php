@@ -17,6 +17,7 @@ class ServidoresCedidosRH extends Model
 		'data_inicio',
 		'observacao',
 		'unidade_id',
+		'status_servidores',
 		'created_at',
 		'updated_at'
 	];

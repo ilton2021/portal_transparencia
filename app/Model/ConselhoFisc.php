@@ -13,6 +13,7 @@ class ConselhoFisc extends Model
 		'level',
 		'tipo_membro',
 		'unidade_id',
+		'status_conselho_fiscs',
 		'created_at',
 		'updated_at'
 	];
